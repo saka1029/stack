@@ -31,8 +31,6 @@ public class Int extends Value {
 	public Value plus(Value right) {
 		if (right instanceof Int i)
             return Int.of(value + i.value);
-		else if (right instanceof Str s)
-			return Str.of(value + s.value);
 		else
 			throw error("+", right);
 	}
