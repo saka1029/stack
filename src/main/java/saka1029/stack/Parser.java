@@ -32,7 +32,24 @@ public class Parser {
 		}
 	}
 	
+	void spaces() {
+		while (Character.isWhitespace(ch))
+			get();
+	}
+	
+	Int integer() {
+		return null;
+	}
+
 	public Evaluable parse() throws ParseException {
+		spaces();
+		switch (ch) {
+		case '-':
+		default:
+			if (Character.isDigit(ch))
+				return integer();
+			return null;
+		}
 		
 	}
 
