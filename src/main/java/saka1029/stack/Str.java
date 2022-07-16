@@ -1,7 +1,7 @@
 package saka1029.stack;
 
 import java.util.Arrays;
-import java.util.Objects;
+import java.util.Iterator;
 
 public class Str extends Value {
 	
@@ -34,6 +34,25 @@ public class Str extends Value {
 		return new String(codePoints, 0, codePoints.length);
 	}
 	
+	// Collections
+
+	@Override
+	public Int size() {
+		return Int.of(codePoints.length);
+	}
+
+	@Override
+	public Value at(Value index) {
+		return Int.of(codePoints[((Int)index).value]);
+	}
+	
+	@Override
+	public Iterator<Value> iterator() {
+		return Arrays.stream(codePoints).mapToObj(i -> (Value)Int.of(i)).iterator();
+	}
+	
+	// Arithmetic
+
 	@Override
 	public Value plus(Value right) {
 		if (right instanceof Str s) {

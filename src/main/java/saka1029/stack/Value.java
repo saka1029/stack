@@ -21,7 +21,11 @@ public abstract class Value implements Evaluable, Iterable<Value> {
 		eval(context);
 	}
 	
+	// Collections
+	public Int size() { throw error(); }
+	public Value at(Value index) { throw error(); }
 	@Override public Iterator<Value> iterator() { throw error(); }
 	
-	public Value plus(Value right) { throw new UnsupportedOperationException(); }
+	// Arithmetic
+	public Value plus(Value right) { throw error(); }
 }
