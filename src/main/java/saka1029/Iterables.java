@@ -1,4 +1,4 @@
-package saka1029.iterables;
+package saka1029;
 
 import java.util.ArrayList;
 import java.util.Collection;
