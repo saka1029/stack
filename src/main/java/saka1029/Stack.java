@@ -42,7 +42,6 @@ public class Stack {
 	public static class Int implements Value {
 	    public final int value;
 	    Int(int value) { this.value = value; }
-	    public static Int of(int value) { return new Int(value); }
 	    @Override public int hashCode() { return value; }
 	    @Override public boolean equals(Object obj) { return obj instanceof Int i && i.value == value; }
 	    @Override public String toString() { return Integer.toString(value); }
@@ -55,7 +54,7 @@ public class Stack {
 	    public static List of(Value... values) {
 	        List list = NIL;
 	        for (int i = values.length - 1; i >= 0; --i)
-	            list = Cons.of(values[i], list);
+	            list = new Cons(values[i], list);
 	        return list;
 	    }
 	    
@@ -63,7 +62,7 @@ public class Stack {
 	        List first = NIL;
 	        Cons last = null;
 	        public Builder add(Value v) {
-	            last = Cons.of(v, NIL);
+	            last = new Cons(v, NIL);
 	            if (first == NIL)
 	                first = last;
 	            else
@@ -95,21 +94,24 @@ public class Stack {
 	    @Override public String toString() { return Iterables.string("[", " ", "]", this); }
 	}
 	
-	public static List list(Iterable<Value> it) {
-	    List.Builder builder = List.builder();
-	    for (Value v : it)
-	        builder.add(v);
-	    return builder.build();
-	}
-	
 	public static class Cons extends List {
 	    public final Value car;
 	    public Value cdr;
 	    Cons(Value car, Value cdr) { this.car = car; this.cdr = cdr; }
-	    public static Cons of(Value car, Value cdr) { return new Cons(car, cdr); }
 	    @Override public int hashCode() { return Objects.hash(car, cdr); }
-	    @Override
-	    public boolean equals(Object obj) { return obj instanceof Cons c && c.car.equals(car) && c.cdr.equals(cdr); }
+	    @Override public boolean equals(Object obj) { return obj instanceof Cons c && c.car.equals(car) && c.cdr.equals(cdr); }
 	}
+
+	// static methods
+    public static Int i(int i) { return new Int(i); }
+    public static List list(Value... values) { return List.of(values); }
+    public static List toList(Iterable<Value> it) {
+        List.Builder builder = List.builder();
+        for (Value v : it)
+            builder.add(v);
+        return builder.build();
+    }
+    public static Cons cons(Value a, Value b) { return new Cons(a, b); }
+    public static final List NIL = List.NIL;
 
 }

@@ -1,31 +1,24 @@
 package saka1029;
 
 import static org.junit.Assert.*;
-import static saka1029.Iterables.*;
 import static saka1029.Stack.*;
-
-import java.util.Arrays;
 
 import org.junit.Test;
 
 public class TestStackCons {
 
-    static Int i(int i) { return Int.of(i); }
-    static List list(Value... values) { return List.of(values); }
-    static Cons cons(Value a, Value b) { return Cons.of(a, b); }
-    static final List nil = List.NIL;
 
     @Test
     public void testToString() {
-        assertEquals("[]", nil.toString());
-        assertEquals("[1]", cons(i(1), nil).toString());
-        assertEquals("[0 1]", cons(i(0), cons(i(1), nil)).toString());
+        assertEquals("[]", NIL.toString());
+        assertEquals("[1]", cons(i(1), NIL).toString());
+        assertEquals("[0 1]", cons(i(0), cons(i(1), NIL)).toString());
         assertEquals("[0 1]", list(i(0), i(1)).toString());
     }
 
     @Test
     public void testEquals() {
-        assertEquals(nil, list());
+        assertEquals(NIL, list());
         assertEquals(list(i(0)), list(i(0)));
         assertEquals(list(i(0), i(1)), list(i(0), i(1)));
     }
@@ -39,7 +32,8 @@ public class TestStackCons {
     
     @Test
     public void testFilter() {
-        assertEquals(list(i(1)), Stack.list(filter(i -> ((Int)i).value % 2 == 1, list(i(0), i(1), i(2)))));
+        assertEquals(list(i(1)),
+            toList(Iterables.filter(i -> ((Int)i).value % 2 == 1,list(i(0), i(1), i(2)))));
     }
 
 }
