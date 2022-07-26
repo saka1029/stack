@@ -95,6 +95,13 @@ public class Stack {
 	    @Override public String toString() { return Iterables.string("[", " ", "]", this); }
 	}
 	
+	public static List list(Iterable<Value> it) {
+	    List.Builder builder = List.builder();
+	    for (Value v : it)
+	        builder.add(v);
+	    return builder.build();
+	}
+	
 	public static class Cons extends List {
 	    public final Value car;
 	    public Value cdr;
