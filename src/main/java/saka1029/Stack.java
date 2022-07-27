@@ -45,6 +45,7 @@ public class Stack {
 	    default Value div(Value right) { throw error(); }
 	    default Value mult(Value right) { throw error(); }
 	    default Value mod(Value right) { throw error(); }
+	    default Value cons(Value right) { return new Cons(this, right); }
 	}
 	
 	public static class Int implements Value {

@@ -35,5 +35,5 @@ public class TestStackCons {
         assertEquals(list(i(1)),
             toList(Iterables.filter(i -> ((Int)i).value % 2 == 1,list(i(0), i(1), i(2)))));
     }
-
+    
 }
