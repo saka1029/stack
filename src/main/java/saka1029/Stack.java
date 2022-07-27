@@ -1,12 +1,10 @@
 package saka1029;
 
-import java.nio.channels.UnsupportedAddressTypeException;
-import java.util.Arrays;
+import static saka1029.Iterables.*;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
 import java.util.Objects;
-import java.util.stream.Collectors;
 
 public class Stack {
 	
@@ -29,9 +27,7 @@ public class Stack {
 
 		@Override
 		public String toString() {
-			return Arrays.stream(stack)
-				.map(Value::toString)
-				.collect(Collectors.joining(", ", "[", "]"));
+		    return string("[", " ", "]", map(i -> stack[i], range(0, sp)));
 		}
 	}
 
