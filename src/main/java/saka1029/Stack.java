@@ -1,7 +1,10 @@
 package saka1029;
 
+import java.nio.channels.UnsupportedAddressTypeException;
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.Iterator;
+import java.util.Map;
 import java.util.Objects;
 import java.util.stream.Collectors;
 
@@ -10,15 +13,19 @@ public class Stack {
 	private Stack() {}
 	
 	public static class Context {
+	    final Map<String, Value> globals = new HashMap<>();
 		final Value[] stack;
 		int sp = 0;
 		
 		Context(int stackSize) { this.stack = new Value[stackSize]; }
 		
-		void push(Value v) { stack[sp++] = v; }
-		Value pop() { return stack[--sp]; }
-		Value peek(int offset) { return stack[sp - offset]; }
-		Value peek() { return peek(0); }
+		public void push(Value v) { stack[sp++] = v; }
+		public Value pop() { return stack[--sp]; }
+		public Value peek(int offset) { return stack[sp - offset]; }
+		public Value peek() { return peek(0); }
+		
+		public Value get(String name) { return globals.get(name); }
+		public void put(String name, Evaluable body) { globals.put(name, new Word(name, body)); }
 
 		@Override
 		public String toString() {
@@ -26,7 +33,6 @@ public class Stack {
 				.map(Value::toString)
 				.collect(Collectors.joining(", ", "[", "]"));
 		}
-		
 	}
 
 	interface Evaluable {
@@ -36,7 +42,13 @@ public class Stack {
 	interface Value extends Iterable<Value>, Evaluable {
 	    @Override default void eval(Context c) { c.push(this); }
 	    default void evlis(Context c) { eval(c); }
-	    @Override default Iterator<Value> iterator() { throw new UnsupportedOperationException(); }
+	    static RuntimeException error() { return new UnsupportedOperationException(); }
+	    @Override default Iterator<Value> iterator() { throw error(); }
+	    default Value plus(Value right) { throw error(); }
+	    default Value minus(Value right) { throw error(); }
+	    default Value div(Value right) { throw error(); }
+	    default Value mult(Value right) { throw error(); }
+	    default Value mod(Value right) { throw error(); }
 	}
 	
 	public static class Int implements Value {
@@ -45,6 +57,11 @@ public class Stack {
 	    @Override public int hashCode() { return value; }
 	    @Override public boolean equals(Object obj) { return obj instanceof Int i && i.value == value; }
 	    @Override public String toString() { return Integer.toString(value); }
+	    @Override public Value plus(Value right) { return new Int(value + ((Int)right).value); }
+	    @Override public Value minus(Value right) { return new Int(value - ((Int)right).value); }
+	    @Override public Value div(Value right) { return new Int(value / ((Int)right).value); }
+	    @Override public Value mult(Value right) { return new Int(value * ((Int)right).value); }
+	    @Override public Value mod(Value right) { return new Int(value % ((Int)right).value); }
 	}
 	
 	public static abstract class List implements Value {
@@ -102,6 +119,14 @@ public class Stack {
 	    @Override public boolean equals(Object obj) { return obj instanceof Cons c && c.car.equals(car) && c.cdr.equals(cdr); }
 	}
 
+	static class Word implements Value {
+	    public final String name;
+	    public final Evaluable body;
+	    Word(String name, Evaluable body) { this.name = name; this.body = body; }
+	    @Override public void eval(Context c) { body.eval(c); }
+	    @Override public String toString() { return name; }
+	}
+
 	// static methods
     public static Int i(int i) { return new Int(i); }
     public static List list(Value... values) { return List.of(values); }
@@ -113,5 +138,6 @@ public class Stack {
     }
     public static Cons cons(Value a, Value b) { return new Cons(a, b); }
     public static final List NIL = List.NIL;
+    public static Word word(String name, Evaluable body) { return new Word(name, body); }
 
 }
