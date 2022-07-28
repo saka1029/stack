@@ -49,6 +49,8 @@ public class Stack {
 	    default Value div(Value right) { throw error(); }
 	    default Value mult(Value right) { throw error(); }
 	    default Value mod(Value right) { throw error(); }
+	    default Value car() { throw error(); }
+	    default Value cdr() { throw error(); }
 	    default Value cons(Value right) { return new Cons(this, right); }
 	}
 	
@@ -113,15 +115,16 @@ public class Stack {
 	}
 	
 	public static class Str implements Value {
-	    public final int[] codePoints;
+	    public final int[] values;
 	    Str(int[] codePoints) {
-	        this.codePoints = codePoints;
+	        this.values = codePoints;
 	    }
-	    public static Str of(String s) { return new Str(s.codePoints().toArray()); }
-	    @Override public String toString() { return new String(codePoints, 0, codePoints.length); }
+	    @Override public int hashCode() { return Arrays.hashCode(values); }
+	    @Override public boolean equals(Object obj) { return obj instanceof Str s && Arrays.equals(s.values, values); }
+	    @Override public String toString() { return new String(values, 0, values.length); }
 	    @Override
 	    public Iterator<Value> iterator() {
-	        return Arrays.stream(codePoints).mapToObj(c -> (Value)new Int(c)).iterator();
+	        return Arrays.stream(values).mapToObj(c -> (Value)new Int(c)).iterator();
 	    }
 	}
 	
@@ -131,6 +134,8 @@ public class Stack {
 	    Cons(Value car, Value cdr) { this.car = car; this.cdr = cdr; }
 	    @Override public int hashCode() { return Objects.hash(car, cdr); }
 	    @Override public boolean equals(Object obj) { return obj instanceof Cons c && c.car.equals(car) && c.cdr.equals(cdr); }
+	    @Override public Value car() { return car; }
+	    @Override public Value cdr() { return cdr; }
 	}
 
 	static class Word implements Value {
@@ -151,7 +156,7 @@ public class Stack {
 
 	// static methods
     public static Int i(int i) { return new Int(i); }
-    public static Str s(String s) { return Str.of(s); }
+    public static Str s(String s) { return new Str(s.codePoints().toArray()); }
     public static List list(Value... values) { return List.of(values); }
     public static List toList(Iterable<Value> it) {
         List.Builder builder = List.builder();
@@ -159,6 +164,8 @@ public class Stack {
             builder.add(v);
         return builder.build();
     }
+    public static Value car(Value a) { return a.car(); }
+    public static Value cdr(Value a) { return a.cdr(); }
     public static Cons cons(Value a, Value b) { return new Cons(a, b); }
     public static final List NIL = List.NIL;
     public static Word word(String name, Loadable body) { return new Word(name, body); }

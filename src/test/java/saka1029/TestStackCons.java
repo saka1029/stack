@@ -20,7 +20,23 @@ public class TestStackCons {
     public void testEquals() {
         assertEquals(NIL, list());
         assertEquals(list(i(0)), list(i(0)));
-        assertEquals(list(i(0), i(1)), list(i(0), i(1)));
+        assertEquals(list(i(0), i(1)), cons(i(0), list(i(1))));
+    }
+    
+    @Test
+    public void testCons() {
+        assertEquals(list(i(1)), cons(i(1), NIL));
+    }
+    
+    @Test
+    public void testCar() {
+        assertEquals(i(1), car(list(i(1))));
+    }
+    
+    @Test
+    public void testCdr() {
+        assertEquals(list(), cdr(list(i(1))));
+        assertEquals(NIL, cdr(list(i(1))));
     }
     
     @Test

@@ -10,6 +10,11 @@ import org.junit.Test;
 public class TestStackStr {
 
     @Test
+    public void testEquals() {
+        assertEquals(s("𩸽"), s("𩸽"));
+    }
+
+    @Test
     public void testSize() {
         assertEquals(i(3), s("abc").size());
         assertEquals(i(3), s("魚は𩸽").size());
