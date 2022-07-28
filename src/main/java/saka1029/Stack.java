@@ -2,6 +2,7 @@ package saka1029;
 
 import static saka1029.Iterables.*;
 
+import java.io.Reader;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -138,6 +139,14 @@ public class Stack {
 	    Word(String name, Loadable body) { this.name = name; this.body = body; }
 	    @Override public void load(Context c) { body.load(c); }
 	    @Override public String toString() { return name; }
+	}
+	
+	public static class Parser {
+	    final Reader reader;
+	    Parser(Reader reader) { this.reader = reader; }
+	    Value read() {
+	        return null;
+	    }
 	}
 
 	// static methods
