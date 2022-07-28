@@ -12,7 +12,7 @@ public class TestStackWord {
 
     static Value eval(Context c, Value... block) {
         Value v = list(block);
-        v.evlis(c);
+        v.eval(c);
         return c.pop();
     }
 
@@ -22,7 +22,7 @@ public class TestStackWord {
             c.accept(t);
     }
     
-    static Evaluable binary(BinaryOperator<Value> op) {
+    static Loadable binary(BinaryOperator<Value> op) {
         return c -> {
             Value r = c.pop(), l = c.pop();
             c.push(op.apply(l, r));
@@ -43,10 +43,10 @@ public class TestStackWord {
     public void testCons() {
         Word plus = word("+", binary((a, b) -> a.plus(b)));
         Word cons = word("cons", binary((a, b) -> a.cons(b)));
-        Word eval = word("eval", c -> { c.pop().evlis(c); c.push(c.pop()); });
+        Word eval = word("eval", c -> { c.pop().eval(c); c.push(c.pop()); });
         List p = list(i(1), i(2), list(plus), cons, cons, eval);
         Context context = new Context(10);
-        p.evlis(context);
+        p.eval(context);
         System.out.println(p + " -> " + context);
         assertEquals(i(3), context.pop());
     }

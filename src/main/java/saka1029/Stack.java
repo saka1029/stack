@@ -1,6 +1,8 @@
 package saka1029;
 
 import static saka1029.Iterables.*;
+
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
@@ -23,7 +25,7 @@ public class Stack {
 		public Value peek() { return peek(0); }
 		
 		public Value get(String name) { return globals.get(name); }
-		public void put(String name, Evaluable body) { globals.put(name, new Word(name, body)); }
+		public void put(String name, Loadable body) { globals.put(name, new Word(name, body)); }
 
 		@Override
 		public String toString() {
@@ -31,15 +33,16 @@ public class Stack {
 		}
 	}
 
-	interface Evaluable {
-		void eval(Context c);
+	interface Loadable {
+		void load(Context c);
 	}
 	
-	interface Value extends Iterable<Value>, Evaluable {
-	    @Override default void eval(Context c) { c.push(this); }
-	    default void evlis(Context c) { eval(c); }
+	interface Value extends Iterable<Value>, Loadable {
+	    @Override default void load(Context c) { c.push(this); }
+	    default void eval(Context c) { load(c); }
 	    static RuntimeException error() { return new UnsupportedOperationException(); }
 	    @Override default Iterator<Value> iterator() { throw error(); }
+	    default Value size() { return new Int(count(this)); }
 	    default Value plus(Value right) { throw error(); }
 	    default Value minus(Value right) { throw error(); }
 	    default Value div(Value right) { throw error(); }
@@ -88,7 +91,7 @@ public class Stack {
 
 	    public static Builder builder() { return new Builder(); }
 	    
-	    @Override public void evlis(Context c) { for (Value v : this) v.eval(c); }
+	    @Override public void eval(Context c) { for (Value v : this) v.load(c); }
 
 	    @Override
 	    public Iterator<Value> iterator() {
@@ -108,6 +111,19 @@ public class Stack {
 	    @Override public String toString() { return Iterables.string("[", " ", "]", this); }
 	}
 	
+	public static class Str implements Value {
+	    public final int[] codePoints;
+	    Str(int[] codePoints) {
+	        this.codePoints = codePoints;
+	    }
+	    public static Str of(String s) { return new Str(s.codePoints().toArray()); }
+	    @Override public String toString() { return new String(codePoints, 0, codePoints.length); }
+	    @Override
+	    public Iterator<Value> iterator() {
+	        return Arrays.stream(codePoints).mapToObj(c -> (Value)new Int(c)).iterator();
+	    }
+	}
+	
 	public static class Cons extends List {
 	    public final Value car;
 	    public Value cdr;
@@ -118,14 +134,15 @@ public class Stack {
 
 	static class Word implements Value {
 	    public final String name;
-	    public final Evaluable body;
-	    Word(String name, Evaluable body) { this.name = name; this.body = body; }
-	    @Override public void eval(Context c) { body.eval(c); }
+	    public final Loadable body;
+	    Word(String name, Loadable body) { this.name = name; this.body = body; }
+	    @Override public void load(Context c) { body.load(c); }
 	    @Override public String toString() { return name; }
 	}
 
 	// static methods
     public static Int i(int i) { return new Int(i); }
+    public static Str s(String s) { return Str.of(s); }
     public static List list(Value... values) { return List.of(values); }
     public static List toList(Iterable<Value> it) {
         List.Builder builder = List.builder();
@@ -135,6 +152,6 @@ public class Stack {
     }
     public static Cons cons(Value a, Value b) { return new Cons(a, b); }
     public static final List NIL = List.NIL;
-    public static Word word(String name, Evaluable body) { return new Word(name, body); }
+    public static Word word(String name, Loadable body) { return new Word(name, body); }
 
 }
