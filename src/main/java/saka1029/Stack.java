@@ -42,18 +42,37 @@ public class Stack {
 	    @Override default void load(Context c) { c.push(this); }
 	    default void eval(Context c) { load(c); }
 	    static RuntimeException error() { return new UnsupportedOperationException(); }
-	    @Override default Iterator<Value> iterator() { throw error(); }
-	    default Value size() { return new Int(count(this)); }
-	    default Value plus(Value right) { throw error(); }
+	    default Value not() { throw error(); }
+	    default Value and(Value right) { throw error(); }
+	    default Value or(Value right) { throw error(); }
+	    default Value xor(Value right) { throw error(); }
 	    default Value minus(Value right) { throw error(); }
 	    default Value div(Value right) { throw error(); }
 	    default Value mult(Value right) { throw error(); }
 	    default Value mod(Value right) { throw error(); }
+	    @Override default Iterator<Value> iterator() { throw error(); }
+	    default Value size() { return new Int(count(this)); }
+	    default Value plus(Value right) { throw error(); }
 	    default Value car() { throw error(); }
 	    default Value cdr() { throw error(); }
 	    default Value cons(Value right) { return new Cons(this, right); }
 	}
 	
+	public static class Bool implements Value {
+	    public final boolean value;
+	    public static final Bool TRUE = new Bool(true);
+	    public static final Bool FALSE = new Bool(false);
+	    Bool(boolean value) { this.value = value; }
+	    @Override public int hashCode() { return value ? 1 : 0; }
+	    @Override public boolean equals(Object obj) { return obj instanceof Bool b && b.value == value; }
+	    static Bool bool(boolean v) { return v ? TRUE : FALSE; }
+	    @Override public Value not() { return bool(!value); }
+	    @Override public Value and(Value right) { return bool(value && ((Bool)right).value); }
+	    @Override public Value or(Value right) { return bool(value || ((Bool)right).value); }
+	    @Override public Value xor(Value right) { return bool(value ^ ((Bool)right).value); }
+	    @Override public String toString() { return value ? "true" : "false"; }
+	}
+
 	public static class Int implements Value {
 	    public final int value;
 	    Int(int value) { this.value = value; }
@@ -155,6 +174,8 @@ public class Stack {
 	}
 
 	// static methods
+	public static final Bool TRUE = Bool.TRUE;
+	public static final Bool FALSE = Bool.FALSE;
     public static Int i(int i) { return new Int(i); }
     public static Str s(String s) { return new Str(s.codePoints().toArray()); }
     public static List list(Value... values) { return List.of(values); }
