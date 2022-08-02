@@ -165,6 +165,20 @@ public class Stack {
 	    @Override public String toString() { return name; }
 	}
 	
+	/**
+	 * <pre><code>
+	 * SYNTAX
+	 * program        : { element }.
+	 * element        : word | integer | string | block.
+	 * word           : ANY_CHAR { ANY_CHAR }.
+	 * integer        : [ '-' ] DIGIT { DIGIT }
+	 * string         : '"' { '/' ['n' 'r' 't' '\"' '\''] | (ANY_CHAR - ('"' '\\') } '"'.
+	 * block          : '[' program ']'.
+	 * DIGIT          : ('0' - '9').
+	 * WORD_CHAR      : ANY_CHAR - ('"' '\'' '\\' '(' ')' '[' ']' '{' '}').
+	 *
+	 * </code></pre>
+	 */
 	public static class Parser {
 	    final Reader reader;
 	    Parser(Reader reader) { this.reader = reader; }
