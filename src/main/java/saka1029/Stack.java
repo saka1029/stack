@@ -170,12 +170,13 @@ public class Stack {
 	 * SYNTAX
 	 * program        : { element }.
 	 * element        : word | integer | string | block.
-	 * word           : ANY_CHAR { ANY_CHAR }.
+	 * word           : WORD_CHAR1 { WORD_CHAR }.
 	 * integer        : [ '-' ] DIGIT { DIGIT }
-	 * string         : '"' { '/' ['n' 'r' 't' '\"' '\''] | (ANY_CHAR - ('"' '\\') } '"'.
+	 * string         : '"' { '/' ('n' | 'r' | 't' | '\"' | '\'') | (ANY_CHAR - '"' - '\\') } '"'.
 	 * block          : '[' program ']'.
-	 * DIGIT          : ('0' - '9').
-	 * WORD_CHAR      : ANY_CHAR - ('"' '\'' '\\' '(' ')' '[' ']' '{' '}').
+	 * DIGIT          : '0' | '1' | '2' | '3' | '4' | '5' | '6' | '7' | '8' | '9'.
+	 * WORD_CHAR      : ANY_CHAR - SPACES - '"' - '\'' - '\\' - '(' - ')' - '[' - ']' - '{' - '}'.
+	 * WORD_CHAR1     : WORD_CHAR - DIGIT.
 	 *
 	 * </code></pre>
 	 */
