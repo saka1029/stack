@@ -183,6 +183,18 @@ public class Stack {
 	public static class Parser {
 	    final Reader reader;
 	    Parser(Reader reader) { this.reader = reader; }
+	    static boolean isDigit(int ch) { return ch >= '0' && ch <= '9'; }
+	    static boolean isSpace(int ch) { return Character.isWhitespace(ch); }
+	    static boolean isWord(int ch) {
+	        switch (ch) {
+	        case '\"': case '\'': case '\\':
+	        case '(': case ')': case '{': case '}':
+                return false;
+            default:
+                return !isSpace(ch);
+	        }
+	    }
+	    static boolean isWord1(int ch) { return !isDigit(ch) && isWord(ch); }
 	    Value read() {
 	        return null;
 	    }
