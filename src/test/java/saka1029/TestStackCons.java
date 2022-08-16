@@ -52,4 +52,10 @@ public class TestStackCons {
             toList(Iterables.filter(i -> ((Int)i).value % 2 == 1,list(i(0), i(1), i(2)))));
     }
     
+    @Test
+    public void testExcel() {
+        System.out.println(1.3 - 1.2 - 0.1);
+        
+    }
+    
 }
