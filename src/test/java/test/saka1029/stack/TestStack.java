@@ -162,10 +162,13 @@ public class TestStack {
     }
 
     static Element expand(Element element, Context context) {
-        if (!(element instanceof List.ListInstruction list))
+        List list;
+        if (element instanceof List.ListInstruction x)
+            list = x.list;
+        else
             return element;
         java.util.List<Element> result = new ArrayList<>();
-        for (Element e : list.list) {
+        for (Element e : list) {
             if (e instanceof Word w) {
                 Element inst = context.instruction(w.name);
                 if (inst != null)
@@ -192,5 +195,8 @@ public class TestStack {
         even.execute(c);
         assertEquals(1, c.size());
         assertEquals(Bool.FALSE, c.pop());
+        run(c, "/fact (dup 0 <= (drop 1) (dup 1 - fact *) if) define");
+        Element fact = expand(c.instruction("fact"), c);
+        logger.info(fact.toString());
     }
 }
