@@ -179,6 +179,9 @@ public class TestStack {
         return List.of(result, List.NIL).instruction();
     }
 
+    /**
+     * TODO: リスト内のブロックが展開されない。
+     */
     @Test
     public void testExpand() {
         Context c = Context.of();
