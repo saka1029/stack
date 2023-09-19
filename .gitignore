@@ -1,5 +1,9 @@
-target/
-lib/
-.settings/
-.classpath
-.project
+/target/
+/debug/
+/.settings/
+/.classpath
+/.project
+*.lck
+*.log
+.~lock*
+/bin/
