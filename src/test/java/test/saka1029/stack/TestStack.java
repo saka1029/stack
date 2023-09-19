@@ -165,8 +165,14 @@ public class TestStack {
         if (!(element instanceof List.ListInstruction list))
             return element;
         java.util.List<Element> result = new ArrayList<>();
-        for (Element e : list.list)
-            result.add(e instanceof Word w ? context.instruction(w.name) : expand(e, context));
+        for (Element e : list.list) {
+            if (e instanceof Word w) {
+                Element inst = context.instruction(w.name);
+                if (inst != null)
+                    e = inst;
+            }
+            result.add(expand(e, context));
+        }
         return List.of(result, List.NIL).instruction();
     }
 
