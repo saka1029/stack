@@ -145,12 +145,12 @@ public class TestElementReader {
     }
 
     @Test
-    public void testFor() {
+    public void testForEach() {
         Context c = Context.of();
-        assertEquals(eval(c, "10"), eval(c, "0 (1 2 3 4) (+) for"));
-        assertEquals(eval(c, "((((() . 1) . 2) . 3) . 4)"), eval(c, "() (1 2 3 4) (pair) for"));
-        assertEquals(eval(c, "(4 3 2 1)"), eval(c, "() (1 2 3 4) (swap pair) for"));
-        assertEquals(eval(c, "(4 3 2 1)"), eval(c, "/reverse (() swap (swap pair) for) define (1 2 3 4) reverse"));
+        assertEquals(eval(c, "10"), eval(c, "0 (1 2 3 4) (+) foreach"));
+        assertEquals(eval(c, "((((() . 1) . 2) . 3) . 4)"), eval(c, "() (1 2 3 4) (pair) foreach"));
+        assertEquals(eval(c, "(4 3 2 1)"), eval(c, "() (1 2 3 4) (swap pair) foreach"));
+        assertEquals(eval(c, "(4 3 2 1)"), eval(c, "/reverse (() swap (swap pair) foreach) define (1 2 3 4) reverse"));
     }
 
     /**

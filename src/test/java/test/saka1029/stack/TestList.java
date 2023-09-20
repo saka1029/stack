@@ -95,15 +95,15 @@ public class TestList {
     }
 
     /**
-     * 0 (1 2 3) (+) for -> 6
+     * 0 (1 2 3) (+) foreach -> 6
      */
     @Test
-    public void testFor() {
+    public void testForEach() {
         Context context = Context.of();
         Int.ZERO.execute(context);
         context.execute(List.of(Int.ONE, Int.TWO, Int.THREE));
         context.execute(List.of(context.word("+")));
-        context.execute("for");
+        context.execute("foreach");
         assertEquals(1, context.size());
         assertEquals(Int.of(6), context.pop());
     }

@@ -1,5 +1,6 @@
 package saka1029.stack;
 
+import java.io.StringReader;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.Map;
@@ -74,6 +75,20 @@ public class Context {
 
     public void execute(Element element) {
         element.execute(this);
+    }
+
+    public void run(String text) {
+        ElementReader reader = ElementReader.of(this, new StringReader(text));
+        Element e;
+        while ((e = reader.read()) != null)
+            execute(e);
+    }
+
+    public Element eval(String text) {
+        int s = size();
+        run(text);
+        assert s + 1 == size();
+        return pop();
     }
 
     @Override
@@ -175,6 +190,7 @@ public class Context {
         });
 
         instruction("execute", c -> ((List) c.pop()).executeAll(c));
+
         instruction("if", c -> {
             List e = (List) c.pop(), t = (List) c.pop();
             Bool b = (Bool) c.pop();
@@ -183,13 +199,32 @@ public class Context {
             else
                 e.executeAll(c);
         });
-        instruction("for", c -> {
+
+        instruction("foreach", c -> {
             List b = (List) c.pop(), l = (List) c.pop();
             for (Element e : l) {
                 c.push(e);
                 b.executeAll(c);
             }
         });
+
+        instruction("for", c -> {
+            List lambda = (List)c.pop();
+            int step = ((Int)c.pop()).value, to = ((Int)c.pop()).value, from = ((Int)c.pop()).value;
+            if (step == 0)
+                throw new RuntimeException("Step must not be zero");
+            else if (step > 0)
+                for (int i = from; i <= to; i += step) {
+                    c.push(Int.of(i));
+                    lambda.executeAll(c);
+                }
+            else
+                for (int i = from; i >= to; i += step) {
+                    c.push(Int.of(i));
+                    lambda.executeAll(c);
+                }
+        });
+
         instruction("define", c -> {
             List list = (List) c.pop();
             Str name = (Str) c.pop();

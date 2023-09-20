@@ -2,7 +2,6 @@ package test.saka1029.stack;
 
 import static org.junit.Assert.assertEquals;
 
-import java.io.StringReader;
 import java.util.ArrayList;
 import java.util.logging.Logger;
 
@@ -12,47 +11,46 @@ import saka1029.Common;
 import saka1029.stack.Bool;
 import saka1029.stack.Context;
 import saka1029.stack.Element;
-import saka1029.stack.ElementReader;
 import saka1029.stack.Int;
 import saka1029.stack.List;
-import saka1029.stack.Word;
 import saka1029.stack.List.ListInstruction;
+import saka1029.stack.Word;
 
 public class TestStack {
     
     static final Logger logger = Common.logger(TestStack.class);
 
-    static void run(Context context, String text) {
-        ElementReader reader = ElementReader.of(context, new StringReader(text));
-        Element e;
-        while ((e = reader.read()) != null)
-            context.execute(e);
-    }
-
-    static Element eval(Context context, String text) {
-        int s = context.size();
-        run(context, text);
-        assertEquals(s + 1, context.size());
-        return context.pop();
-    }
+//    static void run(Context context, String text) {
+//        ElementReader reader = ElementReader.of(context, new StringReader(text));
+//        Element e;
+//        while ((e = reader.read()) != null)
+//            context.execute(e);
+//    }
+//
+//    static Element eval(Context context, String text) {
+//        int s = context.size();
+//        run(context, text);
+//        assertEquals(s + 1, context.size());
+//        return context.pop();
+//    }
 
     @Test
     public void testFact() {
         Context c = Context.of();
-        run(c, "/fact (dup 0 <= (drop 1) (dup 1 - fact *) if) define");
-        assertEquals(eval(c, "1"), eval(c, "0 fact"));
-        assertEquals(eval(c, "1"), eval(c, "1 fact"));
-        assertEquals(eval(c, "6"), eval(c, "3 fact"));
-        assertEquals(eval(c, "120"), eval(c, "5 fact"));
+        c.run("/fact (dup 0 <= (drop 1) (dup 1 - fact *) if) define");
+        assertEquals(c.eval("1"), c.eval("0 fact"));
+        assertEquals(c.eval("1"), c.eval("1 fact"));
+        assertEquals(c.eval("6"), c.eval("3 fact"));
+        assertEquals(c.eval("120"), c.eval("5 fact"));
     }
     
     @Test
-    public void testReverseByFor() {
+    public void testReverseByForEach() {
         Context c = Context.of();
-        run(c, "/reverse (() swap (swap pair) for) define");
-        assertEquals(eval(c, "()"), eval(c, "() reverse"));
-        assertEquals(eval(c, "(1)"), eval(c, "(1) reverse"));
-        assertEquals(eval(c, "(3 2 1)"), eval(c, "(1 2 3) reverse"));
+        c.run("/reverse (() swap (swap pair) foreach) define");
+        assertEquals(c.eval("()"), c.eval("() reverse"));
+        assertEquals(c.eval("(1)"), c.eval("(1) reverse"));
+        assertEquals(c.eval("(3 2 1)"), c.eval("(1 2 3) reverse"));
     }
     
     /**
@@ -71,12 +69,12 @@ public class TestStack {
     @Test
     public void testAppend() {
         Context c = Context.of();
-        run(c, "/append (swap dup () == (drop) (unpair rot append pair) if) define");
-        assertEquals(eval(c, "(1 2 3 4)"), eval(c, "() (1 2 3 4) append"));
-        assertEquals(eval(c, "(1 2 3 4)"), eval(c, "(1) (2 3 4) append"));
-        assertEquals(eval(c, "(1 2 3 4)"), eval(c, "(1 2) (3 4) append"));
-        assertEquals(eval(c, "(1 2 3 4)"), eval(c, "(1 2 3) (4) append"));
-        assertEquals(eval(c, "(1 2 3 4)"), eval(c, "(1 2 3 4) () append"));
+        c.run("/append (swap dup () == (drop) (unpair rot append pair) if) define");
+        assertEquals(c.eval("(1 2 3 4)"), c.eval("() (1 2 3 4) append"));
+        assertEquals(c.eval("(1 2 3 4)"), c.eval("(1) (2 3 4) append"));
+        assertEquals(c.eval("(1 2 3 4)"), c.eval("(1 2) (3 4) append"));
+        assertEquals(c.eval("(1 2 3 4)"), c.eval("(1 2 3) (4) append"));
+        assertEquals(c.eval("(1 2 3 4)"), c.eval("(1 2 3 4) () append"));
     }
 
     /**
@@ -95,11 +93,11 @@ public class TestStack {
     @Test
     public void testReverseRecursion() {
         Context c = Context.of();
-        run(c, "/append (swap dup () == (drop) (unpair rot append pair) if) define");
-        run(c, "/reverse (dup () == () (unpair reverse swap () pair append) if) define");
-        assertEquals(eval(c, "()"), eval(c, "() reverse"));
-        assertEquals(eval(c, "(1)"), eval(c, "(1) reverse"));
-        assertEquals(eval(c, "(3 2 1)"), eval(c, "(1 2 3) reverse"));
+        c.run("/append (swap dup () == (drop) (unpair rot append pair) if) define");
+        c.run("/reverse (dup () == () (unpair reverse swap () pair append) if) define");
+        assertEquals(c.eval("()"), c.eval("() reverse"));
+        assertEquals(c.eval("(1)"), c.eval("(1) reverse"));
+        assertEquals(c.eval("(3 2 1)"), c.eval("(1 2 3) reverse"));
     }
     
     /**
@@ -123,9 +121,9 @@ public class TestStack {
     @Test
     public void testMap() {
         Context c = Context.of();
-        run(c, "/map (swap dup () == () (unpair swap @2 execute swap @2 map pair) if swap drop) define");
-        assertEquals(eval(c, "(4 9 16)"), eval(c, "(2 3 4) (dup *) map"));
-        assertEquals(eval(c, "(4 9 16)"), eval(c, "(1 2 3) (1 +) map (dup *) map"));
+        c.run("/map (swap dup () == () (unpair swap @2 execute swap @2 map pair) if swap drop) define");
+        assertEquals(c.eval("(4 9 16)"), c.eval("(2 3 4) (dup *) map"));
+        assertEquals(c.eval("(4 9 16)"), c.eval("(1 2 3) (1 +) map (dup *) map"));
     }
     
     /**
@@ -148,17 +146,17 @@ public class TestStack {
     @Test
     public void testFilter() {
         Context c = Context.of();
-        run(c, "/even (2 % 0 ==) define");
-        run(c, "/odd (even not) define");
-        run(c, "/filter (swap dup () == () (unpair @2 filter swap dup @3 execute (swap pair) (drop) if) if swap drop) define");
-        assertEquals(eval(c, "()"), eval(c, "() (odd) filter"));
-        assertEquals(eval(c, "()"), eval(c, "(0) (odd) filter"));
-        assertEquals(eval(c, "(3)"), eval(c, "(3) (odd) filter"));
-        assertEquals(eval(c, "(3)"), eval(c, "(0 3) (odd) filter"));
-        assertEquals(eval(c, "(3)"), eval(c, "(3 0) (odd) filter"));
-        assertEquals(eval(c, "(1)"), eval(c, "(0 1 2) (odd) filter"));
-        assertEquals(eval(c, "(0 2)"), eval(c, "(0 1 2 3) (even) filter"));
-        assertEquals(eval(c, "(1 3)"), eval(c, "(0 1 2 3) (odd) filter"));
+        c.run("/even (2 % 0 ==) define");
+        c.run("/odd (even not) define");
+        c.run("/filter (swap dup () == () (unpair @2 filter swap dup @3 execute (swap pair) (drop) if) if swap drop) define");
+        assertEquals(c.eval("()"), c.eval("() (odd) filter"));
+        assertEquals(c.eval("()"), c.eval("(0) (odd) filter"));
+        assertEquals(c.eval("(3)"), c.eval("(3) (odd) filter"));
+        assertEquals(c.eval("(3)"), c.eval("(0 3) (odd) filter"));
+        assertEquals(c.eval("(3)"), c.eval("(3 0) (odd) filter"));
+        assertEquals(c.eval("(1)"), c.eval("(0 1 2) (odd) filter"));
+        assertEquals(c.eval("(0 2)"), c.eval("(0 1 2 3) (even) filter"));
+        assertEquals(c.eval("(1 3)"), c.eval("(0 1 2 3) (odd) filter"));
     }
 
     static Element expand(Element element, Context context) {
@@ -185,7 +183,7 @@ public class TestStack {
     @Test
     public void testExpand() {
         Context c = Context.of();
-        run(c, "/even (2 % 0 ==) define");
+        c.run("/even (2 % 0 ==) define");
         assertEquals("(2 % 0 ==)", c.instruction("even").toString());
         Element even = expand(c.instruction("even"), c);
         logger.info(even.toString());
@@ -198,8 +196,16 @@ public class TestStack {
         even.execute(c);
         assertEquals(1, c.size());
         assertEquals(Bool.FALSE, c.pop());
-        run(c, "/fact (dup 0 <= (drop 1) (dup 1 - fact *) if) define");
+        c.run("/fact (dup 0 <= (drop 1) (dup 1 - fact *) if) define");
         Element fact = expand(c.instruction("fact"), c);
         logger.info(fact.toString());
+    }
+    
+    @Test
+    public void testFor() {
+       Context c = Context.of();
+       assertEquals(Int.of(6), c.eval("0 1 3 1 (+) for"));
+       assertEquals(c.eval("(1 2 3)"), c.eval("() 3 1 -1 (swap pair) for"));
+       assertEquals(c.eval("()"), c.eval("() 1 3 -1 (swap pair) for"));
     }
 }
