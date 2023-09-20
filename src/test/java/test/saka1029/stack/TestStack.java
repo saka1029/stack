@@ -217,10 +217,10 @@ public class TestStack {
        assertEquals(c.eval("()"), c.eval("0 iota")); 
        assertEquals(c.eval("(1)"), c.eval("1 iota")); 
        assertEquals(c.eval("(1 2 3)"), c.eval("3 iota")); 
-       c.run("/fact (iota 1 swap (*) foreach) define");
-       assertEquals(c.eval("1"), c.eval("0 fact")); 
-       assertEquals(c.eval("1"), c.eval("1 fact")); 
-       assertEquals(c.eval("6"), c.eval("3 fact")); 
-       assertEquals(c.eval("120"), c.eval("5 fact")); 
+       c.run("/! (iota 1 swap (*) foreach) define");
+       assertEquals(c.eval("1"), c.eval("0 !")); 
+       assertEquals(c.eval("1"), c.eval("1 !")); 
+       assertEquals(c.eval("6"), c.eval("3 !")); 
+       assertEquals(c.eval("120"), c.eval("5 !")); 
     }
 }
