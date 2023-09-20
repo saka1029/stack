@@ -208,4 +208,13 @@ public class TestStack {
        assertEquals(c.eval("(1 2 3)"), c.eval("() 3 1 -1 (swap pair) for"));
        assertEquals(c.eval("()"), c.eval("() 1 3 -1 (swap pair) for"));
     }
+    
+    @Test
+    public void testIota() {
+       Context c = Context.of();
+       c.run("/iota (() swap 1 -1 (swap pair) for) define");
+       assertEquals(c.eval("()"), c.eval("0 iota")); 
+       assertEquals(c.eval("(1)"), c.eval("1 iota")); 
+       assertEquals(c.eval("(1 2 3)"), c.eval("3 iota")); 
+    }
 }
