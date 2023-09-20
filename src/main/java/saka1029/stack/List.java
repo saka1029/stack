@@ -55,7 +55,7 @@ public interface List extends Value, Iterable<Element> {
         };
     }
     
-    public class ListInstruction implements Element {
+    public static class ListInstruction implements Element {
         public final List list;
 
         ListInstruction(List list) {
