@@ -20,20 +20,6 @@ public class TestStack {
     
     static final Logger logger = Common.logger(TestStack.class);
 
-//    static void run(Context context, String text) {
-//        ElementReader reader = ElementReader.of(context, new StringReader(text));
-//        Element e;
-//        while ((e = reader.read()) != null)
-//            context.execute(e);
-//    }
-//
-//    static Element eval(Context context, String text) {
-//        int s = context.size();
-//        run(context, text);
-//        assertEquals(s + 1, context.size());
-//        return context.pop();
-//    }
-
     @Test
     public void testFact() {
         Context c = Context.of();
@@ -209,6 +195,21 @@ public class TestStack {
        assertEquals(c.eval("()"), c.eval("() 1 3 -1 (swap pair) for"));
     }
     
+    /**
+     * <pre>
+     * 3 iota
+     * 
+     * 3 : ()
+     * 3 () : swap
+     * () 3 : 1 -1 (swap pair)
+     * () 3 1 -1 (swap pair) : for
+     * 
+     * () 3 : (swap pair)
+     * (3) 2 : (swap pair)
+     * (2 3) 1 : (swap pair)
+     * (1 2 3)
+     * </pre>
+     */
     @Test
     public void testIota() {
        Context c = Context.of();
@@ -216,5 +217,10 @@ public class TestStack {
        assertEquals(c.eval("()"), c.eval("0 iota")); 
        assertEquals(c.eval("(1)"), c.eval("1 iota")); 
        assertEquals(c.eval("(1 2 3)"), c.eval("3 iota")); 
+       c.run("/fact (iota 1 swap (*) foreach) define");
+       assertEquals(c.eval("1"), c.eval("0 fact")); 
+       assertEquals(c.eval("1"), c.eval("1 fact")); 
+       assertEquals(c.eval("6"), c.eval("3 fact")); 
+       assertEquals(c.eval("120"), c.eval("5 fact")); 
     }
 }
