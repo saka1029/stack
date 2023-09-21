@@ -2,20 +2,21 @@ package saka1029.stack;
 
 import java.io.IOException;
 import java.io.Reader;
+import java.util.regex.Pattern;
 
 public class ElementReader {
     final Context context;
     final Reader reader;
     int ch;
-    
+
     ElementReader(Context context, Reader reader) {
         this.context = context;
         this.reader = reader;
         get();
     }
-    
+
     public static ElementReader of(Context context, Reader reader) {
-    	return new ElementReader(context, reader);
+        return new ElementReader(context, reader);
     }
 
     int get() {
@@ -25,95 +26,77 @@ public class ElementReader {
             throw new RuntimeException(e);
         }
     }
-    
+
     void spaces() {
         while (Character.isWhitespace(ch))
             get();
     }
-    
-    static boolean isWord(int ch) {
-        return switch (ch) {
-            case -1, '(', ')', '/', '.' -> false;
-            default -> !Character.isWhitespace(ch);
-        };
-    }
-    
-    Element identifier() {
-        get(); // skip '/'
-        spaces();
-        StringBuilder sb = new StringBuilder();
-        while (isWord(ch)) {
-            sb.append((char)ch);
-            get();
-        }
-        return Str.of(sb.toString());
+
+    static RuntimeException error(String format, Object... args) {
+        return new RuntimeException(format.formatted(args));
     }
 
-    Element integer(int first) {
-        StringBuilder sb = new StringBuilder();
-        if (first != 0)
-            sb.append((char)first);
-        while (Character.isDigit(ch)) {
-            sb.append((char)ch);
-            get();
-        }
-        return Int.of(Integer.parseInt(sb.toString()));
-    }
-
-    Element word(int first) {
-        StringBuilder sb = new StringBuilder();
-        if (first != 0)
-            sb.append((char)first);
-        while (isWord(ch)) {
-            sb.append((char)ch);
-            get();
-        }
-        return context.word(sb.toString());
-    }
-    
-    Element list() {
+    List list() {
         get(); // skip '('
+        spaces();
         java.util.List<Element> list = new java.util.ArrayList<>();
         while (ch != -1 && ch != ')' && ch != '.') {
             list.add(read());
             spaces();
         }
         switch (ch) {
-			case ')':
-				get(); // skip ')'
-				return List.of(list, List.NIL);
-			case '.':
-				get(); // skip '.'
-				Element tail = read();
-				spaces();
-				if (ch != ')')
-					throw new RuntimeException("')' expected");
-				get(); // skip ')'
-				return List.of(list, tail);
-			default:
-				throw new RuntimeException("')' or '.' expected");
+            case ')':
+                get(); // skip ')'
+                return List.of(list, List.NIL);
+            case '.':
+                get(); // skip '.'
+                Element tail = read();
+                spaces();
+                if (ch != ')')
+                    throw error("')' expected");
+                get(); // skip ')'
+                return List.of(list, tail);
+            default:
+                throw error("')' or '.' expected");
         }
+    }
+
+    static final Pattern INT_PAT = Pattern.compile("[+-]?\\d+");
+
+    static boolean isWord(int ch) {
+        return switch (ch) {
+            case '(', ')', '.', -1 -> false;
+            default -> !Character.isWhitespace(ch);
+        };
+    }
+
+    Element word() {
+        StringBuilder sb = new StringBuilder();
+        while (isWord(ch)) {
+            sb.append((char) ch);
+            get();
+        }
+        String word = sb.toString();
+        if (word.startsWith("/"))
+            return Str.of(word.substring(1));
+        else if (INT_PAT.matcher(word).matches())
+            return Int.of(Integer.parseInt(word));
+        else
+            return context.word(word);
     }
 
     public Element read() {
         spaces();
-        int f = 0;
         switch (ch) {
             case -1:
                 return null;
-            case '/':
-                return identifier();
             case '(':
                 return list();
             case ')':
-                throw new RuntimeException("Unexpected ')'");
-            case '-':
-            case '+':
-                f = ch;
-                get();
-                /* thru */
+            case '.':
+                throw error("Unexpected '%c'", (char) ch);
             default:
-                return Character.isDigit(ch) ? integer(f) : word(f);
+                return word();
         }
     }
 }
