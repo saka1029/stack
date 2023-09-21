@@ -29,7 +29,7 @@ public class TestElementReader {
 
     @Test
     public void testReadWord() {
-        String text = "  word next + - ++";
+        String text = "  word next + - ++ / ";
         Context context = Context.of();
         ElementReader reader = ElementReader.of(context, new StringReader(text));
         assertEquals(context.word("word"), reader.read());
@@ -37,6 +37,7 @@ public class TestElementReader {
         assertEquals(context.word("+"), reader.read());
         assertEquals(context.word("-"), reader.read());
         assertEquals(context.word("++"), reader.read());
+        assertEquals(context.word("/"), reader.read());
         assertEquals(null, reader.read());
     }
 

@@ -77,7 +77,7 @@ public class ElementReader {
             get();
         }
         String word = sb.toString();
-        if (word.startsWith("/"))
+        if (word.length() != 1 && word.startsWith("/"))
             return Str.of(word.substring(1));
         else if (INT_PAT.matcher(word).matches())
             return Int.of(Integer.parseInt(word));
