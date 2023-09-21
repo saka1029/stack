@@ -193,6 +193,11 @@ public class TestStack {
        assertEquals(Int.of(6), c.eval("0 1 3 1 (+) for"));
        assertEquals(c.eval("(1 2 3)"), c.eval("() 3 1 -1 (swap pair) for"));
        assertEquals(c.eval("()"), c.eval("() 1 3 -1 (swap pair) for"));
+       c.run("/! (1 swap 1 swap 1 (*) for) define");
+       assertEquals(c.eval("1"), c.eval("0 !")); 
+       assertEquals(c.eval("1"), c.eval("1 !")); 
+       assertEquals(c.eval("6"), c.eval("3 !")); 
+       assertEquals(c.eval("120"), c.eval("5 !")); 
     }
     
     /**
