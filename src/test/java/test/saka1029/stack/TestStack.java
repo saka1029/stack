@@ -21,7 +21,7 @@ public class TestStack {
     static final Logger logger = Common.logger(TestStack.class);
 
     @Test
-    public void testFact() {
+    public void testFactByRecursion() {
         Context c = Context.of();
         c.run("/fact (dup 0 <= (drop 1) (dup 1 - fact *) if) define");
         assertEquals(c.eval("1"), c.eval("0 fact"));
@@ -75,7 +75,7 @@ public class TestStack {
      * </pre>
      */
     @Test
-    public void testAppend() {
+    public void testAppendByRecursion() {
         Context c = Context.of();
         c.run("/append (swap dup () == (drop) (unpair rot append pair) if) define");
         assertEquals(c.eval("(1 2 3 4)"), c.eval("() (1 2 3 4) append"));
@@ -99,7 +99,7 @@ public class TestStack {
      * </pre>
      */
     @Test
-    public void testReverseRecursion() {
+    public void testReverseByRecursion() {
         Context c = Context.of();
         c.run("/append (swap dup () == (drop) (unpair rot append pair) if) define");
         c.run("/reverse (dup () == () (unpair reverse swap () pair append) if) define");
@@ -127,7 +127,7 @@ public class TestStack {
      * </pre>
      */
     @Test
-    public void testMap() {
+    public void testMapByRecursion() {
         Context c = Context.of();
         c.run("/map (swap dup () == () (unpair swap @2 execute swap @2 map pair) if swap drop) define");
         assertEquals(c.eval("()"), c.eval("() (dup *) map"));
@@ -154,7 +154,7 @@ public class TestStack {
      * </pre>
      */
     @Test
-    public void testFilter() {
+    public void testFilterByRecursion() {
         Context c = Context.of();
         c.run("/even (2 % 0 ==) define");
         c.run("/odd (even not) define");
@@ -269,5 +269,41 @@ public class TestStack {
        assertEquals(c.eval("5"), c.eval("5 fib")); 
        assertEquals(c.eval("8"), c.eval("6 fib")); 
        assertEquals(c.eval("13"), c.eval("7 fib")); 
+       assertEquals(c.eval("21"), c.eval("8 fib")); 
+       assertEquals(6, c.waterMark);
+    }
+    
+    @Test
+    public void testFibonacciByRecursion() {
+       Context c = Context.of();
+       c.run("/fib (dup 0 == () (dup 1 == () (dup 2 - fib swap 1 - fib +) if) if) define");
+       assertEquals(c.eval("0"), c.eval("0 fib")); 
+       assertEquals(c.eval("1"), c.eval("1 fib")); 
+       assertEquals(c.eval("1"), c.eval("2 fib")); 
+       assertEquals(c.eval("2"), c.eval("3 fib")); 
+       assertEquals(c.eval("3"), c.eval("4 fib")); 
+       assertEquals(c.eval("5"), c.eval("5 fib")); 
+       assertEquals(c.eval("8"), c.eval("6 fib")); 
+       assertEquals(c.eval("13"), c.eval("7 fib")); 
+       assertEquals(c.eval("21"), c.eval("8 fib")); 
+       assertEquals(11, c.waterMark);
+    }
+    
+    static int tarai(int x, int y, int z) {
+        return x <= y ? y : tarai(tarai(x - 1, y, z), tarai(y - 1, z, x), tarai(z - 1, x, y));
+    }
+    
+    @Test
+    public void testTarai() {
+        logger.info(Common.methodName());
+        logger.info("tarai(15, 10, 0)=" + tarai(15, 10, 0));
+        Context c = Context.of();
+        c.run("/tarai (@2 @2 <="
+            + " (drop swap drop)"
+            + " (@2 1 - @2 @2 tarai @2 1 - @2 @5 tarai @2 1 - @5 @5 tarai tarai swap drop swap drop swap drop)"
+            + " if)"
+            + " define");
+        assertEquals(Int.of(15), c.eval("15 10 0 tarai"));
+        logger.info(Common.methodName() + "end");
     }
 }

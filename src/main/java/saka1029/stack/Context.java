@@ -12,6 +12,7 @@ public class Context {
 
     public final Map<String, Element> instructions = new HashMap<>();
     public final Map<String, Word> words = new HashMap<>();
+    public int waterMark = 0;
 
     Context() {
     }
@@ -26,6 +27,7 @@ public class Context {
 
     public void push(Element element) {
         stack.addLast(element);
+        waterMark = Math.max(waterMark, size());
     }
 
     public Element pop() {
@@ -113,6 +115,8 @@ public class Context {
         instruction("@1", c -> c.dup(1));
         instruction("@2", c -> c.dup(2));
         instruction("@3", c -> c.dup(3));
+        instruction("@4", c -> c.dup(4));
+        instruction("@5", c -> c.dup(5));
         instruction("drop", Context::drop);
         instruction("swap", Context::swap);
         instruction("over", Context::over);
