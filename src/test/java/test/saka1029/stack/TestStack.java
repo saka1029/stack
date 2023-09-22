@@ -108,6 +108,8 @@ public class TestStack {
     public void testMap() {
         Context c = Context.of();
         c.run("/map (swap dup () == () (unpair swap @2 execute swap @2 map pair) if swap drop) define");
+        assertEquals(c.eval("()"), c.eval("() (dup *) map"));
+        assertEquals(c.eval("(4)"), c.eval("(2) (dup *) map"));
         assertEquals(c.eval("(4 9 16)"), c.eval("(2 3 4) (dup *) map"));
         assertEquals(c.eval("(4 9 16)"), c.eval("(1 2 3) (1 +) map (dup *) map"));
     }
