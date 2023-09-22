@@ -252,4 +252,22 @@ public class TestStack {
        assertEquals(c.eval("6"), c.eval("3 !")); 
        assertEquals(c.eval("120"), c.eval("5 !")); 
     }
+    
+    /**
+     * n fib
+     * -> 0 1 1 n 1 for drop
+     */
+    @Test
+    public void testFibonacciByFor() {
+       Context c = Context.of();
+       c.run("/fib (0 swap 1 swap 1 swap 1 (drop @1 @1 + rot drop) for drop) define");
+       assertEquals(c.eval("0"), c.eval("0 fib")); 
+       assertEquals(c.eval("1"), c.eval("1 fib")); 
+       assertEquals(c.eval("1"), c.eval("2 fib")); 
+       assertEquals(c.eval("2"), c.eval("3 fib")); 
+       assertEquals(c.eval("3"), c.eval("4 fib")); 
+       assertEquals(c.eval("5"), c.eval("5 fib")); 
+       assertEquals(c.eval("8"), c.eval("6 fib")); 
+       assertEquals(c.eval("13"), c.eval("7 fib")); 
+    }
 }
