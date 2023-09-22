@@ -29,6 +29,28 @@ public class TestStack {
         assertEquals(c.eval("6"), c.eval("3 fact"));
         assertEquals(c.eval("120"), c.eval("5 fact"));
     }
+
+    /**
+     * 3 fact
+     * <pre>
+     * 3 : 1
+     * 3 1 : swap
+     * 1 3 : 1
+     * 1 3 1 : swap
+     * 1 1 3 : 1
+     * 1 1 3 1 : (*) for
+     * 6
+     * </pre>
+     */
+    @Test
+    public void testFactByFor() {
+        Context c = Context.of();
+        c.run("/fact (1 swap 1 swap 1 (*) for) define");
+        assertEquals(c.eval("1"), c.eval("0 fact"));
+        assertEquals(c.eval("1"), c.eval("1 fact"));
+        assertEquals(c.eval("6"), c.eval("3 fact"));
+        assertEquals(c.eval("120"), c.eval("5 fact"));
+    }
     
     @Test
     public void testReverseByForEach() {
