@@ -298,14 +298,14 @@ public class TestStack {
 //        logger.info(Common.methodName());
 //        logger.info("tarai(8, 4, 0)=" + tarai(8, 4, 0));
 //        logger.info("tarai(12, 6, 0)=" + tarai(12, 6, 0));
-        assertEquals(8, tarai(8, 4, 0));
+        assertEquals(10, tarai(10, 4, 0));
         Context c = Context.of();
         c.run("/tarai (@2 @2 <="
-            + " (drop swap drop)"
-            + " (@2 1 - @2 @2 tarai @2 1 - @2 @5 tarai @2 1 - @5 @5 tarai tarai swap drop swap drop swap drop)"
-            + " if)"
+            + " ()"
+            + " (@2 1 - @2 @2 tarai @2 1 - @2 @5 tarai @2 1 - @5 @5 tarai tarai swap drop swap)"
+            + " if drop swap drop)"
             + " define");
-        assertEquals(Int.of(8), c.eval("8 4 0 tarai"));
+        assertEquals(Int.of(10), c.eval("10 4 0 tarai"));
 //        logger.info(Common.methodName() + " end");
     }
 }
