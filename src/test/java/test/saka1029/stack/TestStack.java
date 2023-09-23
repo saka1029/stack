@@ -294,11 +294,41 @@ public class TestStack {
     }
     
     @Test
-    public void testTarai() {
-//        logger.info(Common.methodName());
-//        logger.info("tarai(8, 4, 0)=" + tarai(8, 4, 0));
-//        logger.info("tarai(12, 6, 0)=" + tarai(12, 6, 0));
+    public void testTaraiJava() {
         assertEquals(10, tarai(10, 4, 0));
+    }
+    
+    /**
+     * x y z tarai
+     * x y z : @2
+     * x y z x : 1
+     * x y z x 1 : -
+     * x y z x-1 : @2
+     * x y z x-1 y : @2
+     * x y z x-1 y z : tarai
+     * x y z tara(x-1,y,z) : @2
+     * x y z tara(x-1,y,z) y : 1
+     * x y z tara(x-1,y,z) y 1 : -
+     * x y z tara(x-1,y,z) y-1 : @2
+     * x y z tara(x-1,y,z) y-1 z : @5
+     * x y z tara(x-1,y,z) y-1 z x : tarai
+     * x y z tara(x-1,y,z) tarai(y-1,z,x) : @2
+     * x y z tara(x-1,y,z) tarai(y-1,z,x) z : 1
+     * x y z tara(x-1,y,z) tarai(y-1,z,x) z 1 : -
+     * x y z tara(x-1,y,z) tarai(y-1,z,x) z-1 : @5
+     * x y z tara(x-1,y,z) tarai(y-1,z,x) z-1 x : @5
+     * x y z tara(x-1,y,z) tarai(y-1,z,x) z-1 x y : tarai
+     * x y z tara(x-1,y,z) tarai(y-1,z,x) tarai(z-1,x,y) : tarai
+     * x y z tarai(tara(x-1,y,z) tarai(y-1,z,x) tarai(z-1,x,y)) : swap
+     * x y tarai(tara(x-1,y,z) tarai(y-1,z,x) tarai(z-1,x,y)) z : drop
+     * x y tarai(tara(x-1,y,z) tarai(y-1,z,x) tarai(z-1,x,y)) : swap
+     * x tarai(tara(x-1,y,z) tarai(y-1,z,x) tarai(z-1,x,y)) y : drop
+     * x tarai(tara(x-1,y,z) tarai(y-1,z,x) tarai(z-1,x,y)) : swap
+     * tarai(tara(x-1,y,z) tarai(y-1,z,x) tarai(z-1,x,y)) x : drop
+     * tarai(tara(x-1,y,z) tarai(y-1,z,x) tarai(z-1,x,y))
+     */
+    @Test
+    public void testTarai() {
         Context c = Context.of();
         c.run("/tarai (@2 @2 <="
             + " ()"
@@ -306,6 +336,5 @@ public class TestStack {
             + " if drop swap drop)"
             + " define");
         assertEquals(Int.of(10), c.eval("10 4 0 tarai"));
-//        logger.info(Common.methodName() + " end");
     }
 }
