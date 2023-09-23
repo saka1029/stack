@@ -3,6 +3,7 @@ package test.saka1029.stack;
 import static org.junit.Assert.assertEquals;
 
 import java.util.ArrayList;
+import java.util.function.Predicate;
 import java.util.logging.Logger;
 
 import org.junit.Test;
@@ -14,6 +15,8 @@ import saka1029.stack.Element;
 import saka1029.stack.Int;
 import saka1029.stack.List;
 import saka1029.stack.List.ListInstruction;
+import saka1029.stack.Ordered;
+import saka1029.stack.Pair;
 import saka1029.stack.Word;
 
 public class TestStack {
@@ -307,5 +310,34 @@ public class TestStack {
             + " define");
         assertEquals(Int.of(10), c.eval("10 4 0 tarai"));
 //        logger.info(Common.methodName() + " end");
+    }
+    
+    static List filter(List list, Predicate<Ordered> comparator) {
+        if (!(list instanceof Pair p))
+            return List.NIL;
+        List rest = filter((List)p.tail, comparator);
+        return comparator.test((Ordered)p.head) ? Pair.of(p.head, rest) : rest;
+    }
+    
+    static List append(List a, List b) {
+        return a instanceof Pair p ? Pair.of(p.head, append((List)p.tail, b)) : b;
+    }
+
+    static List qsort(List list) {
+        if (!(list instanceof Pair p))
+            return List.NIL;
+        Ordered pivot = (Ordered)p.head;
+        Predicate<Ordered> le = e -> e.compareTo(pivot) <= 0;
+        Predicate<Ordered> gt = le.negate();
+        List rest = (List)p.tail;
+        return append(qsort(filter(rest, le)), Pair.of(pivot, qsort(filter(rest, gt))));
+    }
+    
+    @Test
+    public void testQSortJava() {
+        Context c = Context.of();
+        assertEquals(c.eval("(0 1 2 3)"), append((List)c.eval("(0 1)"), (List)c.eval("(2 3)")));
+        assertEquals(c.eval("(0 1 2 3)"), append((List)c.eval("(0 1 2)"), (List)c.eval("(3)")));
+        assertEquals(c.eval("(0 1 2 3)"), qsort((List)c.eval("(2 1 3 0)")));
     }
 }
