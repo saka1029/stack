@@ -79,7 +79,7 @@ public interface List extends Value, Iterable<Element> {
     }
 
     default void executeAll(Context context) {
-        for (Element i : this)
-            i.execute(context);
+        for (Element e : this)
+            context.execute(e);
     }
 }

@@ -78,6 +78,10 @@ public class Context {
     public void execute(Element element) {
         element.execute(this);
     }
+    
+    public void executeAll(List list) {
+        list.executeAll(this);
+    }
 
     public void run(String text) {
         ElementReader reader = ElementReader.of(this, new StringReader(text));
@@ -102,6 +106,10 @@ public class Context {
 
     public Element instruction(String name) {
         return instructions.get(name);
+    }
+
+    public Word word(String name) {
+        return words.computeIfAbsent(name, k -> Word.of(k));
     }
 
     public Word instruction(String name, Element element) {
@@ -136,22 +144,27 @@ public class Context {
             Element r = c.pop(), l = c.pop();
             c.push(Bool.of(l.equals(r)));
         });
+
         instruction("!=", c -> {
             Element r = c.pop(), l = c.pop();
             c.push(Bool.of(!l.equals(r)));
         });
+
         instruction("<", c -> {
             Ordered r = (Ordered) c.pop(), l = (Ordered) c.pop();
             c.push(Bool.of(l.compareTo(r) < 0));
         });
+
         instruction("<=", c -> {
             Ordered r = (Ordered) c.pop(), l = (Ordered) c.pop();
             c.push(Bool.of(l.compareTo(r) <= 0));
         });
+
         instruction(">", c -> {
             Ordered r = (Ordered) c.pop(), l = (Ordered) c.pop();
             c.push(Bool.of(l.compareTo(r) > 0));
         });
+
         instruction(">=", c -> {
             Ordered r = (Ordered) c.pop(), l = (Ordered) c.pop();
             c.push(Bool.of(l.compareTo(r) >= 0));
@@ -161,18 +174,22 @@ public class Context {
             Int r = (Int) c.pop(), l = (Int) c.pop();
             c.push(Int.of(l.value + r.value));
         });
+        
         instruction("-", c -> {
             Int r = (Int) c.pop(), l = (Int) c.pop();
             c.push(Int.of(l.value - r.value));
         });
+        
         instruction("*", c -> {
             Int r = (Int) c.pop(), l = (Int) c.pop();
             c.push(Int.of(l.value * r.value));
         });
+        
         instruction("/", c -> {
             Int r = (Int) c.pop(), l = (Int) c.pop();
             c.push(Int.of(l.value / r.value));
         });
+        
         instruction("%", c -> {
             Int r = (Int) c.pop(), l = (Int) c.pop();
             c.push(Int.of(l.value % r.value));
@@ -185,30 +202,32 @@ public class Context {
             Element r = c.pop(), l = c.pop();
             c.push(Pair.of(l, r));
         });
+
         instruction("head", c -> c.push(((Pair) c.pop()).head));
         instruction("tail", c -> c.push(((Pair) c.pop()).tail));
+
         instruction("unpair", c -> {
             Pair p = (Pair) c.pop();
             c.push(p.head);
             c.push(p.tail);
         });
 
-        instruction("execute", c -> ((List) c.pop()).executeAll(c));
+        instruction("execute", c -> c.executeAll((List) c.pop()));
 
         instruction("if", c -> {
             List e = (List) c.pop(), t = (List) c.pop();
             Bool b = (Bool) c.pop();
             if (b.value)
-                t.executeAll(c);
+                c.executeAll(t);
             else
-                e.executeAll(c);
+                c.executeAll(e);
         });
 
         instruction("foreach", c -> {
             List b = (List) c.pop(), l = (List) c.pop();
             for (Element e : l) {
                 c.push(e);
-                b.executeAll(c);
+                c.executeAll(b);
             }
         });
 
@@ -220,12 +239,12 @@ public class Context {
             else if (step > 0)
                 for (int i = from; i <= to; i += step) {
                     c.push(Int.of(i));
-                    lambda.executeAll(c);
+                    c.executeAll(lambda);
                 }
             else
                 for (int i = from; i >= to; i += step) {
                     c.push(Int.of(i));
-                    lambda.executeAll(c);
+                    c.executeAll(lambda);
                 }
         });
 
@@ -235,10 +254,6 @@ public class Context {
             c.instruction(name.value, list.instruction());
 //            c.instruction(name.value, cc -> list.executeAll(cc));
         });
-    }
-
-    public Word word(String name) {
-        return words.computeIfAbsent(name, k -> Word.of(k));
     }
 
 }
