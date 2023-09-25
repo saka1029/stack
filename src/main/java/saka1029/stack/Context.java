@@ -33,10 +33,10 @@ public class Context {
         return this;
     }
     
-    void trace(Element element) {
+    void trace(String string) {
         if (trace == null)
             return;
-        trace.accept("%s%s %s".formatted("  ".repeat(nest), this, element));
+        trace.accept("%s%s".formatted("  ".repeat(nest), string));
     }
 
     public void push(Element element) {
@@ -90,7 +90,7 @@ public class Context {
     }
 
     public void execute(Element element) {
-        trace(element);
+        trace(this + " " + element);
         ++nest;
         element.execute(this);
         --nest;
@@ -105,6 +105,7 @@ public class Context {
         Element e;
         while ((e = reader.read()) != null)
             execute(e);
+        trace(this.toString());
     }
 
     public Element eval(String text) {
