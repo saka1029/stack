@@ -3,13 +3,17 @@ package test.saka1029.stack;
 import static org.junit.Assert.*;
 
 import java.util.Objects;
+import java.util.logging.Logger;
 
 import org.junit.Test;
 
+import saka1029.Common;
 import saka1029.stack.Context;
 import saka1029.stack.Value;
 
 public class TestContext {
+    
+    static Logger logger = Common.logger(TestContext.class);
 
     static class Str implements Value {
         @Override
@@ -93,4 +97,13 @@ public class TestContext {
         assertEquals(A, context.pop());
     }
 
+    @Test
+    public void testTrace() {
+        Context c = Context.of().trace(logger::info);
+        c.run("/fact (dup 0 <= (drop 1) (dup 1 - fact *) if) define");
+//        assertEquals(c.eval("1"), c.eval("0 fact"));
+        assertEquals(c.eval("1"), c.eval("1 fact"));
+//        assertEquals(c.eval("6"), c.eval("3 fact"));
+//        assertEquals(c.eval("120"), c.eval("5 fact"));
+    }
 }

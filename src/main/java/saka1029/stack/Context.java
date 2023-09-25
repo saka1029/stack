@@ -4,6 +4,7 @@ import java.io.StringReader;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.Map;
+import java.util.function.Consumer;
 import java.util.stream.Collectors;
 
 public class Context {
@@ -13,6 +14,8 @@ public class Context {
     public final Map<String, Element> instructions = new HashMap<>();
     public final Map<String, Word> words = new HashMap<>();
     public int waterMark = 0;
+    public Consumer<String> trace = null;
+    public int nest = 0;
 
     Context() {
     }
@@ -23,6 +26,17 @@ public class Context {
 
     public int size() {
         return stack.size();
+    }
+    
+    public Context trace(Consumer<String> trace) {
+        this.trace = trace;
+        return this;
+    }
+    
+    void trace(Element element) {
+        if (trace == null)
+            return;
+        trace.accept("%s%s %s".formatted("  ".repeat(nest), this, element));
     }
 
     public void push(Element element) {
@@ -72,11 +86,14 @@ public class Context {
     }
 
     public void execute(String name) {
-        instructions.get(name).execute(this);
+        execute(instructions.get(name));
     }
 
     public void execute(Element element) {
+        trace(element);
+        ++nest;
         element.execute(this);
+        --nest;
     }
     
     public void executeAll(List list) {
