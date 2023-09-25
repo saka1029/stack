@@ -102,8 +102,9 @@ public class TestContext {
         Context c = Context.of().trace(logger::info);
         c.run("/fact (dup 0 <= (drop 1) (dup 1 - fact *) if) define");
 //        assertEquals(c.eval("1"), c.eval("0 fact"));
-        assertEquals(c.eval("1"), c.eval("1 fact"));
+//        assertEquals(c.eval("1"), c.eval("1 fact"));
 //        assertEquals(c.eval("6"), c.eval("3 fact"));
+        assertEquals(c.eval("24"), c.eval("4 fact"));
 //        assertEquals(c.eval("120"), c.eval("5 fact"));
     }
 }
