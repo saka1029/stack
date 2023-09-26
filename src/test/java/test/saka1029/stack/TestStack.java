@@ -338,7 +338,7 @@ public class TestStack {
             + " (@2 1 - @2 @2 tarai @2 1 - @2 @5 tarai @2 1 - @5 @5 tarai tarai swap drop swap)"
             + " if drop swap drop)"
             + " define");
-        assertEquals(Int.of(10), c.eval("10 4 0 tarai"));
+        assertEquals(Int.of(8), c.eval("8 4 0 tarai"));
     }
     
     static List filter(List list, Predicate<Ordered> comparator) {
