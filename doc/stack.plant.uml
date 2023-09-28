@@ -1,7 +1,7 @@
 @startuml
 class Context {
   LinkedList<Element> stack
-  Map<String, Element> instructions
+  Map<String, Element> globals
   Map<String, Word> words
 }
 interface Element {
