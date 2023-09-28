@@ -1,0 +1,39 @@
+@startuml
+class Context
+interface Element {
+  +void execute(Context context)
+}
+interface Value
+interface Ordered
+interface Comparable<Element>
+interface Iterable<Element>
+class Int {
+  +int value
+}
+class Str {
+  +String value
+}
+class Bool {
+  +boolean value
+}
+interface List
+class Pair {
+  +Element head, tail
+}
+class Word {
+  +String name
+}
+class ElementReader {
+  +Element read()
+}
+Element <|-- Value
+Value <|-- List
+Iterable <|-- List
+Value <|-- Ordered
+Comparable <|-- Ordered
+Ordered <|.. Int
+Ordered <|.. Str
+Ordered <|.. Bool
+List <|.. Pair
+Element <|.. Word
+@enduml
