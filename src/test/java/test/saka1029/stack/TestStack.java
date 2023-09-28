@@ -374,9 +374,10 @@ public class TestStack {
     @Test
     public void testSet() {
         Context c = Context.of().trace(logger::info);
-        c.run("/inc (1 +) set");
-        assertEquals(c.eval("4"), c.eval("3 inc execute"));
         c.run("/one 1 set");
         assertEquals(c.eval("1"), c.eval("one"));
+        c.run("/inc (1 +) set");
+        assertEquals(c.eval("(1 +)"), c.eval("inc"));
+        assertEquals(c.eval("4"), c.eval("3 inc execute"));
     }
 }
