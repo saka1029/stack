@@ -20,7 +20,9 @@ class Str {
 class Bool {
   +boolean value
 }
-interface List
+interface List {
+  {static} List NIL
+}
 class Pair {
   +Element head, tail
 }
