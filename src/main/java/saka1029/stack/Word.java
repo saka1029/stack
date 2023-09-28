@@ -14,7 +14,7 @@ public class Word implements Element {
 
     @Override
     public void execute(Context context) {
-        context.instructions.get(name).execute(context);
+        context.globals.get(name).execute(context);
     }
 
     @Override

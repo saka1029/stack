@@ -11,7 +11,7 @@ public class Context {
 
     public final LinkedList<Element> stack = new LinkedList<>();
 
-    public final Map<String, Element> instructions = new HashMap<>();
+    public final Map<String, Element> globals = new HashMap<>();
     public final Map<String, Word> words = new HashMap<>();
     public int waterMark = 0;
     public Consumer<String> trace = null;
@@ -86,7 +86,7 @@ public class Context {
     }
 
     public void execute(String name) {
-        execute(instructions.get(name));
+        execute(globals.get(name));
     }
 
     public void execute(Element element) {
@@ -123,7 +123,7 @@ public class Context {
     }
 
     public Element instruction(String name) {
-        return instructions.get(name);
+        return globals.get(name);
     }
 
     public Word word(String name) {
@@ -131,7 +131,7 @@ public class Context {
     }
 
     public Word instruction(String name, Element element) {
-        instructions.put(name, element);
+        globals.put(name, element);
         return word(name);
     }
 
@@ -264,6 +264,12 @@ public class Context {
                     c.push(Int.of(i));
                     c.executeAll(lambda);
                 }
+        });
+        
+        instruction("set", c -> {
+            Element value = c.pop();
+            Str name = (Str)c.pop();
+            c.instruction(name.value, value);
         });
 
         instruction("define", c -> {

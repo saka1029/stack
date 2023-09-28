@@ -370,4 +370,11 @@ public class TestStack {
         assertEquals(c.eval("(0 1 2 3)"), qsort((List)c.eval("(2 1 3 0)")));
         assertEquals(c.eval("(0 0 0 1 1 1 2 2 2 3 3 3)"), qsort((List)c.eval("(2 2 0 1 0 1 2 3 3 1 3 0)")));
     }
+    
+    @Test
+    public void testSet() {
+        Context c = Context.of().trace(logger::info);
+        c.run("/inc (1 +) set");
+        assertEquals(c.eval("4"), c.eval("3 inc execute"));
+    }
 }
