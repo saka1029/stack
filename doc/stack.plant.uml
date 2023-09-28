@@ -1,5 +1,9 @@
 @startuml
-class Context
+class Context {
+  LinkedList<Element> stack
+  Map<String, Element> instructions
+  Map<String, Word> words
+}
 interface Element {
   +void execute(Context context)
 }
