@@ -441,6 +441,7 @@ public class TestStack {
      * 3 (1 2 3 4) : swap drop
      * (1 2 3 4)
      * 
+     * filterに渡すクロージャーはマクロ的に作成している。
      */
     @Test
     public void testQSort() {
