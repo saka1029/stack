@@ -402,15 +402,45 @@ public class TestStack {
      * (3 2 4 1) : unpair
      * 3 (2 4 1) : dup
      * 3 (2 4 1) (2 4 1) : @2
-     * 3 (2 4 1) (2 4 1) 3 : smaller
-     * 3 (2 4 1) (2 1) : @1
-     * 3 (2 4 1) (2 1) (2 4 1) : @3
-     * 3 (2 4 1) (2 1) (2 4 1) 3 : larger
-     * 3 (2 4 1) (2 1) (4) : @3
-     * 3 (2 4 1) (2 1) (4) 3 : swap
-     * 3 (2 4 1) (2 1) 3 (4) : pair
-     * 3 (2 4 1) (2 1) (3 4) : append
-     * 3 (2 4 1) (2 1 3 4) : swap drop swap drop
+     * 3 (2 4 1) (2 4 1) 3 : (<=)
+     * 3 (2 4 1) (2 4 1) 3 (<=) : pair
+     * 3 (2 4 1) (2 4 1) (3 <=) : filter
+     * 3 (2 4 1) (2 1) : qsort
+     * 3 (2 4 1) (1 2) : @1
+     * 3 (2 4 1) (1 2) (2 4 1) : @3
+     * 3 (2 4 1) (1 2) (2 4 1) 3 : (>)
+     * 3 (2 4 1) (1 2) (2 4 1) 3 : pair
+     * 3 (2 4 1) (1 2) (2 4 1) (3 >) : filter
+     * 3 (2 4 1) (1 2) (4) : qsort
+     * 3 (2 4 1) (1 2) (4) : @3
+     * 3 (2 4 1) (1 2) (4) 3 : swap
+     * 3 (2 4 1) (1 2) 3 (4) : pair
+     * 3 (2 4 1) (1 2) (3 4) : append
+     * 3 (2 4 1) (1 2 3 4) : swap drop swap drop
+     * (1 2 3 4)
+     * 
+     * ２回目のfilterを最適化
+     * (3 2 4 1) qsort
+     * (3 2 4 1) : unpair
+     * 3 (2 4 1) : dup
+     * 3 (2 4 1) (2 4 1) : @2
+     * 3 (2 4 1) (2 4 1) 3 : (<=)
+     * 3 (2 4 1) (2 4 1) 3 (<=) : pair
+     * 3 (2 4 1) (2 4 1) (3 <=) : filter
+     * 3 (2 4 1) (2 1) : qsort
+     * 3 (2 4 1) (1 2) : swap
+     * 3 (1 2) (2 4 1) : @2
+     * 3 (1 2) (2 4 1) 3 : (>)
+     * 3 (1 2) (2 4 1) 3 (>) : pair
+     * 3 (1 2) (2 4 1) (3 >) : filter
+     * 3 (1 2) (4) : qsort
+     * 3 (1 2) (4) : @2
+     * 3 (1 2) (4) 3 : swap
+     * 3 (1 2) 3 (4) : pair
+     * 3 (1 2) (3 4) : append
+     * 3 (1 2 3 4) : swap drop
+     * (1 2 3 4)
+     * 
      */
     @Test
     public void testQSort() {
@@ -420,7 +450,8 @@ public class TestStack {
 //        c.run("/larger ((>) pair filter) define");
         c.run("/append (swap dup () == (drop) (unpair rot append pair) if) define");
 //        c.run("/qsort (dup () == () (unpair dup @2 smaller qsort @1 @3 larger qsort @3 swap pair append swap drop swap drop) if) define");
-        c.run("/qsort (dup () == () (unpair dup @2 (<=) pair filter qsort @1 @3 (>) pair filter qsort @3 swap pair append swap drop swap drop) if) define");
+//        c.run("/qsort (dup () == () (unpair dup @2 (<=) pair filter qsort @1 @3 (>) pair filter qsort @3 swap pair append swap drop swap drop) if) define");
+        c.run("/qsort (dup () == () (unpair dup @2 (<=) pair filter qsort swap @2 (>) pair filter qsort @2 swap pair append swap drop) if) define");
         assertEquals(c.eval("()"), c.eval("() qsort"));
         assertEquals(c.eval("(1 2 3 4)"), c.eval("(3 2 4 1) qsort"));
         assertEquals(c.eval("(1 2 3 4 5 6 7 8 9)"), c.eval("(6 3 9 5 2 4 7 8 1) qsort"));
