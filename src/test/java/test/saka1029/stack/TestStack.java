@@ -338,7 +338,7 @@ public class TestStack {
             + " (@2 1 - @2 @2 tarai @2 1 - @2 @5 tarai @2 1 - @5 @5 tarai tarai swap drop swap)"
             + " if drop swap drop)"
             + " define");
-        assertEquals(Int.of(8), c.eval("8 4 0 tarai"));
+        assertEquals(Int.of(6), c.eval("6 4 0 tarai"));
     }
     
     static List filter(List list, Predicate<Ordered> comparator) {
@@ -369,6 +369,61 @@ public class TestStack {
         assertEquals(c.eval("(0 1 2 3)"), append((List)c.eval("(0 1 2)"), (List)c.eval("(3)")));
         assertEquals(c.eval("(0 1 2 3)"), qsort((List)c.eval("(2 1 3 0)")));
         assertEquals(c.eval("(0 0 0 1 1 1 2 2 2 3 3 3)"), qsort((List)c.eval("(2 2 0 1 0 1 2 3 3 1 3 0)")));
+    }
+    
+    /**
+     * (2 4 1) 3 smaller
+     * (2 1)
+     */
+    @Test
+    public void testSmaller() {
+        Context c = Context.of();
+        c.run("/filter (swap dup () == () (unpair @2 filter swap dup @3 execute (swap pair) (drop) if) if swap drop) define");
+        c.run("/smaller ((<=) pair filter) define");
+        assertEquals(c.eval("(2 1)"), c.eval("(2 4 1) 3 smaller"));
+        assertEquals(c.eval("(3 2 1)"), c.eval("(3 2 4 1) 3 smaller"));
+    }
+    
+    /**
+     * (2 4 1) 3 larger
+     * (4)
+     */
+    @Test
+    public void testLarger() {
+        Context c = Context.of();
+        c.run("/filter (swap dup () == () (unpair @2 filter swap dup @3 execute (swap pair) (drop) if) if swap drop) define");
+        c.run("/larger ((>) pair filter) define");
+        assertEquals(c.eval("(4)"), c.eval("(2 4 1) 3 larger"));
+        assertEquals(c.eval("(4)"), c.eval("(3 2 4 1) 3 larger"));
+    }
+    
+    /**
+     * (3 2 4 1) qsort
+     * (3 2 4 1) : unpair
+     * 3 (2 4 1) : dup
+     * 3 (2 4 1) (2 4 1) : @2
+     * 3 (2 4 1) (2 4 1) 3 : smaller
+     * 3 (2 4 1) (2 1) : @1
+     * 3 (2 4 1) (2 1) (2 4 1) : @3
+     * 3 (2 4 1) (2 1) (2 4 1) 3 : larger
+     * 3 (2 4 1) (2 1) (4) : @3
+     * 3 (2 4 1) (2 1) (4) 3 : swap
+     * 3 (2 4 1) (2 1) 3 (4) : pair
+     * 3 (2 4 1) (2 1) (3 4) : append
+     * 3 (2 4 1) (2 1 3 4) : swap drop swap drop
+     */
+    @Test
+    public void testQSort() {
+        Context c = Context.of(); //.trace(logger::info);
+        c.run("/filter (swap dup () == () (unpair @2 filter swap dup @3 execute (swap pair) (drop) if) if swap drop) define");
+//        c.run("/smaller ((<=) pair filter) define");
+//        c.run("/larger ((>) pair filter) define");
+        c.run("/append (swap dup () == (drop) (unpair rot append pair) if) define");
+//        c.run("/qsort (dup () == () (unpair dup @2 smaller qsort @1 @3 larger qsort @3 swap pair append swap drop swap drop) if) define");
+        c.run("/qsort (dup () == () (unpair dup @2 (<=) pair filter qsort @1 @3 (>) pair filter qsort @3 swap pair append swap drop swap drop) if) define");
+        assertEquals(c.eval("()"), c.eval("() qsort"));
+        assertEquals(c.eval("(1 2 3 4)"), c.eval("(3 2 4 1) qsort"));
+        assertEquals(c.eval("(1 2 3 4 5 6 7 8 9)"), c.eval("(6 3 9 5 2 4 7 8 1) qsort"));
     }
     
     @Test
