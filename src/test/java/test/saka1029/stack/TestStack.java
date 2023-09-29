@@ -452,7 +452,12 @@ public class TestStack {
         c.run("/append (swap dup () == (drop) (unpair rot append pair) if) define");
 //        c.run("/qsort (dup () == () (unpair dup @2 smaller qsort @1 @3 larger qsort @3 swap pair append swap drop swap drop) if) define");
 //        c.run("/qsort (dup () == () (unpair dup @2 (<=) pair filter qsort @1 @3 (>) pair filter qsort @3 swap pair append swap drop swap drop) if) define");
-        c.run("/qsort (dup () == () (unpair dup @2 (<=) pair filter qsort swap @2 (>) pair filter qsort @2 swap pair append swap drop) if) define");
+        c.run("/qsort (dup () =="
+            + " ()"
+            + " (unpair"
+            + " dup @2 (<=) pair filter qsort"
+            + " swap @2 (>) pair filter qsort"
+            + " @2 swap pair append swap drop) if) define");
         assertEquals(c.eval("()"), c.eval("() qsort"));
         assertEquals(c.eval("(1 2 3 4)"), c.eval("(3 2 4 1) qsort"));
         assertEquals(c.eval("(1 2 3 4 5 6 7 8 9)"), c.eval("(6 3 9 5 2 4 7 8 1) qsort"));
