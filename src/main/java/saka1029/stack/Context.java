@@ -111,7 +111,8 @@ public class Context {
     public Element eval(String text) {
         int s = size();
         run(text);
-        assert s + 1 == size() : "%s result(s)".formatted(size() - s);
+        int r = size() - s;
+        assert r == 1 : "%s result(s)".formatted(r);
         return pop();
     }
 
