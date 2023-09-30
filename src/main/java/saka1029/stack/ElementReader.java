@@ -28,8 +28,18 @@ public class ElementReader {
     }
 
     void spaces() {
-        while (Character.isWhitespace(ch))
-            get();
+        while (true) {
+            while (Character.isWhitespace(ch))
+                get();
+            if (ch != '{')
+                return;
+            get(); // skip '{'
+            while (ch != -1 && ch != '}')
+                get();
+            if (ch != '}')
+                error("'}' expected");
+            get(); // skip '}'
+        }
     }
 
     static RuntimeException error(String format, Object... args) {

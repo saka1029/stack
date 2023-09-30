@@ -378,8 +378,8 @@ public class TestStack {
     @Test
     public void testSmaller() {
         Context c = Context.of();
-        c.run("/filter (swap dup () == () (unpair @2 filter swap dup @3 execute (swap pair) (drop) if) if swap drop) define");
-        c.run("/smaller ((<=) pair filter) define");
+        c.run("/filter {L C : L} (swap dup () == () (unpair @2 filter swap dup @3 execute (swap pair) (drop) if) if swap drop) define");
+        c.run("/smaller {L I : L} ((<=) pair filter) define");
         assertEquals(c.eval("(2 1)"), c.eval("(2 4 1) 3 smaller"));
         assertEquals(c.eval("(3 2 1)"), c.eval("(3 2 4 1) 3 smaller"));
     }
@@ -391,8 +391,8 @@ public class TestStack {
     @Test
     public void testLarger() {
         Context c = Context.of();
-        c.run("/filter (swap dup () == () (unpair @2 filter swap dup @3 execute (swap pair) (drop) if) if swap drop) define");
-        c.run("/larger ((>) pair filter) define");
+        c.run("/filter {L C : L} (swap dup () == () (unpair @2 filter swap dup @3 execute (swap pair) (drop) if) if swap drop) define");
+        c.run("/larger {L I : L} ((>) pair filter) define");
         assertEquals(c.eval("(4)"), c.eval("(2 4 1) 3 larger"));
         assertEquals(c.eval("(4)"), c.eval("(3 2 4 1) 3 larger"));
     }
@@ -446,13 +446,13 @@ public class TestStack {
     @Test
     public void testQSort() {
         Context c = Context.of(); //.trace(logger::info);
-        c.run("/filter (swap dup () == () (unpair @2 filter swap dup @3 execute (swap pair) (drop) if) if swap drop) define");
+        c.run("/filter {L C : L} (swap dup () == () (unpair @2 filter swap dup @3 execute (swap pair) (drop) if) if swap drop) define");
 //        c.run("/smaller ((<=) pair filter) define");
 //        c.run("/larger ((>) pair filter) define");
-        c.run("/append (swap dup () == (drop) (unpair rot append pair) if) define");
+        c.run("/append {L : L} (swap dup () == (drop) (unpair rot append pair) if) define");
 //        c.run("/qsort (dup () == () (unpair dup @2 smaller qsort @1 @3 larger qsort @3 swap pair append swap drop swap drop) if) define");
 //        c.run("/qsort (dup () == () (unpair dup @2 (<=) pair filter qsort @1 @3 (>) pair filter qsort @3 swap pair append swap drop swap drop) if) define");
-        c.run("/qsort (dup () =="
+        c.run("/qsort {L : L} (dup () =="
             + " ()"
             + " (unpair"
             + " dup @2 (<=) pair filter qsort"
