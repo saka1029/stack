@@ -75,7 +75,7 @@ public class ElementReader {
 
     static boolean isWord(int ch) {
         return switch (ch) {
-            case '(', ')', '.', -1 -> false;
+            case '(', ')', '.', '{', '}', -1 -> false;
             default -> !Character.isWhitespace(ch);
         };
     }
@@ -104,6 +104,7 @@ public class ElementReader {
                 return list();
             case ')':
             case '.':
+            case '}':
                 throw error("Unexpected '%c'", (char) ch);
             default:
                 return word();
