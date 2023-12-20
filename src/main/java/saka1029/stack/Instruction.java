@@ -1,6 +1,6 @@
 package saka1029.stack;
 
-public interface Element {
+public interface Instruction {
     
     void execute(Context context);
 
