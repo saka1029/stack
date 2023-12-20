@@ -2,7 +2,7 @@ package saka1029.stack;
 
 public interface List extends Instruction, Collection {
     
-    public static final List NULL = new List() {
+    public static final List NIL = new List() {
 
         @Override
         public Iter iter() {
@@ -10,10 +10,13 @@ public interface List extends Instruction, Collection {
         }
         
         @Override
-        public void execute(Context context) {
-            // TODO Auto-generated method stub
-            
+        public String toString() {
+            return "()";
         }
     };
 
+    @Override
+    default void execute(Context context) {
+        context.codes.addLast(iter());
+    }
 }
