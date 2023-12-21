@@ -1,5 +1,7 @@
 package saka1029.stack;
 
+import java.util.Objects;
+
 public class Cons implements List {
 
     public final Instruction car;
@@ -15,8 +17,8 @@ public class Cons implements List {
     }
 
     @Override
-    public Iter iter() {
-        return new Iter() {
+    public Iterator iterator() {
+        return new Iterator() {
 
             List list = Cons.this;
 
@@ -29,6 +31,16 @@ public class Cons implements List {
                 return null;
             }
         };
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(car, cdr);
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        return obj instanceof Cons c && car.equals(c.car) && cdr.equals(c.cdr);
     }
 
     @Override

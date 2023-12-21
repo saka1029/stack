@@ -1,33 +1,31 @@
 package saka1029.stack;
 
-import java.util.Iterator;
 import java.util.NoSuchElementException;
 
-public interface Collection extends Iterable<Instruction> {
+public interface Collection {
 
-    Iter iter();
+    Iterator iterator();
     
-    @Override
-    default Iterator<Instruction> iterator() {
-        final Iter iter = iter();
-        return new Iterator<>() {
-            
-            Instruction next = iter.next();
+    default Iterable<Instruction> iterable() {
+        return () -> {
+            Iterator it = iterator();
+            return new java.util.Iterator<>() {
+                Instruction ins = it.next();
 
-            @Override
-            public boolean hasNext() {
-                return next != null;
-            }
+                @Override
+                public boolean hasNext() {
+                    return ins != null;
+                }
 
-            @Override
-            public Instruction next() {
-                if (next == null)
-                    throw new NoSuchElementException();
-                Instruction result = next;
-                next = iter.next();
-                return result;
-            }
+                @Override
+                public Instruction next() {
+                    if (ins == null)
+                        throw new NoSuchElementException();
+                    Instruction result = ins;
+                    ins = it.next();
+                    return result;
+                }
+            };
         };
     }
-
 }

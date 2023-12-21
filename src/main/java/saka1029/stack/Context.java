@@ -5,7 +5,7 @@ import java.util.ArrayList;
 public class Context {
     
     public final java.util.List<Instruction> stack;
-    public final java.util.List<Iter> codes;
+    public final java.util.List<Iterator> codes;
     public final java.util.Map<Symbol, Instruction> variables;
     
     Context(java.util.Map<Symbol, Instruction> variables) {
@@ -26,15 +26,15 @@ public class Context {
         return stack.removeLast();
     }
     
-    public void pushCode(Iter it) {
+    public void pushCode(Iterator it) {
         codes.addLast(it);
     }
     
-    public Iter peekCode() {
+    public Iterator peekCode() {
         return codes.getLast();
     }
     
-    public Iter popCode() {
+    public Iterator popCode() {
         return codes.removeLast();
     }
 

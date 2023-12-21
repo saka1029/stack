@@ -1,6 +1,6 @@
 package saka1029.stack;
 
-public interface Iter {
+public interface Iterator {
 
     Instruction next();
 

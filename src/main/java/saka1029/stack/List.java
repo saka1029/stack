@@ -1,11 +1,13 @@
 package saka1029.stack;
 
+import java.util.ListIterator;
+
 public interface List extends Instruction, Collection {
     
     public static final List NIL = new List() {
 
         @Override
-        public Iter iter() {
+        public Iterator iterator() {
             return () -> null;
         }
         
@@ -14,9 +16,17 @@ public interface List extends Instruction, Collection {
             return "()";
         }
     };
+    
+    public static List of(java.util.List<Instruction> list) {
+        List result = NIL;
+        ListIterator<Instruction> it = list.listIterator(list.size());
+        while (it.hasPrevious())
+            result = Cons.of(it.previous(), result);
+        return result;
+    }
 
     @Override
     default void execute(Context context) {
-        context.codes.addLast(iter());
+        context.codes.addLast(iterator());
     }
 }
