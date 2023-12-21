@@ -12,27 +12,27 @@ public class Reader {
 
     final java.io.Reader reader;
     int ch;
-    
+
     Reader(java.io.Reader reader) {
         this.reader = reader;
-        getCh();
+        ch();
     }
-    
+
     public static Reader of(String source) {
         return new Reader(new StringReader(source));
     }
-    
-    int getCh() {
+
+    int ch() {
         try {
             return ch = reader.read();
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
     }
-    
+
     void spaces() {
         while (Character.isWhitespace(ch))
-            getCh();
+            ch();
     }
 
     RuntimeException error(String format, Object... args) {
@@ -51,8 +51,8 @@ public class Reader {
     Instruction symbolOrInt() {
         StringBuilder sb = new StringBuilder();
         while (isSymbol(ch)) {
-            sb.append((char)ch);
-            getCh();
+            sb.append((char) ch);
+            ch();
         }
         String s = sb.toString();
         if (INT_PAT.matcher(s).matches())
@@ -60,19 +60,22 @@ public class Reader {
         return Symbol.of(s);
     }
 
-    Instruction skip(Instruction i) {
-        getCh();
-        return i;
-    }
-
-    Instruction get() {
+    Instruction token() {
         spaces();
-        return switch (ch) {
-            case -1 -> Token.EOF;
-            case '\'' -> skip(Token.QUOTE);
-            case '(' -> skip(Token.LP);
-            case ')' -> skip(Token.RP);
-            default -> symbolOrInt();
+        switch (ch) {
+            case -1:
+                return Token.EOF;
+            case '\'':
+                ch();
+                return Token.QUOTE;
+            case '(':
+                ch();
+                return Token.LP;
+            case ')':
+                ch();
+                return Token.RP;
+            default:
+                return symbolOrInt();
         }
     }
 }
