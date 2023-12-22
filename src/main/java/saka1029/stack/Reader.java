@@ -17,6 +17,7 @@ public class Reader {
     Reader(java.io.Reader reader) {
         this.reader = reader;
         ch();
+        token();
     }
 
     public static Reader of(java.io.Reader reader) {
