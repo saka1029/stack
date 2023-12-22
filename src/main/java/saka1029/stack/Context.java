@@ -5,16 +5,16 @@ import java.util.ArrayList;
 public class Context {
     
     public final java.util.List<Instruction> stack;
-    public final java.util.List<Iterator> codes;
+    public final java.util.List<Iterator> instructions;
     public final java.util.Map<Symbol, Instruction> variables;
     
     Context(java.util.Map<Symbol, Instruction> variables) {
         this.stack = new ArrayList<>();
-        this.codes = new ArrayList<>();
+        this.instructions = new ArrayList<>();
         this.variables = variables;
     }
     
-    public Context of(java.util.Map<Symbol, Instruction> variables) {
+    public static Context of(java.util.Map<Symbol, Instruction> variables) {
         return new Context(variables);
     }
 
@@ -27,15 +27,15 @@ public class Context {
     }
     
     public void pushCode(Iterator it) {
-        codes.addLast(it);
+        instructions.addLast(it);
     }
     
     public Iterator peekCode() {
-        return codes.getLast();
+        return instructions.getLast();
     }
     
     public Iterator popCode() {
-        return codes.removeLast();
+        return instructions.removeLast();
     }
 
     @Override

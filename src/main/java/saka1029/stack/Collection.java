@@ -9,19 +9,19 @@ public interface Collection {
     default Iterable<Instruction> iterable() {
         return () -> new java.util.Iterator<>() {
             final Iterator it = iterator();
-            Instruction ins = it.next();
+            Instruction next = it.next();
 
             @Override
             public boolean hasNext() {
-                return ins != null;
+                return next != null;
             }
 
             @Override
             public Instruction next() {
-                if (ins == null)
+                if (next == null)
                     throw new NoSuchElementException();
-                Instruction result = ins;
-                ins = it.next();
+                Instruction result = next;
+                next = it.next();
                 return result;
             }
         };
