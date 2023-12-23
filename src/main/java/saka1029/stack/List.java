@@ -17,6 +17,14 @@ public interface List extends Instruction, Collection {
         }
     };
     
+    public static List of(Instruction... instructions) {
+        int size = instructions.length;
+        List result = NIL;
+        for (int i = size - 1; i >= 0; --i)
+            result = Cons.of(instructions[i], result);
+        return result;
+    }
+    
     public static List of(java.util.List<Instruction> list) {
         List result = NIL;
         ListIterator<Instruction> it = list.listIterator(list.size());

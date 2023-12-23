@@ -31,7 +31,7 @@ public class Parser {
             int i = 0;
             @Override
             public int getAsInt() {
-                return i < length ? text.charAt(i++) : 0;
+                return i < length ? text.charAt(i++) : -1;
             }
         };
         return of(supplier);
