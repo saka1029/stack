@@ -2,34 +2,54 @@ package saka1029.stack;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.function.IntSupplier;
 import java.util.regex.Pattern;
 
-public class Reader {
+public class Parser {
 
     enum Token implements Value {
         EOF, QUOTE, LP, RP;
     }
 
-    final java.io.Reader reader;
+    final IntSupplier supplier;
     int ch;
     Instruction token;
 
-    Reader(java.io.Reader reader) {
-        this.reader = reader;
+    Parser(IntSupplier supplier) {
+        this.supplier = supplier;
         ch();
         token();
     }
 
-    public static Reader of(java.io.Reader reader) {
-        return new Reader(reader);
+    public static Parser of(IntSupplier supplier) {
+        return new Parser(supplier);
+    }
+    
+    public static Parser of(String text) {
+        IntSupplier supplier = new IntSupplier() {
+            final int length = text.length();
+            int i = 0;
+            @Override
+            public int getAsInt() {
+                return i < length ? text.charAt(i++) : 0;
+            }
+        };
+        return of(supplier);
+    }
+    
+    public static Parser of(java.io.Reader reader) {
+        IntSupplier supplier = () -> {
+            try {
+                return reader.read();
+            } catch (IOException e) {
+                throw new RuntimeException(e);
+            }
+        };
+        return of(supplier);
     }
 
     int ch() {
-        try {
-            return ch = reader.read();
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        }
+        return ch = supplier.getAsInt();
     }
 
     void spaces() {
