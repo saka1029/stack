@@ -1,6 +1,8 @@
 package saka1029.stack;
 
 import java.io.IOException;
+import java.io.Reader;
+import java.io.StringReader;
 import java.util.ArrayList;
 import java.util.function.IntSupplier;
 import java.util.regex.Pattern;
@@ -11,45 +13,31 @@ public class Parser {
         EOF, QUOTE, LP, RP;
     }
 
-    final IntSupplier supplier;
+    final Reader reader;
     int ch;
     Instruction token;
 
-    Parser(IntSupplier supplier) {
-        this.supplier = supplier;
+    Parser(Reader reader) {
+        this.reader = reader;
         ch();
         token();
     }
 
-    public static Parser of(IntSupplier supplier) {
-        return new Parser(supplier);
+    public static Parser of(Reader reader) {
+        return new Parser(reader);
     }
     
     public static Parser of(String text) {
-        IntSupplier supplier = new IntSupplier() {
-            final int length = text.length();
-            int i = 0;
-            @Override
-            public int getAsInt() {
-                return i < length ? text.charAt(i++) : -1;
-            }
-        };
-        return of(supplier);
+        // StringReaderはclose()しない点に注意する。
+        return of(new StringReader(text));
     }
     
-    public static Parser of(java.io.Reader reader) {
-        IntSupplier supplier = () -> {
-            try {
-                return reader.read();
-            } catch (IOException e) {
-                throw new RuntimeException(e);
-            }
-        };
-        return of(supplier);
-    }
-
     int ch() {
-        return ch = supplier.getAsInt();
+        try {
+            return ch = reader.read();
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
     }
 
     void spaces() {
