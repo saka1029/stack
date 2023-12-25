@@ -98,21 +98,15 @@ public class Parser {
         return List.of(list);
     }
 
-    Instruction skipRead() {
-        token();
-        return read();
-    }
-
     public Instruction read() {
         return switch (token) {
-            case Token t ->
-                switch (t) {
-                    case EOF -> null;
-                    case QUOTE -> Quote.of(skipRead());
-                    case LP -> list();
-                    case RP -> throw error("unexpected ')'");
-                    default -> throw error("unknown token '%s'", t);
-                };
+            case Token.EOF -> null;
+            case Token.QUOTE -> {
+                token();
+                yield Quote.of(read());
+            }
+            case Token.LP -> list();
+            case Token.RP -> throw error("unexpected ')'");
             default -> {
                 Instruction word = token;
                 token();
