@@ -4,7 +4,6 @@ import java.io.IOException;
 import java.io.Reader;
 import java.io.StringReader;
 import java.util.ArrayList;
-import java.util.function.IntSupplier;
 import java.util.regex.Pattern;
 
 public class Parser {
@@ -26,12 +25,12 @@ public class Parser {
     public static Parser of(Reader reader) {
         return new Parser(reader);
     }
-    
+
     public static Parser of(String text) {
         // StringReaderはclose()しない点に注意する。
         return of(new StringReader(text));
     }
-    
+
     int ch() {
         try {
             return ch = reader.read();
@@ -58,7 +57,7 @@ public class Parser {
         };
     }
 
-    Instruction symbolOrInt() {
+    Instruction word() {
         StringBuilder sb = new StringBuilder();
         while (isSymbol(ch)) {
             sb.append((char) ch);
@@ -69,7 +68,7 @@ public class Parser {
             return Int.of(Integer.parseInt(s));
         return Symbol.of(s);
     }
-    
+
     Instruction advance(Instruction inst) {
         ch();
         return inst;
@@ -82,10 +81,10 @@ public class Parser {
             case '\'' -> advance(Token.QUOTE);
             case '(' -> advance(Token.LP);
             case ')' -> advance(Token.RP);
-            default -> symbolOrInt();
+            default -> word();
         };
     }
-    
+
     List list() {
         token(); // skip '('
         java.util.List<Instruction> list = new ArrayList<>();
@@ -99,24 +98,26 @@ public class Parser {
         return List.of(list);
     }
 
-    public Instruction read() {
-        if (token instanceof Token t) {
-            switch (t) {
-                case EOF:
-                    return null;
-                case QUOTE:
-                    token();
-                    return Quote.of(read());
-                case LP:
-                    return list();
-                case RP:
-                    throw error("unexpected ')'");
-                default:
-                    throw error("unknown token '%s'", t);
-            }
-        }
-        Instruction symbolOrInt = token;
+    Instruction skipRead() {
         token();
-        return symbolOrInt;
+        return read();
+    }
+
+    public Instruction read() {
+        return switch (token) {
+            case Token t ->
+                switch (t) {
+                    case EOF -> null;
+                    case QUOTE -> Quote.of(skipRead());
+                    case LP -> list();
+                    case RP -> throw error("unexpected ')'");
+                    default -> throw error("unknown token '%s'", t);
+                };
+            default -> {
+                Instruction word = token;
+                token();
+                yield word;
+            }
+        };
     }
 }
