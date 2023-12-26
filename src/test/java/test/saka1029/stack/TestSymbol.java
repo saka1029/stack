@@ -38,7 +38,7 @@ public class TestSymbol {
         logger.info(Common.methodName());
         Context c = Context.of(Map.of(Symbol.of("three"), Int.of(3)));
         Symbol.of("three").execute(c);
-        assertEquals(1, c.stack.size());
+        assertEquals(1, c.size());
         assertEquals(Int.of(3), c.pop());
     }
 

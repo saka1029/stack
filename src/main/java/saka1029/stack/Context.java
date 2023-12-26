@@ -4,9 +4,9 @@ import java.util.ArrayList;
 
 public class Context {
     
-    public final java.util.List<Instruction> stack;
-    public final java.util.List<Iterator> instructions;
-    public final java.util.Map<Symbol, Instruction> variables;
+    private final java.util.List<Instruction> stack;
+    private final java.util.List<Iterator> instructions;
+    private final java.util.Map<Symbol, Instruction> variables;
     
     Context(java.util.Map<Symbol, Instruction> variables) {
         this.stack = new ArrayList<>();
@@ -52,6 +52,10 @@ public class Context {
     
     public Iterator popInstruction() {
         return instructions.removeLast();
+    }
+    
+    public Instruction variable(Symbol s) {
+        return variables.get(s);
     }
 
     @Override

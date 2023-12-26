@@ -35,6 +35,6 @@ public interface List extends Instruction, Collection {
 
     @Override
     default void execute(Context context) {
-        context.instructions.addLast(iterator());
+        context.pushInstruction(iterator());
     }
 }

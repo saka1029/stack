@@ -18,7 +18,7 @@ public class Symbol implements Instruction {
 
     @Override
     public void execute(Context context) {
-        Instruction instruction = context.variables.get(this);
+        Instruction instruction = context.variable(this);
         if (instruction == null)
             throw new RuntimeException("Symbol '%s' undefined".formatted(name));
         instruction.execute(context);
