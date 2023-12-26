@@ -17,29 +17,6 @@ public interface List extends Instruction, Collection {
         }
     };
     
-    public static List of(Instruction instruction) {
-        return new List() {
-
-            @Override
-            public Iterator iterator() {
-                return new Iterator() {
-                    Instruction i = instruction;
-                    @Override
-                    public Instruction next() {
-                        Instruction r = i;
-                        i = null;
-                        return r;
-                    }
-                };
-            }
-
-            @Override
-            public String toString() {
-                return "(%s)".formatted(instruction);
-            }
-        };
-    }
-
     public static List of(Instruction... instructions) {
         int size = instructions.length;
         List result = NIL;

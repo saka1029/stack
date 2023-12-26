@@ -98,12 +98,12 @@ public class Parser {
         return List.of(list);
     }
 
-    public Instruction read() {
+    Instruction element() {
         return switch (token) {
             case Token.EOF -> null;
             case Token.QUOTE -> {
                 token();
-                yield Quote.of(read());
+                yield Quote.of(element());
             }
             case Token.LP -> list();
             case Token.RP -> throw error("unexpected ')'");
@@ -113,5 +113,13 @@ public class Parser {
                 yield word;
             }
         };
+    }
+    
+    public List read() {
+        java.util.List<Instruction> list = new ArrayList<>();
+        Instruction e;
+        while ((e = element()) != null)
+            list.add(e);
+        return List.of(list);
     }
 }
