@@ -5,8 +5,15 @@ import java.util.Map;
 
 public class Stack {
     
+    private Stack() {
+    }
+
     public Context context() {
         return Context.of(standard());
+    }
+    
+    public List read(String source) {
+        return Parser.of(source).read();
     }
 
     static void put(Map<Symbol, Instruction> variables, String name, Instruction instruction) {
