@@ -49,6 +49,10 @@ public class Stack {
         return Int.of(value);
     }
     
+    static Comparable c(Instruction instruction) {
+        return (Comparable)instruction;
+    }
+
     static List l(Instruction instruction) {
         return ((List)instruction);
     }
@@ -65,8 +69,11 @@ public class Stack {
         put(vars, "drop", Context::drop);
         put(vars, "true", Bool.TRUE);
         put(vars, "false", Bool.FALSE);
+        put(vars, "==", c -> c.push(b(c.pop().equals(c.pop()))));
+        put(vars, "<=", c -> c.push(b(c(c.pop()).compareTo(c(c.pop())) >= 0)));
         put(vars, "+", c -> c.push(i(i(c.pop()) + i(c.pop()))));
         put(vars, "-", c -> c.push(i(-i(c.pop()) + i(c.pop()))));
+        put(vars, "*", c -> c.push(i(i(c.pop()) * i(c.pop()))));
         put(vars, "print", c -> System.out.print(c.peek(0)));
         put(vars, "if", c -> {
             Instruction orElse = c.pop(), then = c.pop();
