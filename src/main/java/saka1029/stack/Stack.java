@@ -8,12 +8,16 @@ public class Stack {
     private Stack() {
     }
 
-    public Context context() {
+    public static Context context() {
         return Context.of(standard());
     }
     
-    public List read(String source) {
+    public static List read(String source) {
         return Parser.of(source).read();
+    }
+
+    public static Instruction eval(Context context, String source) {
+        return context.eval(read(source));
     }
 
     static void put(Map<Symbol, Instruction> variables, String name, Instruction instruction) {

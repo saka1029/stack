@@ -45,14 +45,14 @@ public class Context {
     public void pushInstruction(Iterator it) {
         instructions.addLast(it);
     }
-    
-    public Iterator peekInstruction() {
-        return instructions.getLast();
-    }
-    
-    public Iterator popInstruction() {
-        return instructions.removeLast();
-    }
+//    
+//    public Iterator peekInstruction() {
+//        return instructions.getLast();
+//    }
+//    
+//    public Iterator popInstruction() {
+//        return instructions.removeLast();
+//    }
     
     public Instruction variable(Symbol s) {
         return variables.get(s);
@@ -63,13 +63,31 @@ public class Context {
     }
 
     Terminal run() {
-        
+        L0: while (!instructions.isEmpty()) {
+            Iterator it = instructions.getLast();
+            Instruction ins;
+            while ((ins = it.next()) != null) {
+                int oldSize = instructions.size();
+                execute(ins);
+                if (instructions.size() != oldSize || instructions.getLast() != it)
+                    continue L0;
+            }
+            instructions.removeLast();
+        }
         return Terminal.END;
     }
 
     public Terminal run(List instructions) {
         execute(instructions);
         return run();
+    }
+    
+    Instruction eval(List instructions) {
+        int oldSize = size();
+        run(instructions);
+        if (size() - 1 != oldSize)
+            throw new RuntimeException("Illegal stack size %s".formatted(this));
+        return pop();
     }
     
     @Override
