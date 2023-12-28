@@ -70,7 +70,11 @@ public class Stack {
         put(vars, "true", Bool.TRUE);
         put(vars, "false", Bool.FALSE);
         put(vars, "==", c -> c.push(b(c.pop().equals(c.pop()))));
-        put(vars, "<=", c -> c.push(b(c(c.pop()).compareTo(c(c.pop())) >= 0)));
+        put(vars, "!=", c -> c.push(b(!c.pop().equals(c.pop()))));
+        put(vars, "<", c -> c.push(b(c(c.pop()).compareTo(c.pop()) > 0)));
+        put(vars, "<=", c -> c.push(b(c(c.pop()).compareTo(c.pop()) >= 0)));
+        put(vars, ">", c -> c.push(b(c(c.pop()).compareTo(c.pop()) < 0)));
+        put(vars, ">=", c -> c.push(b(c(c.pop()).compareTo(c.pop()) <= 0)));
         put(vars, "+", c -> c.push(i(i(c.pop()) + i(c.pop()))));
         put(vars, "-", c -> c.push(i(-i(c.pop()) + i(c.pop()))));
         put(vars, "*", c -> c.push(i(i(c.pop()) * i(c.pop()))));
