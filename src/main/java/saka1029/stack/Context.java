@@ -57,7 +57,21 @@ public class Context {
     public Instruction variable(Symbol s) {
         return variables.get(s);
     }
+    
+    public void execute(Instruction instruction) {
+        instruction.execute(this);
+    }
 
+    Terminal run() {
+        
+        return Terminal.END;
+    }
+
+    public Terminal run(List instructions) {
+        execute(instructions);
+        return run();
+    }
+    
     @Override
     public String toString() {
         return stack.toString();
