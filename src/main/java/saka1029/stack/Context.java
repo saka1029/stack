@@ -45,14 +45,6 @@ public class Context {
     public void pushInstruction(Iterator it) {
         instructions.addLast(it);
     }
-//    
-//    public Iterator peekInstruction() {
-//        return instructions.getLast();
-//    }
-//    
-//    public Iterator popInstruction() {
-//        return instructions.removeLast();
-//    }
     
     public Instruction variable(Symbol s) {
         return variables.get(s);

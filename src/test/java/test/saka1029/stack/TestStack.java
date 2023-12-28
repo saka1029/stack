@@ -23,7 +23,23 @@ public class TestStack {
         Context context = Stack.context();
         assertEquals(Int.of(1), Stack.eval(context, "true 1 2 if"));
         assertEquals(Int.of(2), Stack.eval(context, "false 1 2 if"));
-
+        assertEquals(Int.of(1), Stack.eval(context, "true '1 '2 if"));
+        assertEquals(Int.of(3), Stack.eval(context, "1 2 true '+ '- if"));
+        assertEquals(Int.of(-1), Stack.eval(context, "1 2 false '+ '- if"));
+        assertEquals(Int.of(3), Stack.eval(context, "true '(1 2 +) '(1 2 -) if"));
+        assertEquals(Int.of(-1), Stack.eval(context, "false '(1 2 +) '(1 2 -) if"));
+    }
+    
+    @Test
+    public void testFor() {
+        Context context = Stack.context();
+        assertEquals(Int.of(6), Stack.eval(context, "0 '(1 2 3) '+ for"));
+    }
+    
+    @Test
+    public void testRane() {
+        Context context = Stack.context();
+        assertEquals(Int.of(6), Stack.eval(context, "0 1 3 range '+ for"));
     }
 
 }
