@@ -46,12 +46,16 @@ public class Context {
         stack.removeLast();
     }
     
-    public void pushInstruction(Iterator it) {
+    public void instruction(Iterator it) {
         instructions.addLast(it);
     }
     
     public Instruction variable(Symbol s) {
         return variables.get(s);
+    }
+    
+    public void variable(Symbol s, Instruction instruction) {
+        variables.put(s, instruction);
     }
     
     public void execute(Instruction instruction) {
@@ -73,7 +77,7 @@ public class Context {
         return Terminal.END;
     }
 
-    public Terminal run(List instructions) {
+    Terminal run(List instructions) {
         execute(instructions);
         return run();
     }

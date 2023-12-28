@@ -41,5 +41,14 @@ public class TestStack {
         Context context = Stack.context();
         assertEquals(Int.of(6), Stack.eval(context, "0 1 3 range '+ for"));
     }
+    
+    @Test
+    public void testDefine() {
+        Context context = Stack.context();
+        Stack.run(context, "'+ 'plus define");
+        assertEquals(Int.of(3), Stack.eval(context, "1 2 plus"));
+        Stack.run(context, "3 'three define");
+        assertEquals(Int.of(3), Stack.eval(context, "three"));
+    }
 
 }

@@ -21,6 +21,10 @@ public class Stack {
         return Parser.of(source).read();
     }
 
+    public static void run(Context context, String source) {
+        context.run(read(source));
+    }
+
     public static Instruction eval(Context context, String source) {
         return context.eval(read(source));
     }
@@ -49,6 +53,10 @@ public class Stack {
         return ((List)instruction);
     }
 
+    static Symbol s(Instruction instruction) {
+        return ((Symbol)instruction);
+    }
+
     static Map<Symbol, Instruction> standard() {
         Map<Symbol, Instruction> vars = new HashMap<>();
         put(vars, "@0", Context::dup);
@@ -70,18 +78,19 @@ public class Stack {
         put(vars, "for", c -> {
             Instruction closure = c.pop();
             Iterator it = l(c.pop()).iterator();
-            Iterator result = new Iterator() {
-                @Override
-                public Instruction next() {
-                    Instruction i = it.next();
-                    return i == null ? null : List.of(i, closure);
-                }
-            };
-            c.pushInstruction(result);
+            c.instruction(() -> {
+                Instruction i = it.next();
+                return i == null ? null : List.of(i, closure);
+            });
         });
         put(vars, "range", c -> {
             int end = i(c.pop()), start = i(c.pop());
             c.push(Range.of(start, end));
+        });
+        put(vars, "define", c -> {
+            Symbol name = s(c.pop());
+            Instruction body = c.pop();
+            c.variable(name, body);
         });
         return vars;
     }
