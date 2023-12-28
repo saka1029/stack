@@ -30,8 +30,12 @@ public class Context {
         return stack.removeLast();
     }
     
+    public Instruction peek(int index) {
+        return stack.get(size() - index - 1);
+    }
+
     public void dup(int index) {
-        push(stack.get(size() - index - 1));
+        push(peek(index));
     }
     
     public void dup() {

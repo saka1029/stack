@@ -59,7 +59,7 @@ public class Stack {
         put(vars, "false", Bool.FALSE);
         put(vars, "+", c -> c.push(i(i(c.pop()) + i(c.pop()))));
         put(vars, "-", c -> c.push(i(-i(c.pop()) + i(c.pop()))));
-        put(vars, "print", c -> System.out.print(c.pop()));
+        put(vars, "print", c -> System.out.print(c.peek(0)));
         put(vars, "if", c -> {
             Instruction orElse = c.pop(), then = c.pop();
             if (b(c.pop()))
@@ -69,22 +69,12 @@ public class Stack {
         });
         put(vars, "for", c -> {
             Instruction closure = c.pop();
-            List list = l(c.pop());
-            Iterator it = list.iterator();
+            Iterator it = l(c.pop()).iterator();
             Iterator result = new Iterator() {
-                
-                Instruction current = it.next();
-
                 @Override
                 public Instruction next() {
-                    if (current == null)
-                        return null;
-                    Instruction i = current;
-                    current = it.next();
-                    return cc -> {
-                        cc.push(i);
-                        cc.execute(closure);
-                    };
+                    Instruction i = it.next();
+                    return i == null ? null : List.of(i, closure);
                 }
             };
             c.pushInstruction(result);
