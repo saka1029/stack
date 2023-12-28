@@ -24,6 +24,14 @@ public class Stack {
         variables.put(Symbol.of(name), instruction);
     }
     
+    static boolean b(Instruction inst) {
+        return ((Bool)inst).value;
+    }
+    
+    static Bool b(boolean value) {
+        return Bool.of(value);
+    }
+
     static int i(Instruction inst) {
         return ((Int)inst).value;
     }
@@ -34,8 +42,17 @@ public class Stack {
 
     static Map<Symbol, Instruction> standard() {
         Map<Symbol, Instruction> vars = new HashMap<>();
+        put(vars, "true", Bool.TRUE);
+        put(vars, "false", Bool.FALSE);
         put(vars, "+", c -> c.push(i(i(c.pop()) + i(c.pop()))));
         put(vars, "-", c -> c.push(i(-i(c.pop()) + i(c.pop()))));
+        put(vars, "if", c -> {
+            Instruction orElse = c.pop(), then = c.pop();
+            if (b(c.pop()))
+                c.execute(then);
+            else
+                c.execute(orElse);
+        });
         return vars;
     }
 }
