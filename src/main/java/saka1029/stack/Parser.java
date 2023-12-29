@@ -69,18 +69,22 @@ public class Parser {
         return Symbol.of(s);
     }
 
-    Instruction advance(Instruction inst) {
-        ch();
-        return inst;
-    }
-
     Instruction token() {
         spaces();
         return token = switch (ch) {
             case -1 -> Token.EOF;
-            case '\'' -> advance(Token.QUOTE);
-            case '(' -> advance(Token.LP);
-            case ')' -> advance(Token.RP);
+            case '\'' -> {
+                ch();
+                yield Token.QUOTE;
+            }
+            case '(' -> {
+                ch();
+                yield Token.LP;
+            }
+            case ')' -> {
+                ch();
+                yield Token.RP;
+            }
             default -> word();
         };
     }
