@@ -52,7 +52,7 @@ public class Parser {
 
     boolean isSymbol(int ch) {
         return switch (ch) {
-            case -1, '(', ')' -> false;
+            case -1, '(', ')', '\'' -> false;
             default -> !Character.isWhitespace(ch);
         };
     }
@@ -92,22 +92,20 @@ public class Parser {
     List list() {
         token(); // skip '('
         java.util.List<Instruction> list = new ArrayList<>();
-        while (token != Token.EOF && token != Token.RP) {
-            list.add(token);
-            token();
-        }
+        while (token != Token.EOF && token != Token.RP)
+            list.add(element());
         if (token != Token.RP)
             throw error("')' expected");
         token(); // skip ')'
         return List.of(list);
     }
 
-    public Instruction read() {
+    Instruction element() {
         return switch (token) {
             case Token.EOF -> null;
             case Token.QUOTE -> {
-                token();
-                yield Quote.of(read());
+                token();    // skip '\''
+                yield Quote.of(element());
             }
             case Token.LP -> list();
             case Token.RP -> throw error("unexpected ')'");
@@ -117,5 +115,13 @@ public class Parser {
                 yield word;
             }
         };
+    }
+    
+    public List read() {
+        java.util.List<Instruction> list = new ArrayList<>();
+        Instruction e;
+        while ((e = element()) != null)
+            list.add(e);
+        return List.of(list);
     }
 }
