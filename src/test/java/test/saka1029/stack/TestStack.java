@@ -37,9 +37,9 @@ public class TestStack {
     }
     
     @Test
-    public void testRane() {
+    public void testRange() {
         Context context = Stack.context();
-        assertEquals(Int.of(6), Stack.eval(context, "0 1 3 range '+ for"));
+        assertEquals(Int.of(6), Stack.eval(context, "0 1 3 range1 '+ for"));
     }
     
     @Test
@@ -65,7 +65,7 @@ public class TestStack {
     @Test
     public void testFactorialFor() {
         Context context = Stack.context();
-        Stack.run(context, "'(1 swap 1 swap 1 range-step '* for) 'factorial define");
+        Stack.run(context, "'(1 swap 1 swap 1 range '* for) 'factorial define");
         assertEquals(Int.of(1), Stack.eval(context, "0 factorial"));
         assertEquals(Int.of(1), Stack.eval(context, "1 factorial"));
         assertEquals(Int.of(2), Stack.eval(context, "2 factorial"));

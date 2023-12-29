@@ -95,11 +95,11 @@ public class Stack {
                 return i == null ? null : List.of(i, closure);
             });
         });
-        put(vars, "range", c -> {
+        put(vars, "range1", c -> {
             int end = i(c.pop()), start = i(c.pop());
             c.push(Range.of(start, end));
         });
-        put(vars, "range-step", c -> {
+        put(vars, "range", c -> {
             int step = i(c.pop()), end = i(c.pop()), start = i(c.pop());
             c.push(Range.of(start, end, step));
         });
