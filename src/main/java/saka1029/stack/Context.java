@@ -52,6 +52,22 @@ public class Context {
         stack.removeLast();
     }
     
+    public void rot() {
+        int size = size();
+        Instruction temp = stack.get(size - 3);
+        stack.set(size - 3, stack.get(size - 2));
+        stack.set(size - 2, stack.get(size - 1));
+        stack.set(size - 1, temp);
+    }
+    
+    public void rrot() {
+        int size = size();
+        Instruction temp = stack.get(size - 1);
+        stack.set(size - 1, stack.get(size - 2));
+        stack.set(size - 2, stack.get(size - 3));
+        stack.set(size - 3, temp);
+    }
+    
     public void instruction(Iterator it) {
         instructions.addLast(it);
     }

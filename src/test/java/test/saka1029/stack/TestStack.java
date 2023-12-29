@@ -6,6 +6,7 @@ import org.junit.Test;
 
 import saka1029.stack.Context;
 import saka1029.stack.Int;
+import saka1029.stack.List;
 import saka1029.stack.Stack;
 
 public class TestStack {
@@ -16,6 +17,38 @@ public class TestStack {
         assertEquals(Int.of(3), Stack.eval(context, "1 2 + "));
         assertEquals(Int.of(3), Stack.eval(context, "(1 2) + "));
         assertEquals(Int.of(3), Stack.eval(context, "1 2 (+) "));
+    }
+
+    @Test
+    public void testCar() {
+        Context c = Stack.context();
+        assertEquals(Int.of(1), Stack.eval(c, "'(1 2) car"));
+    }
+
+    @Test
+    public void testCdr() {
+        Context c = Stack.context();
+        assertEquals(List.of(Int.of(2)), Stack.eval(c, "'(1 2) cdr"));
+    }
+
+    @Test
+    public void testUncons() {
+        Context c = Stack.context();
+        Stack.run(c, "'(1 2) uncons");
+        assertEquals(List.of(Int.of(2)), c.pop());
+        assertEquals(Int.of(1), c.pop());
+    }
+
+    @Test
+    public void testCons() {
+        Context c = Stack.context();
+        assertEquals(List.of(Int.of(1)), Stack.eval(c, "1 '() cons"));
+    }
+
+    @Test
+    public void testRcons() {
+        Context c = Stack.context();
+        assertEquals(List.of(Int.of(1)), Stack.eval(c, "'() 1 rcons"));
     }
 
     @Test

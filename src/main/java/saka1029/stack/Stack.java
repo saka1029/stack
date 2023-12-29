@@ -49,12 +49,16 @@ public class Stack {
         return Int.of(value);
     }
     
-    static Comparable c(Instruction instruction) {
+    static Comparable comp(Instruction instruction) {
         return (Comparable)instruction;
     }
 
     static List l(Instruction instruction) {
         return ((List)instruction);
+    }
+
+    static Cons cons(Instruction instruction) {
+        return ((Cons)instruction);
     }
 
     static Symbol s(Instruction instruction) {
@@ -68,17 +72,32 @@ public class Stack {
         put(vars, "@2", c -> c.dup(2));
         put(vars, "drop", Context::drop);
         put(vars, "swap", Context::swap);
+        put(vars, "rot", Context::rot);
+        put(vars, "rrot", Context::rrot);
         put(vars, "true", Bool.TRUE);
         put(vars, "false", Bool.FALSE);
         put(vars, "==", c -> c.push(b(c.pop().equals(c.pop()))));
         put(vars, "!=", c -> c.push(b(!c.pop().equals(c.pop()))));
-        put(vars, "<", c -> c.push(b(c(c.pop()).compareTo(c.pop()) > 0)));
-        put(vars, "<=", c -> c.push(b(c(c.pop()).compareTo(c.pop()) >= 0)));
-        put(vars, ">", c -> c.push(b(c(c.pop()).compareTo(c.pop()) < 0)));
-        put(vars, ">=", c -> c.push(b(c(c.pop()).compareTo(c.pop()) <= 0)));
+        put(vars, "<", c -> c.push(b(comp(c.pop()).compareTo(c.pop()) > 0)));
+        put(vars, "<=", c -> c.push(b(comp(c.pop()).compareTo(c.pop()) >= 0)));
+        put(vars, ">", c -> c.push(b(comp(c.pop()).compareTo(c.pop()) < 0)));
+        put(vars, ">=", c -> c.push(b(comp(c.pop()).compareTo(c.pop()) <= 0)));
         put(vars, "+", c -> c.push(i(i(c.pop()) + i(c.pop()))));
         put(vars, "-", c -> c.push(i(-i(c.pop()) + i(c.pop()))));
         put(vars, "*", c -> c.push(i(i(c.pop()) * i(c.pop()))));
+        put(vars, "car", c -> c.push(cons(c.pop()).car));
+        put(vars, "cdr", c -> c.push(cons(c.pop()).cdr));
+        put(vars, "uncons", c -> {
+            Cons cons = cons(c.pop());
+            c.push(cons.car);
+            c.push(cons.cdr);
+        });
+        put(vars, "cons", c -> {
+            List cdr = l(c.pop());
+            Instruction car = c.pop();
+            c.push(Cons.of(car, cdr));
+        });
+        put(vars, "rcons", c -> c.push(Cons.of(c.pop(), l(c.pop()))));
         put(vars, "print", c -> System.out.print(c.peek(0)));
         put(vars, "if", c -> {
             Instruction orElse = c.pop(), then = c.pop();
