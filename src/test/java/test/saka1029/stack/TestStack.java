@@ -52,7 +52,7 @@ public class TestStack {
     }
     
     @Test
-    public void testFact() {
+    public void testFactRecuesive() {
         Context context = Stack.context();
         Stack.run(context, "'(@0 0 <= '(drop 1) '(@0 1 - fact *) if) 'fact define");
         assertEquals(Int.of(1), Stack.eval(context, "0 fact"));
@@ -60,6 +60,19 @@ public class TestStack {
         assertEquals(Int.of(2), Stack.eval(context, "2 fact"));
         assertEquals(Int.of(6), Stack.eval(context, "3 fact"));
         assertEquals(Int.of(24), Stack.eval(context, "4 fact"));
+    }
+    
+    @Test
+    public void testFibonacciRecuesive() {
+        Context context = Stack.context();
+        Stack.run(context, "'(@0 1 <= '() '(@0 1 - fibonacci swap 2 - fibonacci +) if) 'fibonacci define");
+        assertEquals(Int.of(0), Stack.eval(context, "0 fibonacci"));
+        assertEquals(Int.of(1), Stack.eval(context, "1 fibonacci"));
+        assertEquals(Int.of(1), Stack.eval(context, "2 fibonacci"));
+        assertEquals(Int.of(2), Stack.eval(context, "3 fibonacci"));
+        assertEquals(Int.of(3), Stack.eval(context, "4 fibonacci"));
+        assertEquals(Int.of(5), Stack.eval(context, "5 fibonacci"));
+        assertEquals(Int.of(8), Stack.eval(context, "6 fibonacci"));
     }
 
 }

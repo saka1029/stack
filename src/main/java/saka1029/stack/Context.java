@@ -1,6 +1,7 @@
 package saka1029.stack;
 
 import java.util.ArrayList;
+import java.util.Collections;
 
 public class Context {
     
@@ -40,6 +41,11 @@ public class Context {
     
     public void dup() {
         dup(0);
+    }
+    
+    public void swap() {
+        int top = size() - 1, second = top - 1;
+        Collections.swap(stack, top, second);
     }
     
     public void drop() {

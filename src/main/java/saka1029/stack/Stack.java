@@ -67,6 +67,7 @@ public class Stack {
         put(vars, "@1", c -> c.dup(1));
         put(vars, "@2", c -> c.dup(2));
         put(vars, "drop", Context::drop);
+        put(vars, "swap", Context::swap);
         put(vars, "true", Bool.TRUE);
         put(vars, "false", Bool.FALSE);
         put(vars, "==", c -> c.push(b(c.pop().equals(c.pop()))));
