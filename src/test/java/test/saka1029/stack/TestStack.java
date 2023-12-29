@@ -63,6 +63,17 @@ public class TestStack {
     }
     
     @Test
+    public void testFactorialFor() {
+        Context context = Stack.context();
+        Stack.run(context, "'(1 swap 1 swap 1 range-step '* for) 'factorial define");
+        assertEquals(Int.of(1), Stack.eval(context, "0 factorial"));
+        assertEquals(Int.of(1), Stack.eval(context, "1 factorial"));
+        assertEquals(Int.of(2), Stack.eval(context, "2 factorial"));
+        assertEquals(Int.of(6), Stack.eval(context, "3 factorial"));
+        assertEquals(Int.of(24), Stack.eval(context, "4 factorial"));
+    }
+    
+    @Test
     public void testFibonacciRecuesive() {
         Context context = Stack.context();
         Stack.run(context, "'(@0 1 <= '() '(@0 1 - fibonacci swap 2 - fibonacci +) if) 'fibonacci define");

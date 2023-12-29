@@ -99,6 +99,10 @@ public class Stack {
             int end = i(c.pop()), start = i(c.pop());
             c.push(Range.of(start, end));
         });
+        put(vars, "range-step", c -> {
+            int step = i(c.pop()), end = i(c.pop()), start = i(c.pop());
+            c.push(Range.of(start, end, step));
+        });
         put(vars, "define", c -> {
             Symbol name = s(c.pop());
             Instruction body = c.pop();
