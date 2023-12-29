@@ -14,7 +14,9 @@ public class Stack {
     }
 
     public static Context context() {
-        return Context.of(standard());
+        Map<Symbol, Instruction> vars = new HashMap<>();
+        standard(vars);
+        return Context.of(vars);
     }
     
     public static List read(String source) {
@@ -53,7 +55,7 @@ public class Stack {
         return (Comparable)instruction;
     }
 
-    static List l(Instruction instruction) {
+    static List list(Instruction instruction) {
         return ((List)instruction);
     }
 
@@ -65,8 +67,7 @@ public class Stack {
         return ((Symbol)instruction);
     }
 
-    static Map<Symbol, Instruction> standard() {
-        Map<Symbol, Instruction> vars = new HashMap<>();
+    static void standard(Map<Symbol, Instruction> vars) {
         put(vars, "@0", Context::dup);
         put(vars, "@1", c -> c.dup(1));
         put(vars, "@2", c -> c.dup(2));
@@ -93,11 +94,11 @@ public class Stack {
             c.push(cons.cdr);
         });
         put(vars, "cons", c -> {
-            List cdr = l(c.pop());
+            List cdr = list(c.pop());
             Instruction car = c.pop();
             c.push(Cons.of(car, cdr));
         });
-        put(vars, "rcons", c -> c.push(Cons.of(c.pop(), l(c.pop()))));
+        put(vars, "rcons", c -> c.push(Cons.of(c.pop(), list(c.pop()))));
         put(vars, "print", c -> System.out.print(c.peek(0)));
         put(vars, "if", c -> {
             Instruction orElse = c.pop(), then = c.pop();
@@ -108,7 +109,7 @@ public class Stack {
         });
         put(vars, "for", c -> {
             Instruction closure = c.pop();
-            Iterator it = l(c.pop()).iterator();
+            Iterator it = list(c.pop()).iterator();
             c.instruction(() -> {
                 Instruction i = it.next();
                 return i == null ? null : List.of(i, closure);
@@ -127,6 +128,5 @@ public class Stack {
             Instruction body = c.pop();
             c.variable(name, body);
         });
-        return vars;
     }
 }
