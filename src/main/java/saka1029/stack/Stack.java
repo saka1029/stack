@@ -123,10 +123,6 @@ public class Stack {
             int step = i(c.pop()), end = i(c.pop()), start = i(c.pop());
             c.push(Range.of(start, end, step));
         });
-        put(vars, "define", c -> {
-            Symbol name = s(c.pop());
-            Instruction body = c.pop();
-            c.variable(name, body);
-        });
+        put(vars, "define", c -> c.variable(s(c.pop()), c.pop()));
     }
 }
