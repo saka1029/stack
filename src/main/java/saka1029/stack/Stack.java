@@ -68,9 +68,11 @@ public class Stack {
     }
 
     static void standard(Map<Symbol, Instruction> vars) {
-        put(vars, "@0", Context::dup);
-        put(vars, "@1", c -> c.dup(1));
-        put(vars, "@2", c -> c.dup(2));
+        put(vars, "dup", Context::dup);
+        put(vars, "dup0", Context::dup);
+        put(vars, "dup1", c -> c.dup(1));
+        put(vars, "dup2", c -> c.dup(2));
+        put(vars, "dup3", c -> c.dup(3));
         put(vars, "drop", Context::drop);
         put(vars, "swap", Context::swap);
         put(vars, "rot", Context::rot);
@@ -86,6 +88,7 @@ public class Stack {
         put(vars, "+", c -> c.push(i(i(c.pop()) + i(c.pop()))));
         put(vars, "-", c -> c.push(i(-i(c.pop()) + i(c.pop()))));
         put(vars, "*", c -> c.push(i(i(c.pop()) * i(c.pop()))));
+        put(vars, "null?", c -> c.push(b(c.pop().equals(List.NIL))));
         put(vars, "car", c -> c.push(cons(c.pop()).car));
         put(vars, "cdr", c -> c.push(cons(c.pop()).cdr));
         put(vars, "uncons", c -> {
@@ -100,6 +103,7 @@ public class Stack {
         });
         put(vars, "rcons", c -> c.push(Cons.of(c.pop(), list(c.pop()))));
         put(vars, "print", c -> System.out.print(c.peek(0)));
+        put(vars, "stack", c -> System.out.println(c));
         put(vars, "if", c -> {
             Instruction orElse = c.pop(), then = c.pop();
             if (b(c.pop()))
