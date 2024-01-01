@@ -205,9 +205,17 @@ public class TestStack {
     }
     
     @Test
-    public void testFilterRecursive() {
+    public void testFilterRecursiveCdrFirst() {
         Context c = context();
         run(c, "'(swap dup null? '() '(uncons dup2 filter swap dup dup3 execute 'rcons 'drop if) if swap drop) 'filter define");
+        assertEquals(eval(c, "'(0 2)"), eval(c, "'(0 1 2 3) '(2 % 0 ==) filter"));
+        assertEquals(eval(c, "'(1 3)"), eval(c, "'(0 1 2 3) '(2 % 0 !=) filter"));
+    }
+    
+    @Test
+    public void testFilterRecursiveCarFirst() {
+        Context c = context();
+        run(c, "'(swap dup null? '() '(uncons swap dup dup3 execute rot dup3 filter swap 'cons '(swap drop) if) if swap drop) 'filter define");
         assertEquals(eval(c, "'(0 2)"), eval(c, "'(0 1 2 3) '(2 % 0 ==) filter"));
         assertEquals(eval(c, "'(1 3)"), eval(c, "'(0 1 2 3) '(2 % 0 !=) filter"));
     }
