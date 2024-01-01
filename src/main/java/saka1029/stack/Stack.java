@@ -88,6 +88,8 @@ public class Stack {
         put(vars, "+", c -> c.push(i(i(c.pop()) + i(c.pop()))));
         put(vars, "-", c -> c.push(i(-i(c.pop()) + i(c.pop()))));
         put(vars, "*", c -> c.push(i(i(c.pop()) * i(c.pop()))));
+        put(vars, "/", c -> { int r = i(c.pop()); c.push(i(i(c.pop()) / r)); });
+        put(vars, "%", c -> { int r = i(c.pop()); c.push(i(i(c.pop()) % r)); });
         put(vars, "null?", c -> c.push(b(c.pop().equals(List.NIL))));
         put(vars, "car", c -> c.push(cons(c.pop()).car));
         put(vars, "cdr", c -> c.push(cons(c.pop()).cdr));
@@ -104,6 +106,7 @@ public class Stack {
         put(vars, "rcons", c -> c.push(Cons.of(c.pop(), list(c.pop()))));
         put(vars, "print", c -> System.out.print(c.peek(0)));
         put(vars, "stack", c -> System.out.println(c));
+        put(vars, "execute", c -> c.execute(c.pop()));
         put(vars, "if", c -> {
             Instruction orElse = c.pop(), then = c.pop();
             if (b(c.pop()))
