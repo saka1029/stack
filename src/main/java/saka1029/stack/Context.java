@@ -18,6 +18,10 @@ public class Context {
     public static Context of(java.util.Map<Symbol, Instruction> variables) {
         return new Context(variables);
     }
+    
+    public Context child() {
+        return of(variables);
+    }
 
     public int size() {
         return stack.size();
@@ -84,13 +88,24 @@ public class Context {
         instruction.execute(this);
     }
 
-    Terminal run() {
+    public Terminal run() {
         L0: while (!instructions.isEmpty()) {
             Iterator it = instructions.getLast();
             Instruction ins;
-            while ((ins = it.next()) != null) {
+            L1: while ((ins = it.next()) != null) {
                 int oldSize = instructions.size();
                 execute(ins);
+                if (size() != 0 && peek(0) instanceof Terminal terminal) {
+                    drop(); // drop Terminal;
+                    switch (terminal) {
+                        case BREAK:
+                            break L1;
+                        case YIELD:
+                            return Terminal.YIELD;
+                        default:
+                            throw new RuntimeException("unexpected terminal '%' found".formatted(terminal));
+                    }
+                }
                 if (instructions.size() != oldSize || instructions.getLast() != it)
                     continue L0;
             }
