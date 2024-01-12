@@ -17,16 +17,13 @@ public class Generator implements List {
     @Override
     public Iterator iterator() {
         context.execute(code);
-        return new Iterator() {
-            @Override
-            public Instruction next() {
-                Terminal t = context.run();
-                return switch (t) {
-                    case END -> null;
-                    case YIELD -> context.pop();
-                    default -> throw new RuntimeException("Unsupported terminator '%s'".formatted(t));
-                };
-            }
+        return () -> {
+            Terminal t = context.run();
+            return switch (t) {
+                case END -> null;
+                case YIELD -> context.pop();
+                default -> throw new RuntimeException("Unsupported terminator '%s'".formatted(t));
+            };
         };
     }
     
