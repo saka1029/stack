@@ -10,8 +10,8 @@ public class Generator implements List {
         this.code = code instanceof List list ? list : List.of(code);
     }
     
-    public static Generator of(Context origin, Instruction list) {
-        return new Generator(origin.child(), list);
+    public static Generator of(Context origin, Instruction code) {
+        return new Generator(origin.child(), code);
     }
     
 //    class Iter implements Iterator {
