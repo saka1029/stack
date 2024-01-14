@@ -5,14 +5,26 @@ public class Generator implements List {
     final Context context;
     final List code;
     
-    Generator(Context context, Instruction code, Instruction arg) {
+    Generator(Context context, Instruction code) {
         this.context = context;
-        this.context.push(arg);
         this.code = code instanceof List list ? list : List.of(code);
     }
     
-    public static Generator of(Context origin, Instruction code, Instruction arg) {
-        return new Generator(origin.child(), code, arg);
+    public static Generator of(Context origin, Instruction code) {
+        return new Generator(origin.child(), code);
+    }
+
+    public static Generator of(Context origin, Instruction code, Instruction arg1) {
+        Generator g = of(origin, code);
+        g.context.push(arg1);
+        return g;
+    }
+
+    public static Generator of(Context origin, Instruction code, Instruction arg2, Instruction arg1) {
+        Generator g = of(origin, code);
+        g.context.push(arg1);
+        g.context.push(arg2);
+        return g;
     }
     
     @Override
