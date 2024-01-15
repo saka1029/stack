@@ -13,51 +13,30 @@ public class Generator implements List {
     public static Generator of(Context origin, Instruction code) {
         return new Generator(origin.child(), code);
     }
-    
-//    class Iter implements Iterator {
-//        
-//        Instruction current;
-//        
-//        Iter() {
-//            context.execute(code);
-//            this.current = advance();
-//        }
-//        
-//        Instruction advance() {
-//            Terminal t = context.run();
-//            switch (t) {
-//                case END:
-//                    return null;
-//                case YIELD:
-//                    return context.pop();
-//                default:
-//                    throw new RuntimeException("Unsupported terminator '%s'".formatted(t));
-//            }
-//        }
-//
-//        @Override
-//        public Instruction next() {
-//            Instruction result = current;
-//            if (result != null)
-//                current = advance();
-//            return result;
-//        }
-//    }
 
+    public static Generator of(Context origin, Instruction code, Instruction arg1) {
+        Generator g = of(origin, code);
+        g.context.push(arg1);
+        return g;
+    }
+
+    public static Generator of(Context origin, Instruction code, Instruction arg2, Instruction arg1) {
+        Generator g = of(origin, code);
+        g.context.push(arg1);
+        g.context.push(arg2);
+        return g;
+    }
+    
     @Override
     public Iterator iterator() {
-//        return new Iter();
         context.execute(code);
-        return new Iterator() {
-            @Override
-            public Instruction next() {
-                Terminal t = context.run();
-                return switch (t) {
-                    case END -> null;
-                    case YIELD -> context.pop();
-                    default -> throw new RuntimeException("Unsupported terminator '%s'".formatted(t));
-                };
-            }
+        return () -> {
+            Terminal t = context.run();
+            return switch (t) {
+                case END -> null;
+                case YIELD -> context.pop();
+                default -> throw new RuntimeException("Unsupported terminator '%s'".formatted(t));
+            };
         };
     }
     
