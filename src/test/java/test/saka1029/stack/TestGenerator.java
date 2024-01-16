@@ -30,5 +30,7 @@ public class TestGenerator {
             eval(c, "'() 3 '(dup 1 2 + + yield dup 2 + yield dup 1 + yield) generator1 'rcons for"));
         assertEquals(eval(c, "'(8 9 10)"),
             eval(c, "'() 3 4 '(+ dup 2 1 + + yield dup 2 + yield dup 1 + yield) generator2 'rcons for"));
+        assertEquals(eval(c, "'(3 2 1)"),
+            eval(c, "'() '(1 3 1 range 'yield for) generator 'rcons for"));
     }
 }
