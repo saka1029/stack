@@ -104,6 +104,13 @@ public class Stack {
             c.push(Cons.of(car, cdr));
         });
         put(vars, "rcons", c -> c.push(Cons.of(c.pop(), list(c.pop()))));
+        put(vars, "reverse", c ->  {
+            List list = list(c.pop());
+            List result = List.NIL;
+            for (Instruction i : list.iterable())
+                result = Cons.of(i, result);
+            c.push(result);
+        });
         put(vars, "print", c -> System.out.print(c.peek(0)));
         put(vars, "stack", c -> System.out.println(c));
         put(vars, "execute", c -> c.execute(c.pop()));

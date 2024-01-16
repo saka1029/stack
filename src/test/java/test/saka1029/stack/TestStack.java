@@ -151,6 +151,15 @@ public class TestStack {
     }
     
     @Test
+    public void testReverseBuiltIn() {
+        Context c = context();
+        assertEquals(eval(c, "'()"), eval(c, "'() reverse"));
+        assertEquals(eval(c, "'(1)"), eval(c, "'(1) reverse"));
+        assertEquals(eval(c, "'(2 1)"), eval(c, "'(1 2) reverse"));
+        assertEquals(eval(c, "'(3 2 1)"), eval(c, "'(1 2 3) reverse"));
+    }
+    
+    @Test
     public void testReverseRecursive() {
         Context c = context();
         run(c, "'(swap dup null? 'drop '(uncons rot append cons) if) 'append define");
