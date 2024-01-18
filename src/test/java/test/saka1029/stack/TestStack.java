@@ -228,4 +228,18 @@ public class TestStack {
         assertEquals(eval(c, "'(0 2)"), eval(c, "'(0 1 2 3) '(2 % 0 ==) filter"));
         assertEquals(eval(c, "'(1 3)"), eval(c, "'(0 1 2 3) '(2 % 0 !=) filter"));
     }
+    
+    /**
+     * 
+     */
+    @Test
+    public void testAnonymousRecursion() {
+        Context c = context();
+        run(c, "'(dup execute) 'rexecute define");
+        assertEquals(eval(c, "1"), eval(c, "0 '(swap dup 0 <= '(drop 1) '(dup 1 - dup2 rexecute *) if swap drop) rexecute"));
+        assertEquals(eval(c, "1"), eval(c, "1 '(swap dup 0 <= '(drop 1) '(dup 1 - dup2 rexecute *) if swap drop) rexecute"));
+        assertEquals(eval(c, "2"), eval(c, "2 '(swap dup 0 <= '(drop 1) '(dup 1 - dup2 rexecute *) if swap drop) rexecute"));
+        assertEquals(eval(c, "6"), eval(c, "3 '(swap dup 0 <= '(drop 1) '(dup 1 - dup2 rexecute *) if swap drop) rexecute"));
+        assertEquals(eval(c, "24"), eval(c, "4 '(swap dup 0 <= '(drop 1) '(stack dup 1 - dup2 dup execute *) if swap drop) dup execute"));
+    }
 }
