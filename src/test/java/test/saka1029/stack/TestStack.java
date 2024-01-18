@@ -230,7 +230,16 @@ public class TestStack {
     }
     
     /**
+     * 通常の関数呼び出し:
+     * 引数 関数
      * 
+     * 無名再帰の関数呼び出し: 
+     * 引数 '関数 rexecute
+     * 
+     * 関数は自分自身をdupしてからexecuteすることで、自分自身を引数として受け取ることができる。
+     * 引数 関数 : rexecute
+     * 引数 関数 : dup
+     * 引数 関数 関数 : execute (関数は引数として[引数 関数]を受け取る)
      */
     @Test
     public void testAnonymousRecursion() {
