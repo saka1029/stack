@@ -239,7 +239,7 @@ public class TestStack {
      * 関数は自分自身をdupしてからexecuteすることで、自分自身を引数として受け取ることができる。
      * 引数 関数 : rexecute
      * 引数 関数 : dup
-     * 引数 関数 関数 : execute (関数は引数として[引数 関数]を受け取る)
+     * 引数 関数 関数 : execute (関数は第2引数として[引数 関数]を受け取る)
      */
     @Test
     public void testAnonymousRecursion() {
@@ -253,5 +253,29 @@ public class TestStack {
         // 無名関数に名前を付けた場合(先頭がクォート2個である点に注意する)
         run(c, "''(swap dup 0 <= '(drop 1) '(dup 1 - dup2 rexecute *) if swap drop) 'fact define");
         assertEquals(eval(c, "24"), eval(c, "4 fact rexecute"));
+    }
+
+    /**
+     * 無名再帰の関数呼び出し: 
+     * 関数の先頭でswapしない方式。
+     * 無名再帰関数は以下の引数を受け取る。
+     * [引数1 引数2 ... 引数n 関数(自分自身)]
+     * 
+     * ifのelse部の動作:
+     * 3 F : dup1 dup (引数を2個pushする)
+     * 3 F 3 3 : 1 - (引数から1を引く)
+     * 3 F 3 2 : dup2 dup (関数自身を2個pushする)
+     * 3 F 3 2 F F : execute (再帰呼び出しする)
+     * 3 F 3 2! : * (その結果と引数を乗算する)
+     * 3 F (3 * 2!)
+     */
+    @Test
+    public void testAnonymousRecursionArgsFunction() {
+        Context c = context();
+        assertEquals(eval(c, "1"), eval(c, "0 '(dup1 0 <= '1 '(dup1 dup 1 - dup2 dup execute *) if swap drop swap drop) dup execute"));
+        assertEquals(eval(c, "1"), eval(c, "1 '(dup1 0 <= '1 '(dup1 dup 1 - dup2 dup execute *) if swap drop swap drop) dup execute"));
+        assertEquals(eval(c, "2"), eval(c, "2 '(dup1 0 <= '1 '(dup1 dup 1 - dup2 dup execute *) if swap drop swap drop) dup execute"));
+        assertEquals(eval(c, "6"), eval(c, "3 '(dup1 0 <= '1 '(dup1 dup 1 - dup2 dup execute *) if swap drop swap drop) dup execute"));
+        assertEquals(eval(c, "24"), eval(c, "4 '(dup1 0 <= '1 '(dup1 dup 1 - dup2 dup execute *) if swap drop swap drop) dup execute"));
     }
 }
