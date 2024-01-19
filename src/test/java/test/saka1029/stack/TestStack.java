@@ -258,6 +258,7 @@ public class TestStack {
     /**
      * 無名再帰の関数呼び出し: 
      * 関数の先頭でswapしない方式。
+     * 2個以上の引数がある場合を考えるとswapしない方式の方がよい。
      * 無名再帰関数は以下の引数を受け取る。
      * [引数1 引数2 ... 引数n 関数(自分自身)]
      * 
@@ -268,6 +269,10 @@ public class TestStack {
      * 3 F 3 2 F F : execute (再帰呼び出しする)
      * 3 F 3 2! : * (その結果と引数を乗算する)
      * 3 F (3 * 2!)
+     * 
+     * 関数最後の動作:
+     * 3 F (3 * 2!) : swap drop swap drop (引数2個をdropする)
+     * 
      */
     @Test
     public void testAnonymousRecursionArgsFunction() {
