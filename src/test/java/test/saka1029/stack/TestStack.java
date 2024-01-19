@@ -244,11 +244,14 @@ public class TestStack {
     @Test
     public void testAnonymousRecursion() {
         Context c = context();
+        assertEquals(eval(c, "1"), eval(c, "0 '(swap dup 0 <= '(drop 1) '(dup 1 - dup2 dup execute *) if swap drop) dup execute"));
+        assertEquals(eval(c, "1"), eval(c, "1 '(swap dup 0 <= '(drop 1) '(dup 1 - dup2 dup execute *) if swap drop) dup execute"));
+        assertEquals(eval(c, "2"), eval(c, "2 '(swap dup 0 <= '(drop 1) '(dup 1 - dup2 dup execute *) if swap drop) dup execute"));
         run(c, "'(dup execute) 'rexecute define");
-        assertEquals(eval(c, "1"), eval(c, "0 '(swap dup 0 <= '(drop 1) '(dup 1 - dup2 rexecute *) if swap drop) rexecute"));
-        assertEquals(eval(c, "1"), eval(c, "1 '(swap dup 0 <= '(drop 1) '(dup 1 - dup2 rexecute *) if swap drop) rexecute"));
-        assertEquals(eval(c, "2"), eval(c, "2 '(swap dup 0 <= '(drop 1) '(dup 1 - dup2 rexecute *) if swap drop) rexecute"));
         assertEquals(eval(c, "6"), eval(c, "3 '(swap dup 0 <= '(drop 1) '(dup 1 - dup2 rexecute *) if swap drop) rexecute"));
-        assertEquals(eval(c, "24"), eval(c, "4 '(swap dup 0 <= '(drop 1) '(dup 1 - dup2 dup execute *) if swap drop) dup execute"));
+        assertEquals(eval(c, "24"), eval(c, "4 '(swap dup 0 <= '(drop 1) '(dup 1 - dup2 rexecute *) if swap drop) dup execute"));
+        // 無名関数に名前を付けた場合(先頭がクォート2個である点に注意する)
+        run(c, "''(swap dup 0 <= '(drop 1) '(dup 1 - dup2 rexecute *) if swap drop) 'fact define");
+        assertEquals(eval(c, "24"), eval(c, "4 fact rexecute"));
     }
 }
