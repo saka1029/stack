@@ -282,5 +282,9 @@ public class TestStack {
         assertEquals(eval(c, "2"), eval(c, "2 '(dup1 0 <= '1 '(dup1 dup 1 - dup2 dup execute *) if swap drop swap drop) dup execute"));
         assertEquals(eval(c, "6"), eval(c, "3 '(dup1 0 <= '1 '(dup1 dup 1 - dup2 dup execute *) if swap drop swap drop) dup execute"));
         assertEquals(eval(c, "24"), eval(c, "4 '(dup1 0 <= '1 '(dup1 dup 1 - dup2 dup execute *) if swap drop swap drop) dup execute"));
+        assertEquals(eval(c, "'(1 1 2 6 24)"),
+            eval(c, "'() 0 4 1 range"
+                + " '('(dup1 0 <= '1 '(dup1 dup 1 - dup2 dup execute *) if swap drop swap drop) dup execute rcons)"
+                + " for reverse"));
     }
 }
