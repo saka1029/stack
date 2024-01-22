@@ -72,7 +72,7 @@ public class TestStack {
     @Test
     public void testRange() {
         Context c = context();
-        assertEquals(Int.of(6), eval(c, "0 1 3 range1 '+ for"));
+        assertEquals(Int.of(6), eval(c, "0 1 3 1 range '+ for"));
     }
     
     @Test
@@ -181,7 +181,7 @@ public class TestStack {
         assertEquals(eval(c, "'(2 1)"), eval(c, "'(1 2) reverse"));
         assertEquals(eval(c, "'(3 2 1)"), eval(c, "'(1 2 3) reverse"));
         // forはnext()だけを使うのでreverseできる。
-        assertEquals(eval(c, "'(3 2 1)"), eval(c, "1 3 range1 reverse"));
+        assertEquals(eval(c, "'(3 2 1)"), eval(c, "1 3 1 range reverse"));
     }
     
     @Test
@@ -193,7 +193,7 @@ public class TestStack {
         assertEquals(eval(c, "'(2 1)"), eval(c, "'(1 2) reverse"));
         assertEquals(eval(c, "'(3 2 1)"), eval(c, "'(1 2 3) reverse"));
         // forはnext()だけを使うのでreverseできる。
-        assertEquals(eval(c, "'(3 2 1)"), eval(c, "1 3 range1 reverse"));
+        assertEquals(eval(c, "'(3 2 1)"), eval(c, "1 3 1 range reverse"));
     }
     
     @Test
