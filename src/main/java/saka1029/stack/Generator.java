@@ -1,6 +1,12 @@
 package saka1029.stack;
 
+import java.util.logging.Logger;
+
+import saka1029.Common;
+
 public class Generator extends List {
+    
+    static final Logger logger = Common.logger(Generator.class);
 
     final Context context;
     final List code;

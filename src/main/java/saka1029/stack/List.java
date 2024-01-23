@@ -93,8 +93,11 @@ public abstract class List implements Instruction {
     public String toString() {
         StringBuilder sb = new StringBuilder("(");
         Iterator it = iterator();
-        for (Instruction e = it.next(); e != null;  e = it.next())
+        Instruction e = it.next();
+        if (e != null)
             sb.append(e);
+        while ((e = it.next()) != null)
+            sb.append(" ").append(e);
         sb.append(")");
         return sb.toString();
     }
