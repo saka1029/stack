@@ -26,6 +26,11 @@ public class Context {
     public int size() {
         return stack.size();
     }
+    
+    public void clear() {
+        stack.clear();
+    }
+    
 
     public void push(Instruction i) {
         stack.addLast(i);
