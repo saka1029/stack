@@ -44,5 +44,4 @@ public class Generator extends List {
     public String toString() {
         return "generator[%s]".formatted(code);
     }
-
 }

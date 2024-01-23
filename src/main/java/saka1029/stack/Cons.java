@@ -1,7 +1,5 @@
 package saka1029.stack;
 
-import java.util.Objects;
-
 public class Cons extends List {
 
     public final Instruction car;
@@ -31,25 +29,5 @@ public class Cons extends List {
                 return null;
             }
         };
-    }
-
-//    @Override
-//    public int hashCode() {
-//        return Objects.hash(car, cdr);
-//    }
-//
-//    @Override
-//    public boolean equals(Object obj) {
-//        return obj instanceof Cons c && car.equals(c.car) && cdr.equals(c.cdr);
-//    }
-
-    @Override
-    public String toString() {
-        StringBuilder sb = new StringBuilder("(");
-        sb.append(car);
-        for (List list = cdr; list instanceof Cons cons; list = cons.cdr)
-            sb.append(" ").append(cons.car);
-        sb.append(")");
-        return sb.toString();
     }
 }
