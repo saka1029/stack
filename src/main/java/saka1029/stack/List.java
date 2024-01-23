@@ -1,8 +1,32 @@
 package saka1029.stack;
 
 import java.util.ListIterator;
+import java.util.NoSuchElementException;
 
-public interface List extends Instruction, Collection {
+public abstract class List implements Instruction {
+    
+    public abstract Iterator iterator();
+    
+    public Iterable<Instruction> iterable() {
+        return () -> new java.util.Iterator<>() {
+            final Iterator it = iterator();
+            Instruction next = it.next();
+
+            @Override
+            public boolean hasNext() {
+                return next != null;
+            }
+
+            @Override
+            public Instruction next() {
+                if (next == null)
+                    throw new NoSuchElementException();
+                Instruction result = next;
+                next = it.next();
+                return result;
+            }
+        };
+    }
     
     public static final List NIL = new List() {
 
@@ -34,7 +58,41 @@ public interface List extends Instruction, Collection {
     }
 
     @Override
-    default void execute(Context context) {
+    public void execute(Context context) {
         context.instruction(iterator());
     }
+    
+    @Override
+    public int hashCode() {
+        int  hash = 17;
+        Iterator it = iterator();
+        for (Instruction i = it.next(); i != null; i = it.next())
+            hash = hash * 31 + i.hashCode();
+        return hash;
+    }
+    
+    @Override
+    public boolean equals(Object obj) {
+        if (!(obj instanceof List list))
+            return false;
+        Iterator left = iterator(), right = list.iterator();
+        Instruction l = left.next(), r = right.next();
+        for (; l != null && r != null; l = left.next(), r = right.next())
+            if (!l.equals(r))
+                return false;
+        if (l == null && r == null)
+            return true;
+        return false;
+    }
+
+    @Override
+    public String toString() {
+        StringBuilder sb = new StringBuilder("(");
+        Iterator it = iterator();
+        for (Instruction e = it.next(); e != null;  e = it.next())
+            sb.append(e);
+        sb.append(")");
+        return sb.toString();
+    }
+    
 }

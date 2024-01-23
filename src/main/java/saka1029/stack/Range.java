@@ -2,7 +2,7 @@ package saka1029.stack;
 
 import java.util.Objects;
 
-public class Range implements List {
+public class Range extends List {
     
     final int start, end, step;
     

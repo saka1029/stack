@@ -2,7 +2,7 @@ package saka1029.stack;
 
 import java.util.Objects;
 
-public class Cons implements List {
+public class Cons extends List {
 
     public final Instruction car;
     public final List cdr;
@@ -33,15 +33,15 @@ public class Cons implements List {
         };
     }
 
-    @Override
-    public int hashCode() {
-        return Objects.hash(car, cdr);
-    }
-
-    @Override
-    public boolean equals(Object obj) {
-        return obj instanceof Cons c && car.equals(c.car) && cdr.equals(c.cdr);
-    }
+//    @Override
+//    public int hashCode() {
+//        return Objects.hash(car, cdr);
+//    }
+//
+//    @Override
+//    public boolean equals(Object obj) {
+//        return obj instanceof Cons c && car.equals(c.car) && cdr.equals(c.cdr);
+//    }
 
     @Override
     public String toString() {

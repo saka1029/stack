@@ -1,6 +1,6 @@
 package saka1029.stack;
 
-public class Generator implements List {
+public class Generator extends List {
 
     final Context context;
     final List code;
