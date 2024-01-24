@@ -213,6 +213,10 @@ public class TestStack {
         assertEquals(eval(c, "'(1 2 3 4 5)"), eval(c, "'(0 1 2 3 4) '(1 +) map"));
     }
     
+    /**
+     * ラムダ式をマクロ的に置換することでmapを実現している。
+     * F -> (F cons)
+     */
     @Test
     public void testMapByReverse() {
         Context c = context();
