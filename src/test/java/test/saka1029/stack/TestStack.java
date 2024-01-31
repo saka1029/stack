@@ -11,6 +11,8 @@ import saka1029.stack.List;
 
 public class TestStack {
 
+	// GitKrakenテスト
+
     @Test
     public void testPlus() {
         Context c = context();
