@@ -94,11 +94,14 @@ public abstract class List implements Instruction {
         StringBuilder sb = new StringBuilder("(");
         Iterator it = iterator();
         Instruction e = it.next();
-        if (e != null)
+        if (e != null) {
             sb.append(e);
-        while ((e = it.next()) != null)
+            e = it.next();
+        }
+        while (e != null) {
             sb.append(" ").append(e);
-        sb.append(")");
-        return sb.toString();
+            e = it.next();
+        }
+        return sb.append(")").toString();
     }
 }

@@ -157,6 +157,7 @@ public class TestStack {
         assertEquals(eval(c, "'(1)"), eval(c, "'(1) reverse"));
         assertEquals(eval(c, "'(2 1)"), eval(c, "'(1 2) reverse"));
         assertEquals(eval(c, "'(3 2 1)"), eval(c, "'(1 2 3) reverse"));
+        assertEquals(eval(c, "'(3 2 1)"), eval(c, "1 3 1 range reverse"));
     }
     
     @Test
