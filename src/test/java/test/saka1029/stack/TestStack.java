@@ -288,7 +288,7 @@ public class TestStack {
      * 3 F (3 * 2!)
      * 
      * 関数最後の動作:
-     * 3 F (3 * 2!) : swap drop swap drop (引数2個をdropする)
+     * 3 F (3 * 2!) : ret2 (引数2個をdropする)
      * 
      */
     @Test
