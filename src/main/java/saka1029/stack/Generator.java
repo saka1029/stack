@@ -23,27 +23,35 @@ public class Generator extends List {
     final List code;
     final Instruction[] args;
     
+    /**
+     * 
+     * @param context
+     * @param code
+     * @param args 引数を逆順に指定します。
+     *             これは以下のような書き方ができるようにするためです。
+     *             <code>new Generator(code, c.pop(), c.pop())</code>
+     */
     Generator(Context context, Instruction code, Instruction... args) {
         this.context = context;
         this.code = code instanceof List list ? list : List.of(code);
         this.args = reverse(args.clone());
     }
     
-    public static Generator of(Context origin, Instruction code, Instruction... args) {
-        return new Generator(origin.child(), code, args);
+    public static Generator of(Context context, Instruction code, Instruction... args) {
+        return new Generator(context, code, args);
     }
 
     @Override
     public Iterator iterator() {
-        context.clear();
+        Context c = context.child();
         for (Instruction i : args)
-            context.push(i);
-        context.execute(code);
+            c.push(i);
+        c.execute(code);
         return () -> {
-            Terminal t = context.run();
+            Terminal t = c.run();
             return switch (t) {
                 case END -> null;
-                case YIELD -> context.pop();
+                case YIELD -> c.pop();
                 default -> throw new RuntimeException("Unsupported terminator '%s'".formatted(t));
             };
         };
