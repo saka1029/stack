@@ -132,6 +132,24 @@ public class Stack {
                 return i == null ? null : List.of(i, closure);
             });
         });
+        put(vars, "map", c -> {
+            Instruction closure = c.pop();
+            List list = list(c.pop());
+            c.push(new List() {
+                @Override
+                public Iterator iterator() {
+                    Iterator it = list.iterator();
+                    return () -> {
+                        Instruction i = it.next();
+                        if (i == null)
+                            return null;
+                        c.execute(i);
+                        c.execute(closure);
+                        return c.pop();
+                    };
+                }
+            });
+        });
         put(vars, "range", c -> {
             int step = i(c.pop()), end = i(c.pop()), start = i(c.pop());
             c.push(Range.of(start, end, step));

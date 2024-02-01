@@ -231,6 +231,15 @@ public class TestStack {
     }
     
     @Test
+    public void testMapBuiltin() {
+        Context c = context();
+        assertEquals(eval(c, "'()"), eval(c, "'() '(1 +) map"));
+//        assertEquals(eval(c, "'(1)"), eval(c, "'(0) '(1 +) map"));
+        assertEquals(eval(c, "'(1 2 3)"), eval(c, "'(0 1 2) '(1 +) map"));
+        assertEquals(eval(c, "'(1 2 3 4 5)"), eval(c, "'(0 1 2 3 4) '(1 +) map"));
+    }
+    
+    @Test
     public void testFilterRecursiveCdrFirst() {
         Context c = context();
         run(c, "'(swap dup null? '() '(uncons dup2 filter swap dup dup3 execute 'rcons 'drop if) if ret1) 'filter define");
