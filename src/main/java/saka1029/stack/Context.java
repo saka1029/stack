@@ -77,6 +77,13 @@ public class Context {
         stack.set(size - 3, temp);
     }
     
+    public void ret(int n) {
+        Instruction top = stack.removeLast();
+        for (int i = 0; i < n; ++i)
+            stack.removeLast();
+        push(top);
+    }
+    
     public void instruction(Iterator it) {
         instructions.addLast(it);
     }

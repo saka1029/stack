@@ -206,7 +206,7 @@ public class TestStack {
     @Test
     public void testMapCarFirst() {
         Context c = context();
-        run(c, "'(swap dup null? '() '(uncons swap dup2 execute swap dup2 map cons) if swap drop) 'map define");
+        run(c, "'(swap dup null? '() '(uncons swap dup2 execute swap dup2 map cons) if ret1) 'map define");
         assertEquals(eval(c, "'()"), eval(c, "'() '(1 +) map"));
         assertEquals(eval(c, "'(1)"), eval(c, "'(0) '(1 +) map"));
         assertEquals(eval(c, "'(1 2 3)"), eval(c, "'(0 1 2) '(1 +) map"));
@@ -230,7 +230,7 @@ public class TestStack {
     @Test
     public void testFilterRecursiveCdrFirst() {
         Context c = context();
-        run(c, "'(swap dup null? '() '(uncons dup2 filter swap dup dup3 execute 'rcons 'drop if) if swap drop) 'filter define");
+        run(c, "'(swap dup null? '() '(uncons dup2 filter swap dup dup3 execute 'rcons 'drop if) if ret1) 'filter define");
         assertEquals(eval(c, "'(0 2)"), eval(c, "'(0 1 2 3) '(2 % 0 ==) filter"));
         assertEquals(eval(c, "'(1 3)"), eval(c, "'(0 1 2 3) '(2 % 0 !=) filter"));
     }
@@ -238,7 +238,7 @@ public class TestStack {
     @Test
     public void testFilterRecursiveCarFirst() {
         Context c = context();
-        run(c, "'(swap dup null? '() '(uncons swap dup dup3 execute rot dup3 filter swap 'cons '(swap drop) if) if swap drop) 'filter define");
+        run(c, "'(swap dup null? '() '(uncons swap dup dup3 execute rot dup3 filter swap 'cons 'ret1 if) if ret1) 'filter define");
         assertEquals(eval(c, "'(0 2)"), eval(c, "'(0 1 2 3) '(2 % 0 ==) filter"));
         assertEquals(eval(c, "'(1 3)"), eval(c, "'(0 1 2 3) '(2 % 0 !=) filter"));
     }
@@ -258,14 +258,14 @@ public class TestStack {
     @Test
     public void testAnonymousRecursion() {
         Context c = context();
-        assertEquals(eval(c, "1"), eval(c, "0 '(swap dup 0 <= '(drop 1) '(dup 1 - dup2 dup execute *) if swap drop) dup execute"));
-        assertEquals(eval(c, "1"), eval(c, "1 '(swap dup 0 <= '(drop 1) '(dup 1 - dup2 dup execute *) if swap drop) dup execute"));
-        assertEquals(eval(c, "2"), eval(c, "2 '(swap dup 0 <= '(drop 1) '(dup 1 - dup2 dup execute *) if swap drop) dup execute"));
+        assertEquals(eval(c, "1"), eval(c, "0 '(swap dup 0 <= '(drop 1) '(dup 1 - dup2 dup execute *) if ret1) dup execute"));
+        assertEquals(eval(c, "1"), eval(c, "1 '(swap dup 0 <= '(drop 1) '(dup 1 - dup2 dup execute *) if ret1) dup execute"));
+        assertEquals(eval(c, "2"), eval(c, "2 '(swap dup 0 <= '(drop 1) '(dup 1 - dup2 dup execute *) if ret1) dup execute"));
         run(c, "'(dup execute) 'rexecute define");
-        assertEquals(eval(c, "6"), eval(c, "3 '(swap dup 0 <= '(drop 1) '(dup 1 - dup2 rexecute *) if swap drop) rexecute"));
-        assertEquals(eval(c, "24"), eval(c, "4 '(swap dup 0 <= '(drop 1) '(dup 1 - dup2 rexecute *) if swap drop) dup execute"));
+        assertEquals(eval(c, "6"), eval(c, "3 '(swap dup 0 <= '(drop 1) '(dup 1 - dup2 rexecute *) if ret1) rexecute"));
+        assertEquals(eval(c, "24"), eval(c, "4 '(swap dup 0 <= '(drop 1) '(dup 1 - dup2 rexecute *) if ret1) dup execute"));
         // 無名関数に名前を付けた場合(先頭がクォート2個である点に注意する)
-        run(c, "''(swap dup 0 <= '(drop 1) '(dup 1 - dup2 rexecute *) if swap drop) 'fact define");
+        run(c, "''(swap dup 0 <= '(drop 1) '(dup 1 - dup2 rexecute *) if ret1) 'fact define");
         assertEquals(eval(c, "24"), eval(c, "4 fact rexecute"));
     }
 
@@ -291,14 +291,14 @@ public class TestStack {
     @Test
     public void testAnonymousRecursionArgsFunction() {
         Context c = context();
-        assertEquals(eval(c, "1"), eval(c, "0 '(dup1 0 <= '1 '(dup1 dup 1 - dup2 dup execute *) if swap drop swap drop) dup execute"));
-        assertEquals(eval(c, "1"), eval(c, "1 '(dup1 0 <= '1 '(dup1 dup 1 - dup2 dup execute *) if swap drop swap drop) dup execute"));
-        assertEquals(eval(c, "2"), eval(c, "2 '(dup1 0 <= '1 '(dup1 dup 1 - dup2 dup execute *) if swap drop swap drop) dup execute"));
-        assertEquals(eval(c, "6"), eval(c, "3 '(dup1 0 <= '1 '(dup1 dup 1 - dup2 dup execute *) if swap drop swap drop) dup execute"));
-        assertEquals(eval(c, "24"), eval(c, "4 '(dup1 0 <= '1 '(dup1 dup 1 - dup2 dup execute *) if swap drop swap drop) dup execute"));
+        assertEquals(eval(c, "1"), eval(c, "0 '(dup1 0 <= '1 '(dup1 dup 1 - dup2 dup execute *) if ret2) dup execute"));
+        assertEquals(eval(c, "1"), eval(c, "1 '(dup1 0 <= '1 '(dup1 dup 1 - dup2 dup execute *) if ret2) dup execute"));
+        assertEquals(eval(c, "2"), eval(c, "2 '(dup1 0 <= '1 '(dup1 dup 1 - dup2 dup execute *) if ret2) dup execute"));
+        assertEquals(eval(c, "6"), eval(c, "3 '(dup1 0 <= '1 '(dup1 dup 1 - dup2 dup execute *) if ret2) dup execute"));
+        assertEquals(eval(c, "24"), eval(c, "4 '(dup1 0 <= '1 '(dup1 dup 1 - dup2 dup execute *) if ret2) dup execute"));
         run(c, "'('() rrot '(rcons) cons for reverse) 'map define");
         assertEquals(eval(c, "'(1 1 2 6 24)"),
             eval(c, "0 4 1 range"
-                + " '('(dup1 0 <= '1 '(dup1 dup 1 - dup2 dup execute *) if swap drop swap drop) dup execute) map"));
+                + " '('(dup1 0 <= '1 '(dup1 dup 1 - dup2 dup execute *) if ret2) dup execute) map"));
     }
 }

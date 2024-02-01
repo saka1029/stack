@@ -77,6 +77,9 @@ public class Stack {
         put(vars, "swap", Context::swap);
         put(vars, "rot", Context::rot);
         put(vars, "rrot", Context::rrot);
+        put(vars, "ret1", c -> c.ret(1)); 
+        put(vars, "ret2", c -> c.ret(2)); 
+        put(vars, "ret3", c -> c.ret(3)); 
         put(vars, "true", Bool.TRUE);
         put(vars, "false", Bool.FALSE);
         put(vars, "==", c -> c.push(b(c.pop().equals(c.pop()))));
