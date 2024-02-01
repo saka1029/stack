@@ -4,13 +4,12 @@ import java.util.ListIterator;
 import java.util.NoSuchElementException;
 
 /**
- * インターフェースにした場合、hashCode(), equals(), toString()を
- * デフォルトメソッドとして実装することができない。
+ * インターフェースにした場合、hashCode(), equals(), toString()を デフォルトメソッドとして実装することができない。
  */
 public abstract class List implements Instruction {
-    
+
     public abstract Iterator iterator();
-    
+
     public Iterable<Instruction> iterable() {
         return () -> new java.util.Iterator<>() {
             final Iterator it = iterator();
@@ -31,20 +30,20 @@ public abstract class List implements Instruction {
             }
         };
     }
-    
+
     public static final List NIL = new List() {
 
         @Override
         public Iterator iterator() {
             return () -> null;
         }
-        
+
         @Override
         public String toString() {
             return "()";
         }
     };
-    
+
     public static List of(Instruction... instructions) {
         int size = instructions.length;
         List result = NIL;
@@ -52,7 +51,7 @@ public abstract class List implements Instruction {
             result = Cons.of(instructions[i], result);
         return result;
     }
-    
+
     public static List of(java.util.List<Instruction> list) {
         List result = NIL;
         ListIterator<Instruction> it = list.listIterator(list.size());
@@ -65,16 +64,16 @@ public abstract class List implements Instruction {
     public void execute(Context context) {
         context.instruction(iterator());
     }
-    
+
     @Override
     public int hashCode() {
-        int  hash = 17;
+        int hash = 17;
         Iterator it = iterator();
         for (Instruction i = it.next(); i != null; i = it.next())
             hash = hash * 31 + i.hashCode();
         return hash;
     }
-    
+
     @Override
     public boolean equals(Object obj) {
         if (!(obj instanceof List list))
@@ -94,11 +93,14 @@ public abstract class List implements Instruction {
         StringBuilder sb = new StringBuilder("(");
         Iterator it = iterator();
         Instruction e = it.next();
-        if (e != null)
+        if (e != null) {
             sb.append(e);
-        while ((e = it.next()) != null)
+            e = it.next();
+        }
+        while (e != null) {
             sb.append(" ").append(e);
-        sb.append(")");
-        return sb.toString();
+            e = it.next();
+        }
+        return sb.append(")").toString();
     }
 }
