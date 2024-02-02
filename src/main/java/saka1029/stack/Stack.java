@@ -141,11 +141,7 @@ public class Stack {
                     Iterator it = list.iterator();
                     return () -> {
                         Instruction i = it.next();
-                        if (i == null)
-                            return null;
-                        c.execute(i);
-                        c.execute(closure);
-                        return c.pop();
+                        return i == null ? null : c.eval(List.of(i, closure));
                     };
                 }
             });

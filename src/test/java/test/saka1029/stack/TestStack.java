@@ -230,11 +230,11 @@ public class TestStack {
         assertEquals(eval(c, "'(1 2 3 4 5)"), eval(c, "'(0 1 2 3 4) '(1 +) map"));
     }
     
-//    @Test
+    @Test
     public void testMapBuiltin() {
         Context c = context();
         assertEquals(eval(c, "'()"), eval(c, "'() '(1 +) map"));
-//        assertEquals(eval(c, "'(1)"), eval(c, "'(0) '(1 +) map"));
+        assertEquals(eval(c, "'(1)"), eval(c, "'(0) '(1 +) map"));
         assertEquals(eval(c, "'(1 2 3)"), eval(c, "'(0 1 2) '(1 +) map"));
         assertEquals(eval(c, "'(1 2 3 4 5)"), eval(c, "'(0 1 2 3 4) '(1 +) map"));
     }
