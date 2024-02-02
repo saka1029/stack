@@ -27,8 +27,8 @@ public class Range extends List {
     }
 
     @Override
-    public Iterator iterator() {
-        return new Iterator() {
+    public Sequence sequence() {
+        return new Sequence() {
             
             int current = start;
             

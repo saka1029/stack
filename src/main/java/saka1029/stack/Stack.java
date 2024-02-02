@@ -116,7 +116,7 @@ public class Stack {
         put(vars, "reverse", c -> {
             List list = list(c.pop());
             List result = List.NIL;
-            for (Instruction i : list.iterable())
+            for (Instruction i : list)
                 result = Cons.of(i, result);
             c.push(result);
         });
@@ -132,7 +132,7 @@ public class Stack {
         });
         put(vars, "for", c -> {
             Instruction closure = c.pop();
-            Iterator it = list(c.pop()).iterator();
+            Sequence it = list(c.pop()).sequence();
             c.instruction(() -> {
                 Instruction i = it.next();
                 return i == null ? null : List.of(i, closure);
@@ -144,8 +144,8 @@ public class Stack {
             List list = list(c.pop());
             c.push(new List() {
                 @Override
-                public Iterator iterator() {
-                    Iterator it = list.iterator();
+                public Sequence sequence() {
+                    Sequence it = list.sequence();
                     return () -> {
                         Instruction i = it.next();
                         return i == null ? null : c.eval(List.of(i, closure));
@@ -159,9 +159,9 @@ public class Stack {
             List list = list(c.pop());
             c.push(new List() {
                 @Override
-                public Iterator iterator() {
-                    Iterator it = list.iterator();
-                    return new Iterator() {
+                public Sequence sequence() {
+                    Sequence it = list.sequence();
+                    return new Sequence() {
                         Instruction cur;
 
                         {

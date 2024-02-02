@@ -15,8 +15,8 @@ public class Cons extends List {
     }
 
     @Override
-    public Iterator iterator() {
-        return new Iterator() {
+    public Sequence sequence() {
+        return new Sequence() {
 
             List list = Cons.this;
 

@@ -6,7 +6,7 @@ import java.util.Collections;
 public class Context {
     
     private final java.util.List<Instruction> stack;
-    private final java.util.List<Iterator> instructions;
+    private final java.util.List<Sequence> instructions;
     private final java.util.Map<Symbol, Instruction> variables;
     
     Context(java.util.Map<Symbol, Instruction> variables) {
@@ -84,7 +84,7 @@ public class Context {
         push(top);
     }
     
-    public void instruction(Iterator it) {
+    public void instruction(Sequence it) {
         instructions.addLast(it);
     }
     
@@ -102,7 +102,7 @@ public class Context {
 
     public Terminal run() {
         L0: while (!instructions.isEmpty()) {
-            Iterator it = instructions.getLast();
+            Sequence it = instructions.getLast();
             Instruction ins;
             L1: while ((ins = it.next()) != null) {
                 int oldSize = instructions.size();

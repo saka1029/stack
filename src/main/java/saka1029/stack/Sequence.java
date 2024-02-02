@@ -1,6 +1,6 @@
 package saka1029.stack;
 
-public interface Iterator {
+public interface Sequence {
 
     Instruction next();
 
