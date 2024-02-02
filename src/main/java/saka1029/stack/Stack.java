@@ -7,9 +7,9 @@ import java.util.logging.Logger;
 import saka1029.Common;
 
 public class Stack {
-    
+
     static final Logger logger = Common.logger(Stack.class);
-    
+
     private Stack() {
     }
 
@@ -18,7 +18,7 @@ public class Stack {
         standard(vars);
         return Context.of(vars);
     }
-    
+
     public static List read(String source) {
         return Parser.of(source).read();
     }
@@ -34,37 +34,37 @@ public class Stack {
     static void put(Map<Symbol, Instruction> variables, String name, Instruction instruction) {
         variables.put(Symbol.of(name), instruction);
     }
-    
+
     static boolean b(Instruction instruction) {
-        return ((Bool)instruction).value;
+        return ((Bool) instruction).value;
     }
-    
+
     static Bool b(boolean value) {
         return Bool.of(value);
     }
 
     static int i(Instruction instruction) {
-        return ((Int)instruction).value;
+        return ((Int) instruction).value;
     }
-    
+
     static Int i(int value) {
         return Int.of(value);
     }
-    
+
     static Comparable comp(Instruction instruction) {
-        return (Comparable)instruction;
+        return (Comparable) instruction;
     }
 
     static List list(Instruction instruction) {
-        return ((List)instruction);
+        return ((List) instruction);
     }
 
     static Cons cons(Instruction instruction) {
-        return ((Cons)instruction);
+        return ((Cons) instruction);
     }
 
     static Symbol s(Instruction instruction) {
-        return ((Symbol)instruction);
+        return ((Symbol) instruction);
     }
 
     static void standard(Map<Symbol, Instruction> vars) {
@@ -77,9 +77,9 @@ public class Stack {
         put(vars, "swap", Context::swap);
         put(vars, "rot", Context::rot);
         put(vars, "rrot", Context::rrot);
-        put(vars, "ret1", c -> c.ret(1)); 
-        put(vars, "ret2", c -> c.ret(2)); 
-        put(vars, "ret3", c -> c.ret(3)); 
+        put(vars, "ret1", c -> c.ret(1));
+        put(vars, "ret2", c -> c.ret(2));
+        put(vars, "ret3", c -> c.ret(3));
         put(vars, "true", Bool.TRUE);
         put(vars, "false", Bool.FALSE);
         put(vars, "==", c -> c.push(b(c.pop().equals(c.pop()))));
@@ -91,8 +91,14 @@ public class Stack {
         put(vars, "+", c -> c.push(i(i(c.pop()) + i(c.pop()))));
         put(vars, "-", c -> c.push(i(-i(c.pop()) + i(c.pop()))));
         put(vars, "*", c -> c.push(i(i(c.pop()) * i(c.pop()))));
-        put(vars, "/", c -> { int r = i(c.pop()); c.push(i(i(c.pop()) / r)); });
-        put(vars, "%", c -> { int r = i(c.pop()); c.push(i(i(c.pop()) % r)); });
+        put(vars, "/", c -> {
+            int r = i(c.pop());
+            c.push(i(i(c.pop()) / r));
+        });
+        put(vars, "%", c -> {
+            int r = i(c.pop());
+            c.push(i(i(c.pop()) % r));
+        });
         put(vars, "null?", c -> c.push(b(c.pop().equals(List.NIL))));
         put(vars, "car", c -> c.push(cons(c.pop()).car));
         put(vars, "cdr", c -> c.push(cons(c.pop()).cdr));
@@ -107,7 +113,7 @@ public class Stack {
             c.push(Cons.of(car, cdr));
         });
         put(vars, "rcons", c -> c.push(Cons.of(c.pop(), list(c.pop()))));
-        put(vars, "reverse", c ->  {
+        put(vars, "reverse", c -> {
             List list = list(c.pop());
             List result = List.NIL;
             for (Instruction i : list.iterable())
@@ -142,6 +148,36 @@ public class Stack {
                     return () -> {
                         Instruction i = it.next();
                         return i == null ? null : c.eval(List.of(i, closure));
+                    };
+                }
+            });
+        });
+        put(vars, "filter", c -> {
+            Instruction closure = c.pop();
+            List list = list(c.pop());
+            c.push(new List() {
+                @Override
+                public Iterator iterator() {
+                    Iterator it = list.iterator();
+                    return new Iterator() {
+                        Instruction current;
+
+                        {
+                            advance();
+                        }
+
+                        void advance() {
+                            current = it.next();
+                            while (current != null && !b(c.eval(List.of(current, closure))))
+                                current = it.next();
+                        }
+
+                        @Override
+                        public Instruction next() {
+                            Instruction result = current;
+                            advance();
+                            return result;
+                        }
                     };
                 }
             });

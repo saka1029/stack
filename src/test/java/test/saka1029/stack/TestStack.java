@@ -255,6 +255,13 @@ public class TestStack {
         assertEquals(eval(c, "'(1 3)"), eval(c, "'(0 1 2 3) '(2 % 0 !=) filter"));
     }
     
+    @Test
+    public void testFilterRecursiveBuiltin() {
+        Context c = context();
+        assertEquals(eval(c, "'(0 2)"), eval(c, "'(0 1 2 3) '(2 % 0 ==) filter"));
+        assertEquals(eval(c, "'(1 3)"), eval(c, "'(0 1 2 3) '(2 % 0 !=) filter"));
+    }
+    
     /**
      * 通常の関数呼び出し:
      * 引数 関数
