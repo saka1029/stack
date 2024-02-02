@@ -138,6 +138,7 @@ public class Stack {
                 return i == null ? null : List.of(i, closure);
             });
         });
+        // mapはConsではないListのサブクラスを返す点に注意する。
         put(vars, "map", c -> {
             Instruction closure = c.pop();
             List list = list(c.pop());
@@ -152,6 +153,7 @@ public class Stack {
                 }
             });
         });
+        // filterはConsではないListのサブクラスを返す点に注意する。
         put(vars, "filter", c -> {
             Instruction closure = c.pop();
             List list = list(c.pop());
@@ -160,21 +162,20 @@ public class Stack {
                 public Iterator iterator() {
                     Iterator it = list.iterator();
                     return new Iterator() {
-                        Instruction current;
+                        Instruction cur;
 
                         {
                             advance();
                         }
 
                         void advance() {
-                            current = it.next();
-                            while (current != null && !b(c.eval(List.of(current, closure))))
-                                current = it.next();
+                            for (cur = it.next(); cur != null && !b(c.eval(List.of(cur, closure))); cur = it.next())
+                                /* do nothing */;
                         }
 
                         @Override
                         public Instruction next() {
-                            Instruction result = current;
+                            Instruction result = cur;
                             advance();
                             return result;
                         }
