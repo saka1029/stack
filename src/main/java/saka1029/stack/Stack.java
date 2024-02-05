@@ -201,5 +201,9 @@ public class Stack {
 			c.push(Range.of(start, end, step));
 		});
 		put(vars, "define", c -> c.variable(s(c.pop()), c.pop()));
+		put(vars, "yield", Terminal.YIELD);
+		put(vars, "generator", c -> c.push(Generator.of(c, c.pop())));
+		put(vars, "generator1", c -> c.push(Generator.of(c, c.pop(), c.pop())));
+		put(vars, "generator2", c -> c.push(Generator.of(c, c.pop(), c.pop(), c.pop())));
 	}
 }

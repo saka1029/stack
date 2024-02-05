@@ -358,4 +358,29 @@ public class TestStack {
         run(c, "'(1 2) permutations");
         run(c, "'(1 2 3) permutations");
     }
+
+    /**
+     * Generatorを使った再帰呼び出し
+     * testPermutations()からの変更点：
+     * <pre>
+     * (1) permの定義中のprintをyieldに変更する。
+     * (2) permutationsで「perm」を「'perm generator2」に変更する。
+     *     (permは2引数なのでgenerator2を使う)
+     * </pre>
+     */
+    @Test
+    
+    public void testPermutationsByGenerator() {
+//        logger.info(Common.methodName());
+        Context c = Stack.context();
+        run(c, "'('(!=) cons filter) 'remove define");
+        run(c, "'(dup1 null?"
+            + " '(dup reverse yield)"
+            + " '(dup1 '(dup2 dup1 remove swap dup2 cons perm) for) if drop2) 'perm define");
+        run(c, "'('() 'perm generator2) 'permutations define");
+        assertEquals(eval(c, "'(())"), eval(c, "'() permutations"));
+        assertEquals(eval(c, "'((1))"), eval(c, "'(1) permutations"));
+        assertEquals(eval(c, "'((1 2) (2 1))"), eval(c, "'(1 2) permutations"));
+        assertEquals(eval(c, "'((1 2 3) (1 3 2) (2 1 3) (2 3 1) (3 1 2) (3 2 1))"), eval(c, "'(1 2 3) permutations"));
+    }
 }

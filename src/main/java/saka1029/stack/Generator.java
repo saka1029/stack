@@ -1,6 +1,5 @@
 package saka1029.stack;
 
-import java.util.Arrays;
 import java.util.logging.Logger;
 
 import saka1029.Common;
@@ -55,10 +54,5 @@ public class Generator extends List {
                 default -> throw new RuntimeException("Unsupported terminator '%s'".formatted(t));
             };
         };
-    }
-    
-    @Override
-    public String toString() {
-        return "generator[%s %s]".formatted(Arrays.toString(args), code);
     }
 }
