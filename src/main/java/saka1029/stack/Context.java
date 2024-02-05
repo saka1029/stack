@@ -2,25 +2,32 @@ package saka1029.stack;
 
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.function.Consumer;
 
 public class Context {
     
     private final java.util.List<Instruction> stack;
     private final java.util.List<Sequence> instructions;
     private final java.util.Map<Symbol, Instruction> variables;
+    private Consumer<String> output;
     
-    Context(java.util.Map<Symbol, Instruction> variables) {
+    Context(java.util.Map<Symbol, Instruction> variables, Consumer<String> output) {
         this.stack = new ArrayList<>();
         this.instructions = new ArrayList<>();
         this.variables = variables;
+        this.output = output;
+    }
+    
+    public static Context of(java.util.Map<Symbol, Instruction> variables, Consumer<String> output) {
+        return new Context(variables, output);
     }
     
     public static Context of(java.util.Map<Symbol, Instruction> variables) {
-        return new Context(variables);
+        return new Context(variables, System.out::print);
     }
     
     public Context fork() {
-        return of(variables);
+        return of(variables, output);
     }
 
     public int size() {
@@ -89,6 +96,20 @@ public class Context {
         push(top);
     }
     
+    public void output(Consumer<String> output) {
+        this.output = output;
+    }
+    
+    public void print(Instruction i) {
+        if (output != null)
+            output.accept(i.toString());
+    }
+    
+    public void println(Instruction i) {
+        if (output != null)
+            output.accept("%s%n".formatted(i));
+    }
+
     public void instruction(Sequence it) {
         instructions.addLast(it);
     }

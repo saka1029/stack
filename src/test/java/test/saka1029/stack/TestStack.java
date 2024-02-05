@@ -342,25 +342,37 @@ public class TestStack {
      *           ls)))
      *   (perm ls '()))
      * </pre>
+     * 結果をprintで収集する。
      */
     @Test
     public void testPermutations() {
-        logger.info(Common.methodName());
+//        logger.info(Common.methodName());
         Context c = Stack.context();
+        StringBuilder sb = new StringBuilder();
+        c.output(sb::append);
         run(c, "'('(!=) cons filter) 'remove define");
         assertEquals(eval(c, "'(0 1 3)"), eval(c, "'(0 1 2 3) 2 remove"));
         run(c, "'(dup1 null?"
-            + " '(dup reverse println)"
+            + " '(dup reverse print)"
             + " '(dup1 '(dup2 dup1 remove swap dup2 cons perm) for) if drop2) 'perm define");
         run(c, "'('() perm) 'permutations define");
+        sb.setLength(0);
         run(c, "'() permutations");
+        assertEquals("()", sb.toString());
+        sb.setLength(0);
         run(c, "'(1) permutations");
+        assertEquals("(1)", sb.toString());
+        sb.setLength(0);
         run(c, "'(1 2) permutations");
+        assertEquals("(1 2)(2 1)", sb.toString());
+        sb.setLength(0);
         run(c, "'(1 2 3) permutations");
+        assertEquals("(1 2 3)(1 3 2)(2 1 3)(2 3 1)(3 1 2)(3 2 1)", sb.toString());
     }
 
     /**
      * Generatorを使った再帰呼び出し
+     * permの結果を順次printする代わりに、すべての結果をリストにして返す。
      * testPermutations()からの変更点：
      * <pre>
      * (1) permの定義中のprintをyieldに変更する。

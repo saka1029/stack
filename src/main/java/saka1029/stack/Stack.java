@@ -123,8 +123,8 @@ public class Stack {
 				result = Cons.of(i, result);
 			c.push(result);
 		});
-		put(vars, "print", c -> System.out.print(c.pop()));
-		put(vars, "println", c -> System.out.println(c.pop()));
+		put(vars, "print", c -> c.print(c.pop()));
+		put(vars, "println", c -> c.println(c.pop()));
 		put(vars, "stack", c -> System.out.println(c));
 		put(vars, "execute", c -> c.execute(c.pop()));
 		put(vars, "if", c -> {
