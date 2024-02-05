@@ -75,6 +75,8 @@ public class Stack {
 		put(vars, "dup2", c -> c.dup(2));
 		put(vars, "dup3", c -> c.dup(3));
 		put(vars, "drop", Context::drop);
+		put(vars, "drop2", c -> c.drop(2));
+		put(vars, "drop3", c -> c.drop(3));
 		put(vars, "swap", Context::swap);
 		put(vars, "rot", Context::rot);
 		put(vars, "rrot", Context::rrot);
@@ -122,6 +124,7 @@ public class Stack {
 			c.push(result);
 		});
 		put(vars, "print", c -> System.out.print(c.pop()));
+		put(vars, "println", c -> System.out.println(c.pop()));
 		put(vars, "stack", c -> System.out.println(c));
 		put(vars, "execute", c -> c.execute(c.pop()));
 		put(vars, "if", c -> {
@@ -144,20 +147,20 @@ public class Stack {
 			java.util.List<Instruction> a = new ArrayList<>();
 			for (Instruction i : list)
 				a.add(i);
-			logger.info(a.toString());
 			c.push(List.of(a));
 		});
 		// mapはConsではないListのサブクラスを返す点に注意する。
 		put(vars, "map", c -> {
 			Instruction closure = c.pop();
 			List list = list(c.pop());
+			Context child = c.fork();
 			c.push(new List() {
 				@Override
 				public Sequence sequence() {
 					Sequence it = list.sequence();
 					return () -> {
 						Instruction i = it.next();
-						return i == null ? null : c.eval(List.of(i, closure));
+						return i == null ? null : child.eval(List.of(i, closure));
 					};
 				}
 			});
@@ -166,6 +169,7 @@ public class Stack {
 		put(vars, "filter", c -> {
 			Instruction closure = c.pop();
 			List list = list(c.pop());
+			Context child = c.fork();
 			c.push(new List() {
 				@Override
 				public Sequence sequence() {
@@ -178,7 +182,7 @@ public class Stack {
 						}
 
 						void advance() {
-							for (cur = it.next(); cur != null && !b(c.eval(List.of(cur, closure))); cur = it.next())
+							for (cur = it.next(); cur != null && !b(child.eval(List.of(cur, closure))); cur = it.next())
 								/* do nothing */;
 						}
 

@@ -19,7 +19,7 @@ public class TestParser {
 
     @Test
     public void testReadInt() throws IOException {
-        logger.info(Common.methodName());
+//        logger.info(Common.methodName());
         String text = "  1  2";
         Parser r = Parser.of(text);
         assertEquals(List.of(Int.of(1), Int.of(2)), r.read());
@@ -27,7 +27,7 @@ public class TestParser {
 
     @Test
     public void testReadList() throws IOException {
-        logger.info(Common.methodName());
+//        logger.info(Common.methodName());
         String text = "  ()  (1)  (1 2)";
         Parser r = Parser.of(text);
         assertEquals(List.of(
@@ -39,7 +39,7 @@ public class TestParser {
 
     @Test
     public void testReadQuote() throws IOException {
-        logger.info(Common.methodName());
+//        logger.info(Common.methodName());
         String text = "  '0 '()  '(1)  '(1 2)";
         Parser r = Parser.of(text);
         assertEquals(List.of(

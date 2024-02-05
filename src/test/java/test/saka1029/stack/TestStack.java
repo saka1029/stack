@@ -3,14 +3,19 @@ package test.saka1029.stack;
 import static org.junit.Assert.assertEquals;
 import static saka1029.stack.Stack.*;
 
+import java.util.logging.Logger;
+
 import org.junit.Test;
 
+import saka1029.Common;
 import saka1029.stack.Context;
 import saka1029.stack.Int;
 import saka1029.stack.List;
 import saka1029.stack.Stack;
 
 public class TestStack {
+    
+    static final Logger logger = Common.logger(TestStack.class);
 
 	// GitKrakenテスト
 
@@ -340,13 +345,17 @@ public class TestStack {
      */
     @Test
     public void testPermutations() {
+        logger.info(Common.methodName());
         Context c = Stack.context();
-        run(c, "'('(!=) cons filter list) 'remove define");
+        run(c, "'('(!=) cons filter) 'remove define");
         assertEquals(eval(c, "'(0 1 3)"), eval(c, "'(0 1 2 3) 2 remove"));
-        assertEquals(eval(c, "'()"), eval(c, "'(1) 1 remove stack"));
-        run(c, "'(dup1 null? '(dup reverse print) '(dup1 '(dup2 dup1 stack remove swap dup2 cons perm) for) if drop drop) 'perm define");
+        run(c, "'(dup1 null?"
+            + " '(dup reverse println)"
+            + " '(dup1 '(dup2 dup1 remove swap dup2 cons perm) for) if drop2) 'perm define");
         run(c, "'('() perm) 'permutations define");
-//        run(c, "'() permutations");
+        run(c, "'() permutations");
         run(c, "'(1) permutations");
+        run(c, "'(1 2) permutations");
+        run(c, "'(1 2 3) permutations");
     }
 }

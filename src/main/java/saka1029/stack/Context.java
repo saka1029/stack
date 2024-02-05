@@ -19,7 +19,7 @@ public class Context {
         return new Context(variables);
     }
     
-    public Context child() {
+    public Context fork() {
         return of(variables);
     }
 
@@ -59,6 +59,11 @@ public class Context {
     
     public void drop() {
         stack.removeLast();
+    }
+    
+    public void drop(int n) {
+        for (int i = 0; i < n; ++i)
+            drop();
     }
     
     public void rot() {

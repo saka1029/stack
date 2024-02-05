@@ -43,7 +43,7 @@ public class Generator extends List {
 
     @Override
     public Sequence sequence() {
-        Context c = context.child();
+        Context c = context.fork();
         for (Instruction i : args)
             c.push(i);
         c.execute(code);

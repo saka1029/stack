@@ -20,7 +20,7 @@ public class TestSymbol {
 
     @Test
     public void testEquals() {
-        logger.info(Common.methodName());
+//        logger.info(Common.methodName());
         assertEquals(Symbol.of("foo"), Symbol.of("foo"));
         assertNotEquals(Symbol.of("foo"), Symbol.of("bar"));
         assertTrue(Symbol.of("foo") == Symbol.of("foo"));
@@ -29,13 +29,13 @@ public class TestSymbol {
     
     @Test
     public void testToString() {
-        logger.info(Common.methodName());
+//        logger.info(Common.methodName());
         assertEquals("foo", Symbol.of("foo").toString());
     }
     
     @Test
     public void testExecute() {
-        logger.info(Common.methodName());
+//        logger.info(Common.methodName());
         Context c = Context.of(Map.of(Symbol.of("three"), Int.of(3)));
         Symbol.of("three").execute(c);
         assertEquals(1, c.size());
