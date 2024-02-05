@@ -376,7 +376,7 @@ public class TestStack {
      * testPermutations()からの変更点：
      * <pre>
      * (1) permの定義中のprintをyieldに変更する。
-     * (2) permutationsで「perm」を「'perm generator2」に変更する。
+     * (2) permutationsで「'() perm」を「'() 'perm generator2」に変更する。
      *     (permは2引数なのでgenerator2を使う)
      * </pre>
      */
