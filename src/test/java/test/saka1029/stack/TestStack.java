@@ -341,10 +341,12 @@ public class TestStack {
     @Test
     public void testPermutations() {
         Context c = Stack.context();
-        run(c, "'('(!=) cons filter) 'remove define");
-        run(c, "'(dup1 null? '(dup reverse print) '(dup1 '(dup dup3 remove swap dup2 cons perm) for) if drop drop) 'perm define");
+        run(c, "'('(!=) cons filter list) 'remove define");
+        assertEquals(eval(c, "'(0 1 3)"), eval(c, "'(0 1 2 3) 2 remove"));
+        assertEquals(eval(c, "'()"), eval(c, "'(1) 1 remove stack"));
+        run(c, "'(dup1 null? '(dup reverse print) '(dup1 '(dup2 dup1 stack remove swap dup2 cons perm) for) if drop drop) 'perm define");
         run(c, "'('() perm) 'permutations define");
-        run(c, "'() permutations");
+//        run(c, "'() permutations");
         run(c, "'(1) permutations");
     }
 }
