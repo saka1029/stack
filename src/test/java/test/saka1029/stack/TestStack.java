@@ -8,6 +8,7 @@ import org.junit.Test;
 import saka1029.stack.Context;
 import saka1029.stack.Int;
 import saka1029.stack.List;
+import saka1029.stack.Stack;
 
 public class TestStack {
 
@@ -321,5 +322,29 @@ public class TestStack {
         assertEquals(eval(c, "'(1 1 2 6 24)"),
             eval(c, "0 4 1 range"
                 + " '('(dup1 0 <= '1 '(dup1 dup 1 - dup2 dup execute *) if ret2) dup execute) map"));
+    }
+    
+    /**
+     * <pre>
+     * scheme:
+     * (define (permutations func ls)
+     *   (define (perm ls a)
+     *     (if (null? ls)
+     *         (func (reverse a))
+     *         (for-each
+     *           (lambda (n)
+     *             (perm (remove n ls) (cons n a)))
+     *           ls)))
+     *   (perm ls '()))
+     * </pre>
+     */
+    @Test
+    public void testPermutations() {
+        Context c = Stack.context();
+        run(c, "'('(!=) cons filter) 'remove define");
+        run(c, "'(dup1 null? '(dup reverse print) '(dup1 '(dup dup3 remove swap dup2 cons perm) for) if drop drop) 'perm define");
+        run(c, "'('() perm) 'permutations define");
+        run(c, "'() permutations");
+        run(c, "'(1) permutations");
     }
 }
