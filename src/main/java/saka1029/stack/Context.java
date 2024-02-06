@@ -3,6 +3,8 @@ package saka1029.stack;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.function.Consumer;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 public class Context {
     
@@ -126,7 +128,7 @@ public class Context {
         instruction.execute(this);
     }
 
-    public Terminal run() {
+    public Terminal run0() {
         L0: while (!instructions.isEmpty()) {
             Sequence it = instructions.getLast();
             Instruction ins;
@@ -150,6 +152,27 @@ public class Context {
             instructions.removeLast();
         }
         return Terminal.END;
+    }
+
+    
+    static final Pattern CLASS_CAST_EXCEPTION = Pattern.compile(
+        "class \\S*\\.(\\S+) cannot be cast to class \\S*\\.(\\S+).*");
+    
+    static RuntimeException error(ClassCastException ex) {
+        Matcher m = CLASS_CAST_EXCEPTION.matcher(ex.getMessage());
+        if (m.find())
+            return new RuntimeException("Cast error: %s to %s"
+                .formatted(m.group(1), m.group(2)), ex);
+        else
+            return new RuntimeException(ex);
+    }
+
+    public Terminal run() {
+        try {
+            return run0();
+        } catch (ClassCastException ex) {
+            throw error(ex);
+        }
     }
 
     Terminal run(List instructions) {

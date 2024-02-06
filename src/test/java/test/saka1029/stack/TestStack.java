@@ -1,7 +1,10 @@
 package test.saka1029.stack;
 
 import static org.junit.Assert.assertEquals;
-import static saka1029.stack.Stack.*;
+import static org.junit.Assert.fail;
+import static saka1029.stack.Stack.context;
+import static saka1029.stack.Stack.eval;
+import static saka1029.stack.Stack.run;
 
 import java.util.logging.Logger;
 
@@ -394,5 +397,16 @@ public class TestStack {
         assertEquals(eval(c, "'((1))"), eval(c, "'(1) permutations"));
         assertEquals(eval(c, "'((1 2) (2 1))"), eval(c, "'(1 2) permutations"));
         assertEquals(eval(c, "'((1 2 3) (1 3 2) (2 1 3) (2 3 1) (3 1 2) (3 2 1))"), eval(c, "'(1 2 3) permutations"));
+    }
+    
+    @Test
+    public void testClassCastException() {
+        Context c = Stack.context();
+        try {
+            run(c, "2 true +");
+            fail();
+        } catch (RuntimeException ex) {
+            assertEquals("Cast error: Bool to Int", ex.getMessage());
+        }
     }
 }
