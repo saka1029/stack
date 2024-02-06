@@ -371,7 +371,7 @@ public class TestStack {
     }
 
     /**
-     * Generatorを使った再帰呼び出し
+     * Generator(コルーチン)を使った再帰呼び出し
      * permの結果を順次printする代わりに、すべての結果をリストにして返す。
      * testPermutations()からの変更点：
      * <pre>
