@@ -14,7 +14,7 @@ public class Bool implements Comparable {
     public static Bool of(boolean value) {
         return value ? TRUE : FALSE;
     }
-
+    
     @Override
     public int compareTo(Instruction r) {
         return Boolean.compare(value, ((Bool)r).value);
