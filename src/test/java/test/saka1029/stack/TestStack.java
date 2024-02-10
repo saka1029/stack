@@ -81,6 +81,12 @@ public class TestStack {
 	}
 
 	@Test
+	public void testWhile() {
+		Context c = context();
+		assertEquals(eval(c, "6"), eval(c, "0 3 '(dup 0 > stack) '() while"));
+	}
+
+	@Test
 	public void testRange() {
 		Context c = context();
 		assertEquals(Int.of(6), eval(c, "0 1 3 1 range '+ for"));
@@ -398,6 +404,57 @@ public class TestStack {
 		} catch (RuntimeException ex) {
 			assertEquals("Cast error: Bool to Int", ex.getMessage());
 		}
+	}
+	
+	/**
+	 * C言語
+	 * <pre>
+	 * // Square root of integer
+     * unsigned int int_sqrt(unsigned int s) {
+     *     // Zero yields zero
+     *     // One yields one
+     * 	   if (s <= 1) 
+     * 		   return s;
+     * 
+     *     // Initial estimate (must be too high)
+     * 	   unsigned int x0 = s / 2;
+     * 
+     * 	   // Update
+     * 	   unsigned int x1 = (x0 + s / x0) / 2;
+     * 
+     * 	   while (x1 < x0)	// Bound check {
+     * 		   x0 = x1;
+     * 	      	x1 = (x0 + s / x0) / 2;
+     * 	   }		
+     * 	   return x0;
+     * }
+	 * <pre>
+	 */
+	static int isqrt(int s) {
+		if (s <= 1)
+			return s;
+		int x0 = s, x1 = s / 2;
+		while (x0 > x1) {
+			x0 = x1;
+			x1 = (x0 + s / x0) / 2;
+		}
+		return x0;
+	}
+	
+	@Test
+	public void testISqrtByJava() {
+		int MAX = 10000;
+		for (int i = 0; i <= MAX; ++i)
+			assertEquals((int)Math.sqrt(i), isqrt(i));
+	}
+
+	/**
+	 * ニュートン法により整数の平方根を求める。
+	 */
+	@Test
+	public void testISqrtByNewton() {
+		Context c = Stack.context();
+		run(c, "'(dup 1 <= '() '(dup dup 2 / )) 'isqrt define");
 	}
 
 	/**

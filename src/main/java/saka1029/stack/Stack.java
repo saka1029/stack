@@ -145,6 +145,15 @@ public class Stack {
 				return i == null ? null : List.of(i, closure);
 			});
 		});
+		put(vars, "while", c -> {
+		    Instruction body = c.pop(), cond = c.pop();
+		    while (true) {
+		        c.execute(cond);
+		        if (!b(c.pop()))
+		            break;
+		        c.execute(body);
+		    }
+		});
 		put(vars, "list", c -> {
 			List list = list(c.pop());
 			java.util.List<Instruction> a = new ArrayList<>();
