@@ -414,16 +414,18 @@ public class TestStack {
 	 * List (2 dup1 dup1 == true '(dup1 dup1 % 0 !=) if ret2) filter
 	 * ここでフィルター式の先頭「2」はsieveの第2引数である。
 	 * 
-	 * MAX primes
-	 * MAX : 2
-	 * MAX 2 : dup1
-	 * MAX 2 MAX : 1
-	 * MAX 2 MAX 1 : range
-	 * MAX Range(2,MAX,1) : 2
-	 * MAX Range(2,MAX,1) 2 : rot
-	 * Range(2,MAX,1) 2 MAX : 1
-	 * MAX Range(2,MAX,1) 2 MAX 1 : range
-	 * MAX Range(2,MAX,1) Range(2,MAX,1) : sieve for
+	 * primesはInt(n)を引数として受け取り、n以下の素数のリストを返す。
+	 * 2からnまでのRangeを２つ作り、sieveをforで繰り返し実行する。
+	 * n primes
+	 * n : 2
+	 * n 2 : dup1
+	 * n 2 n : 1
+	 * n 2 n 1 : range
+	 * n Range(2,n,1) : 2
+	 * n Range(2,n,1) 2 : rot
+	 * Range(2,n,1) 2 n : 1
+	 * n Range(2,n,1) 2 n 1 : range
+	 * n Range(2,n,1) Range(2,n,1) : sieve for
 	 * 
 	 */
 	@Test
@@ -433,7 +435,7 @@ public class TestStack {
 		run(c, "'('(dup1 dup1 == '(true ret2) '(% 0 !=) if) cons filter) 'sieve define");
 		assertEquals(eval(c, "'(2)"), eval(c, "2 2 1 range 2 sieve"));
 		assertEquals(eval(c, "'(2 3 5 7)"), eval(c, "2 7 1 range 2 sieve"));
-		assertEquals(eval(c, "'(2 3 4 5 7)"), eval(c, "2 7 1 range 3 sieve"));
+		assertEquals(eval(c, "'(2 3 4 5 7 8 10 11 13 14 16 17 19 20)"), eval(c, "2 20 1 range 3 sieve"));
 		assertEquals(eval(c, "'(2 3 5 7 11 13 17 19)"), eval(c, "2 20 1 range 2 20 1 range 'sieve for"));
 		run(c, "'(2 dup1 1 range 2 rot 1 range 'sieve for) 'primes define");
 		assertEquals(eval(c, "'(2 3 5 7 11 13 17 19)"), eval(c, "20 primes"));
