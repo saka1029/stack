@@ -181,7 +181,12 @@ public class Stack {
 				a.add(i);
 			c.push(List.of(a));
 		});
-		// mapはConsではないListのサブクラスを返す点に注意する。
+		/*
+		 * このmapの実装はクロージャーを別コンテキストで評価する点に注意する。
+		 * クロージャー内ではmapのコンテキストにアクセスできない。
+		 * クロージャー実行時は常にスタックが空である。
+		 * mapはConsではないListのサブクラスを返す点に注意する。
+		 */
 		put(vars, "map", c -> {
 			Instruction closure = c.pop();
 			List list = l(c.pop());
