@@ -82,6 +82,16 @@ public abstract class List implements Instruction, Iterable<Instruction> {
             result = Cons.of(it.previous(), result);
         return result;
     }
+    
+//    public static List of(Iterable<Instruction> iterable) {
+//        return new List() {
+//            @Override
+//            public Sequence sequence() {
+//                Iterator<Instruction> iterator = iterable.iterator();
+//                return () -> iterator.hasNext() ? iterator.next() : null;
+//            }
+//        };
+//    }
 
     @Override
     public void execute(Context context) {
