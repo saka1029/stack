@@ -157,6 +157,12 @@ public class Stack {
 				return i == null ? null : list(i, closure);
 			});
 		});
+		/*
+		 * COND BODY while はCONDをexecuteして結果がtrueである間、BODYを実行する。
+		 * 実装はリスト (COND 'BODY 'END if) を繰り返し返すSequenceをinstructionsにプッシュする。
+		 * ENDはSequence内の終了フラグをセットするInstructionである。
+		 * 終了フラグがtrueの場合、Sequenceはリストではなくnullを返す。
+		 */
 		put(vars, "while", c -> {
 		    Instruction body = c.pop(), cond = c.pop();
 		    c.instruction(new Sequence() {
