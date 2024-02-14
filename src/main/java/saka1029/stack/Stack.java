@@ -185,12 +185,12 @@ public class Stack {
 		 * このmapの実装はクロージャーを別コンテキストで評価する点に注意する。
 		 * クロージャー内ではmapのコンテキストにアクセスできない。
 		 * クロージャー実行時は常にスタックが空である。
-		 * mapはConsではないListのサブクラスを返す点に注意する。
+		 * このmapはConsではないListのサブクラスを返す点に注意する。
 		 */
 		put(vars, "map", c -> {
 			Instruction closure = c.pop();
 			List list = l(c.pop());
-			Context child = c.fork();
+			Context child = c.fork();    // クロージャー評価用コンテキスト
 			c.push(new List() {
 				@Override
 				public Sequence sequence() {
@@ -202,11 +202,16 @@ public class Stack {
 				}
 			});
 		});
-		// filterはConsではないListのサブクラスを返す点に注意する。
+		/*
+		 * このfilterの実装はクロージャーを別コンテキストで評価する点に注意する。
+		 * クロージャー内ではfilterのコンテキストにアクセスできない。
+		 * クロージャー実行時は常にスタックが空である。
+		 * このfilterはConsではないListのサブクラスを返す点に注意する。
+		 */
 		put(vars, "filter", c -> {
 			Instruction closure = c.pop();
 			List list = l(c.pop());
-			Context child = c.fork();
+			Context child = c.fork();    // クロージャー評価用コンテキスト
 			c.push(new List() {
 				@Override
 				public Sequence sequence() {
