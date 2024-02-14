@@ -83,7 +83,15 @@ public class TestStack {
 	@Test
 	public void testWhile() {
 		Context c = context();
-		assertEquals(eval(c, "6"), eval(c, "0 3 '(dup 0 > stack) '() while"));
+		assertEquals(eval(c, "6"), eval(c, "3 0 '(dup1 0 >) '(dup1 1 - rrot +) while ret1"));
+		run(c,"'(1 '(dup1 0 >) '(dup1 1 - rrot *) while ret1) 'factorial define");
+		assertEquals(eval(c, "1"), eval(c, "0 factorial"));
+		assertEquals(eval(c, "1"), eval(c, "1 factorial"));
+		assertEquals(eval(c, "2"), eval(c, "2 factorial"));
+		assertEquals(eval(c, "6"), eval(c, "3 factorial"));
+		assertEquals(eval(c, "24"), eval(c, "4 factorial"));
+		assertEquals(eval(c, "120"), eval(c, "5 factorial"));
+		assertEquals(eval(c, "720"), eval(c, "6 factorial"));
 	}
 
 	@Test

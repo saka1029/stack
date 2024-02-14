@@ -56,16 +56,28 @@ public class Stack {
 		return (Comparable) instruction;
 	}
 
-	static List list(Instruction instruction) {
+	static List l(Instruction instruction) {
 		return ((List) instruction);
 	}
 
-	static Cons cons(Instruction instruction) {
+	static Cons c(Instruction instruction) {
 		return ((Cons) instruction);
 	}
 
 	static Symbol s(Instruction instruction) {
 		return ((Symbol) instruction);
+	}
+	
+	static Symbol symbol(String name) {
+	    return Symbol.of(name);
+	}
+
+	static Quote quote(Instruction instruction) {
+	    return Quote.of(instruction);
+	}
+
+	static List list(Instruction... instructions) {
+	    return List.of(instructions);
 	}
 
 	static void standard(Map<Symbol, Instruction> vars) {
@@ -106,21 +118,21 @@ public class Stack {
 			c.push(i(i(c.pop()) % r));
 		});
 		put(vars, "null?", c -> c.push(b(c.pop().equals(List.NIL))));
-		put(vars, "car", c -> c.push(cons(c.pop()).car));
-		put(vars, "cdr", c -> c.push(cons(c.pop()).cdr));
+		put(vars, "car", c -> c.push(c(c.pop()).car));
+		put(vars, "cdr", c -> c.push(c(c.pop()).cdr));
 		put(vars, "uncons", c -> {
-			Cons cons = cons(c.pop());
+			Cons cons = c(c.pop());
 			c.push(cons.car);
 			c.push(cons.cdr);
 		});
 		put(vars, "cons", c -> {
-			List cdr = list(c.pop());
+			List cdr = l(c.pop());
 			Instruction car = c.pop();
 			c.push(Cons.of(car, cdr));
 		});
-		put(vars, "rcons", c -> c.push(Cons.of(c.pop(), list(c.pop()))));
+		put(vars, "rcons", c -> c.push(Cons.of(c.pop(), l(c.pop()))));
 		put(vars, "reverse", c -> {
-			List list = list(c.pop());
+			List list = l(c.pop());
 			List result = List.NIL;
 			for (Instruction i : list)
 				result = Cons.of(i, result);
@@ -139,23 +151,25 @@ public class Stack {
 		});
 		put(vars, "for", c -> {
 			Instruction closure = c.pop();
-			Sequence it = list(c.pop()).sequence();
+			Sequence it = l(c.pop()).sequence();
 			c.instruction(() -> {
 				Instruction i = it.next();
-				return i == null ? null : List.of(i, closure);
+				return i == null ? null : list(i, closure);
 			});
 		});
 		put(vars, "while", c -> {
 		    Instruction body = c.pop(), cond = c.pop();
-		    while (true) {
-		        c.execute(cond);
-		        if (!b(c.pop()))
-		            break;
-		        c.execute(body);
-		    }
+		    c.instruction(new Sequence() {
+		        boolean done = false;
+		        List w = list(cond, quote(body), quote(x -> done = true), symbol("if"));
+                @Override
+                public Instruction next() {
+                    return done ? null : w;
+                }
+		    });
 		});
 		put(vars, "list", c -> {
-			List list = list(c.pop());
+			List list = l(c.pop());
 			java.util.List<Instruction> a = new ArrayList<>();
 			for (Instruction i : list)
 				a.add(i);
@@ -164,7 +178,7 @@ public class Stack {
 		// mapはConsではないListのサブクラスを返す点に注意する。
 		put(vars, "map", c -> {
 			Instruction closure = c.pop();
-			List list = list(c.pop());
+			List list = l(c.pop());
 			Context child = c.fork();
 			c.push(new List() {
 				@Override
@@ -180,7 +194,7 @@ public class Stack {
 		// filterはConsではないListのサブクラスを返す点に注意する。
 		put(vars, "filter", c -> {
 			Instruction closure = c.pop();
-			List list = list(c.pop());
+			List list = l(c.pop());
 			Context child = c.fork();
 			c.push(new List() {
 				@Override
