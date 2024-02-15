@@ -45,15 +45,19 @@ public abstract class List implements Instruction, Iterable<Instruction> {
         }
     };
     
-//    public static List of(Iterable<Instruction> iterable) {
-//        return new List() {
-//            @Override
-//            public Sequence sequence() {
-//                Iterator<Instruction> iterator = iterable.iterator();
-//                return () -> iterator.hasNext() ? iterator.next() : null;
-//            }
-//        };
-//    }
+    /**
+     * 引数のIterableを直接参照するListを返す点に注意する。
+     * (引数のIterableが変更されると返すListも同様に変更される)
+     */
+    public static List of(Iterable<Instruction> iterable) {
+        return new List() {
+            @Override
+            public Sequence sequence() {
+                Iterator<Instruction> iterator = iterable.iterator();
+                return () -> iterator.hasNext() ? iterator.next() : null;
+            }
+        };
+    }
 
     @Override
     public void execute(Context context) {
