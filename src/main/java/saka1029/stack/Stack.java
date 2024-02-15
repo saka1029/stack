@@ -76,8 +76,12 @@ public class Stack {
 	    return Quote.of(instruction);
 	}
 
-	static List list(Instruction... instructions) {
-	    return List.of(instructions);
+	static List consList(Instruction... instructions) {
+	    return Cons.of(instructions);
+	}
+
+	static List consList(java.util.List<Instruction> list) {
+	    return Cons.of(list);
 	}
 
 	static void standard(Map<Symbol, Instruction> vars) {
@@ -154,7 +158,7 @@ public class Stack {
 			Sequence it = l(c.pop()).sequence();
 			c.instruction(() -> {
 				Instruction i = it.next();
-				return i == null ? null : list(i, closure);
+				return i == null ? null : consList(i, closure);
 			});
 		});
 		/*
@@ -167,19 +171,22 @@ public class Stack {
 		    Instruction body = c.pop(), cond = c.pop();
 		    c.instruction(new Sequence() {
 		        boolean done = false;
-		        List w = list(cond, quote(body), quote(x -> done = true), symbol("if"));
+		        List w = consList(cond, quote(body), quote(x -> done = true), symbol("if"));
                 @Override
                 public Instruction next() {
                     return done ? null : w;
                 }
 		    });
 		});
+		/*
+		 * 名前に反してConsによるListを返す。
+		 */
 		put(vars, "list", c -> {
 			List list = l(c.pop());
 			java.util.List<Instruction> a = new ArrayList<>();
 			for (Instruction i : list)
 				a.add(i);
-			c.push(List.of(a));
+			c.push(consList(a));
 		});
 		/*
 		 * このmapの実装はクロージャーを別コンテキストで評価する点に注意する。
@@ -197,7 +204,7 @@ public class Stack {
 					Sequence it = list.sequence();
 					return () -> {
 						Instruction i = it.next();
-						return i == null ? null : child.eval(List.of(i, closure));
+						return i == null ? null : child.eval(Cons.of(i, closure));
 					};
 				}
 			});
@@ -224,7 +231,7 @@ public class Stack {
 						}
 
 						void advance() {
-							for (cur = it.next(); cur != null && !b(child.eval(List.of(cur, closure))); cur = it.next())
+							for (cur = it.next(); cur != null && !b(child.eval(Cons.of(cur, closure))); cur = it.next())
 								/* do nothing */;
 						}
 

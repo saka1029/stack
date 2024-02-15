@@ -8,6 +8,7 @@ import java.util.logging.Logger;
 import org.junit.Test;
 
 import saka1029.Common;
+import saka1029.stack.Cons;
 import saka1029.stack.Int;
 import saka1029.stack.List;
 import saka1029.stack.Parser;
@@ -22,7 +23,7 @@ public class TestParser {
 //        logger.info(Common.methodName());
         String text = "  1  2";
         Parser r = Parser.of(text);
-        assertEquals(List.of(Int.of(1), Int.of(2)), r.read());
+        assertEquals(Cons.of(Int.of(1), Int.of(2)), r.read());
     }
 
     @Test
@@ -30,10 +31,10 @@ public class TestParser {
 //        logger.info(Common.methodName());
         String text = "  ()  (1)  (1 2)";
         Parser r = Parser.of(text);
-        assertEquals(List.of(
+        assertEquals(Cons.of(
             List.NIL,
-            List.of(Int.of(1)),
-            List.of(Int.of(1), Int.of(2))),
+            Cons.of(Int.of(1)),
+            Cons.of(Int.of(1), Int.of(2))),
             r.read());
     }
 
@@ -42,11 +43,11 @@ public class TestParser {
 //        logger.info(Common.methodName());
         String text = "  '0 '()  '(1)  '(1 2)";
         Parser r = Parser.of(text);
-        assertEquals(List.of(
+        assertEquals(Cons.of(
             Quote.of(Int.of(0)),
             Quote.of(List.NIL),
-            Quote.of(List.of(Int.of(1))),
-            Quote.of(List.of(Int.of(1), Int.of(2)))),
+            Quote.of(Cons.of(Int.of(1))),
+            Quote.of(Cons.of(Int.of(1), Int.of(2)))),
             r.read());
     }
 }

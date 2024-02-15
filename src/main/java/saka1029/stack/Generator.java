@@ -32,7 +32,7 @@ public class Generator extends List {
      */
     Generator(Context context, Instruction code, Instruction... args) {
         this.context = context;
-        this.code = code instanceof List list ? list : List.of(code);
+        this.code = code instanceof List list ? list : Cons.of(code);
         this.args = reverse(args.clone());
     }
     

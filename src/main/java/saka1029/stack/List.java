@@ -1,7 +1,6 @@
 package saka1029.stack;
 
 import java.util.Iterator;
-import java.util.ListIterator;
 import java.util.NoSuchElementException;
 
 /**
@@ -33,27 +32,6 @@ public abstract class List implements Instruction, Iterable<Instruction> {
         };
     }
 
-//    public Iterable<Instruction> iterable() {
-//        return () -> new java.util.Iterator<>() {
-//            final Sequence it = sequence();
-//            Instruction next = it.next();
-//
-//            @Override
-//            public boolean hasNext() {
-//                return next != null;
-//            }
-//
-//            @Override
-//            public Instruction next() {
-//                if (next == null)
-//                    throw new NoSuchElementException();
-//                Instruction result = next;
-//                next = it.next();
-//                return result;
-//            }
-//        };
-//    }
-
     public static final List NIL = new List() {
 
         @Override
@@ -66,22 +44,6 @@ public abstract class List implements Instruction, Iterable<Instruction> {
             return "()";
         }
     };
-
-    public static List of(Instruction... instructions) {
-        int size = instructions.length;
-        List result = NIL;
-        for (int i = size - 1; i >= 0; --i)
-            result = Cons.of(instructions[i], result);
-        return result;
-    }
-
-    public static List of(java.util.List<Instruction> list) {
-        List result = NIL;
-        ListIterator<Instruction> it = list.listIterator(list.size());
-        while (it.hasPrevious())
-            result = Cons.of(it.previous(), result);
-        return result;
-    }
     
 //    public static List of(Iterable<Instruction> iterable) {
 //        return new List() {

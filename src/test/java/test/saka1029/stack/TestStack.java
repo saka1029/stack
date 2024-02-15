@@ -11,9 +11,9 @@ import java.util.logging.Logger;
 import org.junit.Test;
 
 import saka1029.Common;
+import saka1029.stack.Cons;
 import saka1029.stack.Context;
 import saka1029.stack.Int;
-import saka1029.stack.List;
 import saka1029.stack.Stack;
 
 public class TestStack {
@@ -39,27 +39,27 @@ public class TestStack {
 	@Test
 	public void testCdr() {
 		Context c = context();
-		assertEquals(List.of(Int.of(2)), eval(c, "'(1 2) cdr"));
+		assertEquals(Cons.of(Int.of(2)), eval(c, "'(1 2) cdr"));
 	}
 
 	@Test
 	public void testUncons() {
 		Context c = context();
 		run(c, "'(1 2) uncons");
-		assertEquals(List.of(Int.of(2)), c.pop());
+		assertEquals(Cons.of(Int.of(2)), c.pop());
 		assertEquals(Int.of(1), c.pop());
 	}
 
 	@Test
 	public void testCons() {
 		Context c = context();
-		assertEquals(List.of(Int.of(1)), eval(c, "1 '() cons"));
+		assertEquals(Cons.of(Int.of(1)), eval(c, "1 '() cons"));
 	}
 
 	@Test
 	public void testRcons() {
 		Context c = context();
-		assertEquals(List.of(Int.of(1)), eval(c, "'() 1 rcons"));
+		assertEquals(Cons.of(Int.of(1)), eval(c, "'() 1 rcons"));
 	}
 
 	@Test

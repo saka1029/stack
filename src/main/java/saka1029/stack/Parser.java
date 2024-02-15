@@ -97,7 +97,7 @@ public class Parser {
         if (token != Token.RP)
             throw error("')' expected");
         token(); // skip ')'
-        return List.of(list);
+        return Cons.of(list);
     }
 
     Instruction element() {
@@ -122,6 +122,6 @@ public class Parser {
         Instruction e;
         while ((e = element()) != null)
             list.add(e);
-        return List.of(list);
+        return Cons.of(list);
     }
 }
