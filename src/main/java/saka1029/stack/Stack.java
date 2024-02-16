@@ -209,6 +209,21 @@ public class Stack {
 				}
 			});
 		});
+		put(vars, "map2", c -> {
+			Instruction closure = c.pop();
+			List list = l(c.pop());
+			java.util.List<Instruction> result = new ArrayList<>();
+			c.instruction(new Sequence() {
+			    Sequence s = list.sequence();
+                boolean done = false;
+                @Override
+                public Instruction next() {
+                    if (done)
+                        return null;
+                    return null;
+                }
+			});
+		});
 		/*
 		 * このfilterの実装はクロージャーを別コンテキストで評価する点に注意する。
 		 * クロージャー内ではfilterのコンテキストにアクセスできない。
