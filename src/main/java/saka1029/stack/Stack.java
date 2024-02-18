@@ -76,14 +76,6 @@ public class Stack {
 	    return Quote.of(instruction);
 	}
 
-	static List consList(Instruction... instructions) {
-	    return Cons.list(instructions);
-	}
-
-	static List consList(java.util.List<Instruction> list) {
-	    return Cons.list(list);
-	}
-
 	static void standard(Map<Symbol, Instruction> vars) {
 		put(vars, "dup", Context::dup);
 		put(vars, "dup0", Context::dup);
@@ -158,7 +150,7 @@ public class Stack {
 			Sequence it = l(c.pop()).sequence();
 			c.instruction(() -> {
 				Instruction i = it.next();
-				return i == null ? null : consList(i, closure);
+				return i == null ? null : Cons.list(i, closure);
 			});
 		});
 		/*
@@ -171,7 +163,7 @@ public class Stack {
 		    Instruction body = c.pop(), cond = c.pop();
 		    c.instruction(new Sequence() {
 		        boolean done = false;
-		        List w = consList(cond, quote(body), quote(x -> done = true), symbol("if"));
+		        List w = Cons.list(cond, quote(body), quote(x -> done = true), symbol("if"));
                 @Override
                 public Instruction next() {
                     return done ? null : w;
@@ -186,7 +178,7 @@ public class Stack {
 			java.util.List<Instruction> a = new ArrayList<>();
 			for (Instruction i : list)
 				a.add(i);
-			c.push(consList(a));
+			c.push(Cons.list(a));
 		});
 //		/*
 //		 * このmapの実装はクロージャーを別コンテキストで評価する点に注意する。
