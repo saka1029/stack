@@ -14,8 +14,8 @@ public class TestList {
     @Test
     public void testEquals() {
         assertEquals(List.NIL, List.NIL);
-        assertEquals(Cons.of(Int.of(0)), Cons.of(Int.of(0)));
-        assertEquals(Cons.of(Int.of(0), Bool.of(true)), Cons.of(Int.of(0), Bool.of(true)));
+        assertEquals(Cons.list(Int.of(0)), Cons.list(Int.of(0)));
+        assertEquals(Cons.list(Int.of(0), Bool.of(true)), Cons.list(Int.of(0), Bool.of(true)));
     }
 
 }

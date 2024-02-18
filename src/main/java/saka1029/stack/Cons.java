@@ -33,7 +33,7 @@ public class Cons extends List {
         };
     }
 
-    public static List of(java.util.List<Instruction> list) {
+    public static List list(java.util.List<Instruction> list) {
         List result = List.NIL;
         ListIterator<Instruction> it = list.listIterator(list.size());
         while (it.hasPrevious())
@@ -41,7 +41,7 @@ public class Cons extends List {
         return result;
     }
 
-    public static List of(Instruction... instructions) {
+    public static List list(Instruction... instructions) {
         int size = instructions.length;
         List result = List.NIL;
         for (int i = size - 1; i >= 0; --i)

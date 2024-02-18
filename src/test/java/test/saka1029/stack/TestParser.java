@@ -23,7 +23,7 @@ public class TestParser {
 //        logger.info(Common.methodName());
         String text = "  1  2";
         Parser r = Parser.of(text);
-        assertEquals(Cons.of(Int.of(1), Int.of(2)), r.read());
+        assertEquals(Cons.list(Int.of(1), Int.of(2)), r.read());
     }
 
     @Test
@@ -31,10 +31,10 @@ public class TestParser {
 //        logger.info(Common.methodName());
         String text = "  ()  (1)  (1 2)";
         Parser r = Parser.of(text);
-        assertEquals(Cons.of(
+        assertEquals(Cons.list(
             List.NIL,
-            Cons.of(Int.of(1)),
-            Cons.of(Int.of(1), Int.of(2))),
+            Cons.list(Int.of(1)),
+            Cons.list(Int.of(1), Int.of(2))),
             r.read());
     }
 
@@ -43,11 +43,11 @@ public class TestParser {
 //        logger.info(Common.methodName());
         String text = "  '0 '()  '(1)  '(1 2)";
         Parser r = Parser.of(text);
-        assertEquals(Cons.of(
+        assertEquals(Cons.list(
             Quote.of(Int.of(0)),
             Quote.of(List.NIL),
-            Quote.of(Cons.of(Int.of(1))),
-            Quote.of(Cons.of(Int.of(1), Int.of(2)))),
+            Quote.of(Cons.list(Int.of(1))),
+            Quote.of(Cons.list(Int.of(1), Int.of(2)))),
             r.read());
     }
 }

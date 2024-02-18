@@ -77,11 +77,11 @@ public class Stack {
 	}
 
 	static List consList(Instruction... instructions) {
-	    return Cons.of(instructions);
+	    return Cons.list(instructions);
 	}
 
 	static List consList(java.util.List<Instruction> list) {
-	    return Cons.of(list);
+	    return Cons.list(list);
 	}
 
 	static void standard(Map<Symbol, Instruction> vars) {
@@ -188,39 +188,45 @@ public class Stack {
 				a.add(i);
 			c.push(consList(a));
 		});
+//		/*
+//		 * このmapの実装はクロージャーを別コンテキストで評価する点に注意する。
+//		 * クロージャー内ではmapのコンテキストにアクセスできない。
+//		 * クロージャー実行時は常にスタックが空である。
+//		 * このmapはConsではないListのサブクラスを返す点に注意する。
+//		 */
+//		put(vars, "map", c -> {
+//			Instruction closure = c.pop();
+//			List list = l(c.pop());
+//			Context child = c.fork();    // クロージャー評価用コンテキスト
+//			c.push(new List() {
+//				@Override
+//				public Sequence sequence() {
+//					Sequence it = list.sequence();
+//					return () -> {
+//						Instruction i = it.next();
+//						return i == null ? null : child.eval(Cons.list(i, closure));
+//					};
+//				}
+//			});
+//		});
 		/*
-		 * このmapの実装はクロージャーを別コンテキストで評価する点に注意する。
-		 * クロージャー内ではmapのコンテキストにアクセスできない。
-		 * クロージャー実行時は常にスタックが空である。
-		 * このmapはConsではないListのサブクラスを返す点に注意する。
+		 * このmapの実装は結果をConsで返す。
+		 * closure(mapper)の評価は現在のContext内で行う。
 		 */
 		put(vars, "map", c -> {
 			Instruction closure = c.pop();
 			List list = l(c.pop());
-			Context child = c.fork();    // クロージャー評価用コンテキスト
-			c.push(new List() {
-				@Override
-				public Sequence sequence() {
-					Sequence it = list.sequence();
-					return () -> {
-						Instruction i = it.next();
-						return i == null ? null : child.eval(Cons.of(i, closure));
-					};
-				}
-			});
-		});
-		put(vars, "map2", c -> {
-			Instruction closure = c.pop();
-			List list = l(c.pop());
-			java.util.List<Instruction> result = new ArrayList<>();
 			c.instruction(new Sequence() {
 			    Sequence s = list.sequence();
-                boolean done = false;
+                java.util.List<Instruction> result = new ArrayList<>();
                 @Override
                 public Instruction next() {
-                    if (done)
+                    Instruction i = s.next();
+                    if (i == null) {
+                        c.push(Cons.list(result));
                         return null;
-                    return null;
+                    }
+                    return Cons.list(i, closure, x -> result.add(c.pop()));
                 }
 			});
 		});
@@ -246,7 +252,7 @@ public class Stack {
 						}
 
 						void advance() {
-							for (cur = it.next(); cur != null && !b(child.eval(Cons.of(cur, closure))); cur = it.next())
+							for (cur = it.next(); cur != null && !b(child.eval(Cons.list(cur, closure))); cur = it.next())
 								/* do nothing */;
 						}
 

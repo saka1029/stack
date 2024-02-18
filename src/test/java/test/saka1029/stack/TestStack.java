@@ -39,27 +39,27 @@ public class TestStack {
 	@Test
 	public void testCdr() {
 		Context c = context();
-		assertEquals(Cons.of(Int.of(2)), eval(c, "'(1 2) cdr"));
+		assertEquals(Cons.list(Int.of(2)), eval(c, "'(1 2) cdr"));
 	}
 
 	@Test
 	public void testUncons() {
 		Context c = context();
 		run(c, "'(1 2) uncons");
-		assertEquals(Cons.of(Int.of(2)), c.pop());
+		assertEquals(Cons.list(Int.of(2)), c.pop());
 		assertEquals(Int.of(1), c.pop());
 	}
 
 	@Test
 	public void testCons() {
 		Context c = context();
-		assertEquals(Cons.of(Int.of(1)), eval(c, "1 '() cons"));
+		assertEquals(Cons.list(Int.of(1)), eval(c, "1 '() cons"));
 	}
 
 	@Test
 	public void testRcons() {
 		Context c = context();
-		assertEquals(Cons.of(Int.of(1)), eval(c, "'() 1 rcons"));
+		assertEquals(Cons.list(Int.of(1)), eval(c, "'() 1 rcons"));
 	}
 
 	@Test
@@ -260,6 +260,15 @@ public class TestStack {
 		assertEquals(eval(c, "'(1 2 3)"), eval(c, "'(0 1 2) '(1 +) map"));
 		assertEquals(eval(c, "'(1 2 3 4 5)"), eval(c, "'(0 1 2 3 4) '(1 +) map"));
 	}
+
+//	@Test
+//	public void testMap2Builtin() {
+//		Context c = context();
+//		assertEquals(eval(c, "'()"), eval(c, "'() '(1 +) map2"));
+//		assertEquals(eval(c, "'(1)"), eval(c, "'(0) '(1 +) map2"));
+//		assertEquals(eval(c, "'(1 2 3)"), eval(c, "'(0 1 2) '(1 +) map2"));
+//		assertEquals(eval(c, "'(1 2 3 4 5)"), eval(c, "'(0 1 2 3 4) '(1 +) map2"));
+//	}
 
 	@Test
 	public void testFilterRecursiveCdrFirst() {
