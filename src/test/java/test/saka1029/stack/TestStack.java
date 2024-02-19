@@ -287,7 +287,7 @@ public class TestStack {
 	}
 
 	@Test
-	public void testFilterRecursiveBuiltin() {
+	public void testFilterBuiltin() {
 		Context c = context();
 		assertEquals(eval(c, "'(0 2)"), eval(c, "'(0 1 2 3) '(2 % 0 ==) filter"));
 		assertEquals(eval(c, "'(1 3)"), eval(c, "'(0 1 2 3) '(2 % 0 !=) filter"));

@@ -222,40 +222,60 @@ public class Stack {
                 }
 			});
 		});
+//		/*
+//		 * このfilterの実装はクロージャーを別コンテキストで評価する点に注意する。
+//		 * クロージャー内ではfilterのコンテキストにアクセスできない。
+//		 * クロージャー実行時は常にスタックが空である。
+//		 * このfilterはConsではないListのサブクラスを返す点に注意する。
+//		 */
+//		put(vars, "filter", c -> {
+//			Instruction closure = c.pop();
+//			List list = l(c.pop());
+//			Context child = c.fork();    // クロージャー評価用コンテキスト
+//			c.push(new List() {
+//				@Override
+//				public Sequence sequence() {
+//					Sequence it = list.sequence();
+//					return new Sequence() {
+//						Instruction cur;
+//
+//						{
+//							advance();
+//						}
+//
+//						void advance() {
+//							for (cur = it.next(); cur != null && !b(child.eval(Cons.list(cur, closure))); cur = it.next())
+//								/* do nothing */;
+//						}
+//
+//						@Override
+//						public Instruction next() {
+//							Instruction result = cur;
+//							advance();
+//							return result;
+//						}
+//					};
+//				}
+//			});
+//		});
 		/*
-		 * このfilterの実装はクロージャーを別コンテキストで評価する点に注意する。
-		 * クロージャー内ではfilterのコンテキストにアクセスできない。
-		 * クロージャー実行時は常にスタックが空である。
-		 * このfilterはConsではないListのサブクラスを返す点に注意する。
+		 * このfilterの実装はConsのリストを返す。
 		 */
 		put(vars, "filter", c -> {
 			Instruction closure = c.pop();
 			List list = l(c.pop());
-			Context child = c.fork();    // クロージャー評価用コンテキスト
-			c.push(new List() {
-				@Override
-				public Sequence sequence() {
-					Sequence it = list.sequence();
-					return new Sequence() {
-						Instruction cur;
-
-						{
-							advance();
-						}
-
-						void advance() {
-							for (cur = it.next(); cur != null && !b(child.eval(Cons.list(cur, closure))); cur = it.next())
-								/* do nothing */;
-						}
-
-						@Override
-						public Instruction next() {
-							Instruction result = cur;
-							advance();
-							return result;
-						}
-					};
-				}
+			c.instruction(new Sequence() {
+			    Sequence s = list.sequence();
+                java.util.List<Instruction> result = new ArrayList<>();
+                @Override
+                public Instruction next() {
+                    Instruction i = s.next();
+                    if (i == null) {
+                        c.push(Cons.list(result));
+                        return null;
+                    }
+                    return Cons.list(i, closure, quote(x -> result.add(i)), quote(List.NIL), symbol("if"));
+                }
 			});
 		});
 		put(vars, "range", c -> {
