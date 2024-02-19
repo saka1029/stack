@@ -75,6 +75,22 @@ public class Stack {
 	static Quote quote(Instruction instruction) {
 	    return Quote.of(instruction);
 	}
+	
+	static List quickList(Instruction... instructions) {
+	    int size = instructions.length;
+	    return new List() {
+            @Override
+            public Sequence sequence() {
+                return new Sequence() {
+                    int i = 0;
+                    @Override
+                    public Instruction next() {
+                        return i < size ? instructions[i++] : null;
+                    }
+                };
+            }
+	    };
+	}
 
 	static void standard(Map<Symbol, Instruction> vars) {
 		put(vars, "dup", Context::dup);
@@ -163,7 +179,7 @@ public class Stack {
 		    Instruction body = c.pop(), cond = c.pop();
 		    c.instruction(new Sequence() {
 		        boolean done = false;
-		        List w = Cons.list(cond, quote(body), quote(x -> done = true), symbol("if"));
+		        List w = quickList(cond, quote(body), quote(x -> done = true), symbol("if"));
                 @Override
                 public Instruction next() {
                     return done ? null : w;
@@ -218,7 +234,7 @@ public class Stack {
                         c.push(Cons.list(result));
                         return null;
                     }
-                    return Cons.list(i, closure, x -> result.add(c.pop()));
+                    return quickList(i, closure, x -> result.add(c.pop()));
                 }
 			});
 		});
@@ -274,7 +290,7 @@ public class Stack {
                         c.push(Cons.list(result));
                         return null;
                     }
-                    return Cons.list(i, closure, quote(x -> result.add(i)), quote(List.NIL), symbol("if"));
+                    return quickList(i, closure, quote(x -> result.add(i)), quote(List.NIL), symbol("if"));
                 }
 			});
 		});
