@@ -480,8 +480,7 @@ public class TestStack {
 		run(c, "'(dup 1 <="
 		    + "   '()"
 		    + "   '(dup dup 2 /"
-		    + "     '(dup1 dup1 >)"
-		    + "     '(swap drop dup1 dup1 / dup1 + 2 /) while"
+		    + "     '(dup1 dup1 >) '(swap drop dup1 dup1 / dup1 + 2 /) while"
 		    + "     drop ret1)"
 		    + "   if) 'isqrt define");
 		assertEquals(eval(c, "1"), eval(c, "1 isqrt"));
