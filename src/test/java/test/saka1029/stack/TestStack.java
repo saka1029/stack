@@ -534,7 +534,13 @@ public class TestStack {
 		assertEquals(eval(c, "'(2 3 5 7)"), eval(c, "2 7 1 range 2 sieve"));
 		assertEquals(eval(c, "'(2 3 4 5 7 8 10 11 13 14 16 17 19 20)"), eval(c, "2 20 1 range 3 sieve"));
 		assertEquals(eval(c, "'(2 3 5 7 11 13 17 19)"), eval(c, "2 20 1 range 2 20 1 range 'sieve for"));
-		run(c, "'(2 dup1 1 range 2 rot 1 range 'sieve for) 'primes define");
+		run(c, "'(dup 1 <="
+		    + "   '()"
+		    + "   '(dup dup 2 /"
+		    + "     '(dup1 dup1 >) '(swap drop dup1 dup1 / dup1 + 2 /) while"
+		    + "     drop ret1)"
+		    + "   if) 'isqrt define");
+		run(c, "'(2 dup1 1 range 2 rot isqrt 1 range 'sieve for) 'primes define");
 		assertEquals(eval(c, "'(2 3 5 7 11 13 17 19)"), eval(c, "20 primes"));
 		assertEquals(eval(c, "'(2 3 5 7 11 13 17 19 23 29 31 37 41 43 47 53 59 61 67 71 73 79 83 89 97)"), eval(c, "100 primes"));
 	}
