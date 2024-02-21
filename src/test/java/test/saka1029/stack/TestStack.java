@@ -483,18 +483,18 @@ public class TestStack {
 		    + "   '(dup dup 2 /"
 		    + "     '(dup1 dup1 >) '(swap drop dup1 dup1 / dup1 + 2 /) while"
 		    + "     drop ret1)"
-		    + "   if) 'isqrt define");
-		assertEquals(eval(c, "1"), eval(c, "1 isqrt"));
-		assertEquals(eval(c, "1"), eval(c, "2 isqrt"));
-		assertEquals(eval(c, "1"), eval(c, "3 isqrt"));
-		assertEquals(eval(c, "2"), eval(c, "4 isqrt"));
-		assertEquals(eval(c, "2"), eval(c, "5 isqrt"));
-		assertEquals(eval(c, "2"), eval(c, "6 isqrt"));
-		assertEquals(eval(c, "2"), eval(c, "7 isqrt"));
-		assertEquals(eval(c, "2"), eval(c, "8 isqrt"));
-		assertEquals(eval(c, "3"), eval(c, "9 isqrt"));
-		c.variable(Symbol.of("expected-isqrt"), x -> x.push(Int.of((int)Math.sqrt(((Int)c.pop()).value))));
-		assertEquals(eval(c, "1 1000 1 range 'expected-isqrt map"), eval(c, "1 1000 1 range 'isqrt map"));
+		    + "   if) 'int-sqrt define");
+		assertEquals(eval(c, "1"), eval(c, "1 int-sqrt"));
+		assertEquals(eval(c, "1"), eval(c, "2 int-sqrt"));
+		assertEquals(eval(c, "1"), eval(c, "3 int-sqrt"));
+		assertEquals(eval(c, "2"), eval(c, "4 int-sqrt"));
+		assertEquals(eval(c, "2"), eval(c, "5 int-sqrt"));
+		assertEquals(eval(c, "2"), eval(c, "6 int-sqrt"));
+		assertEquals(eval(c, "2"), eval(c, "7 int-sqrt"));
+		assertEquals(eval(c, "2"), eval(c, "8 int-sqrt"));
+		assertEquals(eval(c, "3"), eval(c, "9 int-sqrt"));
+		c.variable(Symbol.of("expected-int-sqrt"), x -> x.push(Int.of((int)Math.sqrt(((Int)c.pop()).value))));
+		assertEquals(eval(c, "1 1000 1 range 'expected-int-sqrt map"), eval(c, "1 1000 1 range 'int-sqrt map"));
 	}
 
 	/**
