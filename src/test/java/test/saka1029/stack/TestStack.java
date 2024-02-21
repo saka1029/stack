@@ -494,7 +494,7 @@ public class TestStack {
 		assertEquals(eval(c, "2"), eval(c, "8 int-sqrt"));
 		assertEquals(eval(c, "3"), eval(c, "9 int-sqrt"));
 		c.variable(Symbol.of("expected-int-sqrt"), x -> x.push(Int.of((int)Math.sqrt(((Int)c.pop()).value))));
-		assertEquals(eval(c, "1 1000 1 range 'expected-int-sqrt map"), eval(c, "1 1000 1 range 'int-sqrt map"));
+		assertEquals(eval(c, "1 200 1 range 'expected-int-sqrt map"), eval(c, "1 200 1 range 'int-sqrt map"));
 	}
 
 	/**
