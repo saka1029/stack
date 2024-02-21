@@ -21,8 +21,6 @@ public class TestStack {
 
 	static final Logger logger = Common.logger(TestStack.class);
 
-	// GitKrakenテスト
-
 	@Test
 	public void testPlus() {
 		Context c = context();
@@ -473,6 +471,9 @@ public class TestStack {
 	 * s x1 (s/x1) : dup1 +
 	 * s x1 (s/x1+x1) : 2 /
 	 * s x1 ((s/x1+x1)/2) :
+	 * 漢字は入力できますか？
+	 *   エスケープキーはCtrl+[で代替できますか？
+	 *   できます。
 	 */
 	@Test
 	public void testISqrtByNewton() {
