@@ -472,8 +472,8 @@ public class TestStack {
 	 * s x1 (s/x1+x1) : 2 /
 	 * s x1 ((s/x1+x1)/2) :
 	 * 漢字は入力できますか？
-	 *   エスケープキーはCtrl+[で代替できますか？
-	 *   できます。
+	 * エスケープキーはCtrl+[で代替できますか？
+	 * できます。
 	 */
 	@Test
 	public void testISqrtByNewton() {
