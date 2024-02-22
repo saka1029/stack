@@ -15,12 +15,11 @@ import saka1029.stack.Cons;
 import saka1029.stack.Context;
 import saka1029.stack.Int;
 import saka1029.stack.Stack;
+import saka1029.stack.Symbol;
 
 public class TestStack {
 
 	static final Logger logger = Common.logger(TestStack.class);
-
-	// GitKrakenテスト
 
 	@Test
 	public void testPlus() {
@@ -453,7 +452,7 @@ public class TestStack {
 		int x0 = s, x1 = s / 2;
 		while (x0 > x1) {
 			x0 = x1;
-			x1 = (x0 + s / x0) / 2;
+			x1 = (x1 + s / x1) / 2;
 		}
 		return x0;
 	}
@@ -467,11 +466,35 @@ public class TestStack {
 
 	/**
 	 * ニュートン法により整数の平方根を求める。
+	 * s x0 x1 : swap drop
+	 * s x1 : dup1 dup1 /
+	 * s x1 (s/x1) : dup1 +
+	 * s x1 (s/x1+x1) : 2 /
+	 * s x1 ((s/x1+x1)/2) :
+	 * 漢字は入力できますか？
+	 * エスケープキーはCtrl+[で代替できますか？
+	 * できます。
 	 */
 	@Test
 	public void testISqrtByNewton() {
 		Context c = Stack.context();
-		run(c, "'(dup 1 <= '() '(dup dup 2 / )) 'isqrt define");
+		run(c, "'(dup 1 <="
+		    + "   '()"
+		    + "   '(dup dup 2 /"
+		    + "     '(dup1 dup1 >) '(swap drop dup1 dup1 / dup1 + 2 /) while"
+		    + "     drop ret1)"
+		    + "   if) 'int-sqrt define");
+		assertEquals(eval(c, "1"), eval(c, "1 int-sqrt"));
+		assertEquals(eval(c, "1"), eval(c, "2 int-sqrt"));
+		assertEquals(eval(c, "1"), eval(c, "3 int-sqrt"));
+		assertEquals(eval(c, "2"), eval(c, "4 int-sqrt"));
+		assertEquals(eval(c, "2"), eval(c, "5 int-sqrt"));
+		assertEquals(eval(c, "2"), eval(c, "6 int-sqrt"));
+		assertEquals(eval(c, "2"), eval(c, "7 int-sqrt"));
+		assertEquals(eval(c, "2"), eval(c, "8 int-sqrt"));
+		assertEquals(eval(c, "3"), eval(c, "9 int-sqrt"));
+		c.variable(Symbol.of("expected-int-sqrt"), x -> x.push(Int.of((int)Math.sqrt(((Int)c.pop()).value))));
+		assertEquals(eval(c, "1 200 1 range 'expected-int-sqrt map"), eval(c, "1 200 1 range 'int-sqrt map"));
 	}
 
 	/**
@@ -511,7 +534,13 @@ public class TestStack {
 		assertEquals(eval(c, "'(2 3 5 7)"), eval(c, "2 7 1 range 2 sieve"));
 		assertEquals(eval(c, "'(2 3 4 5 7 8 10 11 13 14 16 17 19 20)"), eval(c, "2 20 1 range 3 sieve"));
 		assertEquals(eval(c, "'(2 3 5 7 11 13 17 19)"), eval(c, "2 20 1 range 2 20 1 range 'sieve for"));
-		run(c, "'(2 dup1 1 range 2 rot 1 range 'sieve for) 'primes define");
+		run(c, "'(dup 1 <="
+		    + "   '()"
+		    + "   '(dup dup 2 /"
+		    + "     '(dup1 dup1 >) '(swap drop dup1 dup1 / dup1 + 2 /) while"
+		    + "     drop ret1)"
+		    + "   if) 'isqrt define");
+		run(c, "'(2 dup1 1 range 2 rot isqrt 1 range 'sieve for) 'primes define");
 		assertEquals(eval(c, "'(2 3 5 7 11 13 17 19)"), eval(c, "20 primes"));
 		assertEquals(eval(c, "'(2 3 5 7 11 13 17 19 23 29 31 37 41 43 47 53 59 61 67 71 73 79 83 89 97)"), eval(c, "100 primes"));
 	}

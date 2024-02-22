@@ -118,6 +118,7 @@ public class Stack {
 		put(vars, "+", c -> c.push(i(i(c.pop()) + i(c.pop()))));
 		put(vars, "-", c -> c.push(i(-i(c.pop()) + i(c.pop()))));
 		put(vars, "*", c -> c.push(i(i(c.pop()) * i(c.pop()))));
+//		put(vars, "isqrt", c -> c.push(i((int)Math.sqrt(i(c.pop())))));
 		put(vars, "and", c -> c.push(b(b(c.pop()) & b(c.pop()))));
 		put(vars, "or", c -> c.push(b(b(c.pop()) | b(c.pop()))));
 		put(vars, "not", c -> c.push(b(!b(c.pop()))));
