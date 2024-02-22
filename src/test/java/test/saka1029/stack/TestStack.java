@@ -520,9 +520,10 @@ public class TestStack {
 	 * n 2 n 1 : range
 	 * n Range(2,n,1) : 2
 	 * n Range(2,n,1) 2 : rot
-	 * Range(2,n,1) 2 n : 1
-	 * n Range(2,n,1) 2 n 1 : range
-	 * n Range(2,n,1) Range(2,n,1) : sieve for
+	 * n Range(2,n,1) 2 n : isqrt
+	 * Range(2,n,1) 2 isqrt(n) : 1
+	 * n Range(2,n,1) 2 isqrt(n) 1 : range
+	 * n Range(2,n,1) Range(2,isqrt(n),1) : sieve for
 	 * 
 	 */
 	@Test
