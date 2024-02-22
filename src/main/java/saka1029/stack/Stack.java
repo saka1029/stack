@@ -307,6 +307,7 @@ public class Stack {
 		context.variable("generator1", c -> c.push(Generator.of(c, c.pop(), c.pop())));
 		context.variable("generator2", c -> c.push(Generator.of(c, c.pop(), c.pop(), c.pop())));
 		context.variable("array", c -> c.push(Array.of(i(c.pop()), c.pop())));
+		context.variable("to-array", c -> c.push(Array.of(l(c.pop()))));
 		context.variable("size", c -> c.push(i(a(c.pop()).size())));
 		context.variable("at", c -> c.push(a(c.pop()).at(i(c.pop()))));
 		context.variable("put", c -> a(c.pop()).put(i(c.pop()), c.pop()));
