@@ -4,11 +4,9 @@ import static org.junit.Assert.assertEquals;
 
 import org.junit.Test;
 
-import saka1029.stack.Bool;
 import saka1029.stack.Context;
 import saka1029.stack.Int;
 import saka1029.stack.Stack;
-import saka1029.stack.Symbol;
 
 public class TestContext {
 

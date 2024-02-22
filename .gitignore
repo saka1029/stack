@@ -1,6 +1,7 @@
 /target/
 /debug/
 /.settings/
+/.vscode/
 /.classpath
 /.project
 *.lck
