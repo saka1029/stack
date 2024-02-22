@@ -28,6 +28,10 @@ public class Context {
         return new Context(variables, System.out::print);
     }
     
+    public static Context of() {
+        return new Context(new java.util.HashMap<Symbol, Instruction>(), System.out::print);
+    }
+    
     public Context fork() {
         return of(variables, output);
     }
@@ -122,6 +126,10 @@ public class Context {
     
     public void variable(Symbol s, Instruction instruction) {
         variables.put(s, instruction);
+    }
+    
+    public void variable(String name, Instruction instruction) {
+        variables.put(Symbol.of(name), instruction);
     }
     
     public void execute(Instruction instruction) {

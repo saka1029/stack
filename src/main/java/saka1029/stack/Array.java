@@ -28,11 +28,11 @@ public class Array extends List {
         return array.length;
     }
 
-    public Instruction get(int index) {
+    public Instruction at(int index) {
         return array[index];
     }
 
-    public void set(int index, Instruction value) {
+    public void put(int index, Instruction value) {
         array[index] = value;
     }
 

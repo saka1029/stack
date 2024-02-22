@@ -66,7 +66,11 @@ public class Parser {
         String s = sb.toString();
         if (INT_PAT.matcher(s).matches())
             return Int.of(Integer.parseInt(s));
-        return Symbol.of(s);
+        return switch (s) {
+            case "true" -> Bool.TRUE;
+            case "false" -> Bool.FALSE;
+            default -> Symbol.of(s);
+        };
     }
 
     Instruction token() {

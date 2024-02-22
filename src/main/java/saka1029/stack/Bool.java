@@ -21,6 +21,16 @@ public class Bool implements Comparable {
     }
     
     @Override
+    public int hashCode() {
+        return Boolean.hashCode(value);
+    }
+    
+    @Override
+    public boolean equals(Object obj) {
+        return obj instanceof Bool b && value == b.value;
+    }
+    
+    @Override
     public String toString() {
         return Boolean.toString(value);
     }
