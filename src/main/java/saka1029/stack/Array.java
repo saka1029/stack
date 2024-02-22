@@ -1,19 +1,27 @@
 package saka1029.stack;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 
 public class Array extends List {
 
     final Instruction[] array;
 
-    Array(Instruction[] array, Instruction value) {
+    Array(Instruction[] array) {
         this.array = array;
-        Arrays.fill(array, value);
+    }
+
+    public static Array of(List list) {
+        java.util.List<Instruction> x = new ArrayList<>();
+        for (Instruction i : list)
+            x.add(i);
+        return new Array(x.toArray(Instruction[]::new));
     }
 
     public static Array of(int size, Instruction value) {
         Instruction[] array = new Instruction[size];
-        return new Array(array, value);
+        Arrays.fill(array, value);
+        return new Array(array);
     }
 
     public int size() {
