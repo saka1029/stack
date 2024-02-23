@@ -31,7 +31,8 @@ public class Common {
      * System.out, System.errのデフォルト文字セットは
      * (1)コマンドプロンプトの場合はコードページに依存する。
      * （コードページ932のときMS932、65001のときUTF-8）
-     * (2)Eclipseの場合はwindows-31jとなる。
+     * (2)Eclipseのコンソールの場合はwindows-31jとなる。
+     * (3)vscodeのコンソールの場合はwindows-31jとなる。
      */
     public static void initLogger() {
         if (!System.out.charset().equals(StandardCharsets.UTF_8))
