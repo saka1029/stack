@@ -10,7 +10,7 @@ import saka1029.stack.Stack;
 
 public class TestArray {
 
-    static final Logger logger = Common.logger(TestArray.class);
+    // static final Logger logger = Common.logger(TestArray.class);
 
     @Test
     public void testAtPut() {
@@ -23,7 +23,8 @@ public class TestArray {
 
     @Test
     public void testConsole() {
-        logger.info("日本語です。");
+        // logger.info("日本語です。");
+        System.out.println("sysout.charset=" + System.out.charset());
         System.out.println("日本語です。");
     }
 }
