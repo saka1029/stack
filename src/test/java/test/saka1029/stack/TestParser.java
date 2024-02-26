@@ -22,7 +22,7 @@ public class TestParser {
     public void testReadInt() throws IOException {
 //        logger.info(Common.methodName());
         String text = "  1  2";
-        Parser r = Parser.of(text);
+        Parser r = Parser.parse(text);
         assertEquals(Cons.list(Int.of(1), Int.of(2)), r.read());
     }
 
@@ -30,7 +30,7 @@ public class TestParser {
     public void testReadList() throws IOException {
 //        logger.info(Common.methodName());
         String text = "  ()  (1)  (1 2)";
-        Parser r = Parser.of(text);
+        Parser r = Parser.parse(text);
         assertEquals(Cons.list(
             List.NIL,
             Cons.list(Int.of(1)),
@@ -42,7 +42,7 @@ public class TestParser {
     public void testReadQuote() throws IOException {
 //        logger.info(Common.methodName());
         String text = "  '0 '()  '(1)  '(1 2)";
-        Parser r = Parser.of(text);
+        Parser r = Parser.parse(text);
         assertEquals(Cons.list(
             Quote.of(Int.of(0)),
             Quote.of(List.NIL),

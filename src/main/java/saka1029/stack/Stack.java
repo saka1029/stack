@@ -19,7 +19,7 @@ public class Stack {
 	}
 
 	public static List read(String source) {
-		return Parser.of(source).read();
+		return Parser.parse(source).read();
 	}
 
 	public static void run(Context context, String source) {

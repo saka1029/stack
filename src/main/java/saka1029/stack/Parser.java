@@ -22,13 +22,13 @@ public class Parser {
         token();
     }
 
-    public static Parser of(Reader reader) {
+    public static Parser parse(Reader reader) {
         return new Parser(reader);
     }
 
-    public static Parser of(String text) {
+    public static Parser parse(String text) {
         // StringReaderはclose()しない点に注意する。
-        return of(new StringReader(text));
+        return parse(new StringReader(text));
     }
 
     int ch() {
