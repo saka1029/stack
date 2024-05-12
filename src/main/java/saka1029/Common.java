@@ -24,6 +24,8 @@ public class Common {
         return Logger.getLogger(clazz.getName());
     }
 
+    static boolean INIT_LOGGER = false;
+
     /**
      * System.out, System.errの文字セットをUTF-8に変更する。
      * すべてのロガーのフォーマットをMY_FORMATに変更する。
@@ -35,9 +37,11 @@ public class Common {
      * (3)vscodeのコンソールの場合はwindows-31jとなる。
      */
     public static void initLogger() {
-        if (!System.out.charset().equals(StandardCharsets.UTF_8))
+        if (INIT_LOGGER)
+            return;
+        // if (!System.out.charset().equals(StandardCharsets.UTF_8))
             System.setOut(new PrintStream(System.out, true, StandardCharsets.UTF_8));
-        if (!System.err.charset().equals(StandardCharsets.UTF_8))
+        // if (!System.err.charset().equals(StandardCharsets.UTF_8))
             System.setErr(new PrintStream(System.err, true, StandardCharsets.UTF_8));
         for (Handler h : Logger.getLogger("").getHandlers())
             if (!h.getFormatter().equals(MY_FORMATTER))

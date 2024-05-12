@@ -46,11 +46,15 @@ public class Context {
     
 
     public void push(Instruction i) {
-        stack.addLast(i);
+        stack.add(i);
     }
     
+    public Instruction removeLast() {
+        return stack.remove(stack.size() - 1);
+    }
+
     public Instruction pop() {
-        return stack.removeLast();
+        return removeLast();
     }
     
     public Instruction peek(int index) {
@@ -71,7 +75,7 @@ public class Context {
     }
     
     public void drop() {
-        stack.removeLast();
+        removeLast();
     }
     
     public void drop(int n) {
@@ -96,9 +100,9 @@ public class Context {
     }
     
     public void ret(int n) {
-        Instruction top = stack.removeLast();
+        Instruction top = removeLast();
         for (int i = 0; i < n; ++i)
-            stack.removeLast();
+            removeLast();
         push(top);
     }
     
@@ -117,7 +121,7 @@ public class Context {
     }
 
     public void instruction(Sequence it) {
-        instructions.addLast(it);
+        instructions.add(it);
     }
     
     public Instruction variable(Symbol s) {
@@ -138,7 +142,7 @@ public class Context {
 
     public Terminal run0() {
         L0: while (!instructions.isEmpty()) {
-            Sequence it = instructions.getLast();
+            Sequence it = instructions.get(instructions.size() - 1);
             Instruction ins;
             L1: while ((ins = it.next()) != null) {
                 int oldSize = instructions.size();
@@ -154,10 +158,10 @@ public class Context {
                             throw new RuntimeException("unexpected terminal '%' found".formatted(terminal));
                     }
                 }
-                if (instructions.size() != oldSize || instructions.getLast() != it)
+                if (instructions.size() != oldSize || instructions.get(instructions.size() - 1) != it)
                     continue L0;
             }
-            instructions.removeLast();
+            instructions.remove(instructions.size() - 1);
         }
         return Terminal.END;
     }

@@ -105,20 +105,20 @@ public class Parser {
     }
 
     Instruction element() {
-        return switch (token) {
-            case Token.EOF -> null;
-            case Token.QUOTE -> {
-                token();    // skip '\''
-                yield Quote.of(element());
-            }
-            case Token.LP -> list();
-            case Token.RP -> throw error("unexpected ')'");
-            default -> {
-                Instruction word = token;
-                token();
-                yield word;
-            }
-        };
+        if (token.equals(Token.EOF)) {
+            return null;
+        } else if (token.equals(Token.QUOTE)) {
+            token(); // sip '\''
+            return Quote.of(element());
+        } else if (token.equals(Token.LP)) {
+            return list();
+        } else if (token.equals(Token.RP)) {
+            throw error("unexpected ')'");
+        } else {
+            Instruction word = token;
+            token();
+            return word;
+        }
     }
     
     public List read() {
