@@ -6,6 +6,14 @@ import org.junit.Test;
 
 public class TestSpec {
 
+    static class Context {
+
+    }
+
+    interface Instruction {
+        void execute(Context c);
+    }
+
     interface Spec {
         int i();
         int o();
@@ -22,6 +30,11 @@ public class TestSpec {
             return i + ":" + o;
         }
     }
+
+    static Spec SPEC_VALUE = new Func(0, 1);
+    static Spec SPEC_VALUE2 = new Func(0, 2);
+    static Spec SPEC_UNARY = new Func(1, 1);
+    static Spec SPEC_BINARY = new Func(2, 1);
 
     static Func spec(int i, int o) {
         return new Func(i, o);
@@ -45,11 +58,11 @@ public class TestSpec {
 
     @Test
     public void testConcat() {
-        assertEquals(spec(0, 1), concat(spec(0, 1)));
-        assertEquals(spec(0, 1), concat(spec(0, 1), spec(0, 1), spec(2, 1)));
-        assertEquals(spec(1, 1), concat(spec(0, 1), spec(2, 1)));
-        assertEquals(spec(0, 1), concat(spec(0, 2), spec(2, 1)));
-        assertEquals(spec(0, 2), concat(spec(0, 1), spec(0, 1)));
-        assertEquals(spec(2, 1), concat(spec(1, 1), spec(2, 1)));
+        assertEquals(SPEC_VALUE, concat(SPEC_VALUE));
+        assertEquals(SPEC_VALUE, concat(SPEC_VALUE, SPEC_VALUE, SPEC_BINARY));
+        assertEquals(SPEC_UNARY, concat(SPEC_VALUE, SPEC_BINARY));
+        assertEquals(SPEC_VALUE, concat(SPEC_VALUE2, SPEC_BINARY));
+        assertEquals(SPEC_VALUE2, concat(SPEC_VALUE, SPEC_VALUE));
+        assertEquals(SPEC_BINARY, concat(SPEC_UNARY, SPEC_BINARY));
     }
 }
