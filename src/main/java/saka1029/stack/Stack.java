@@ -125,14 +125,8 @@ public class Stack {
 		context.variable("and", c -> c.push(b(b(c.pop()) & b(c.pop()))));
 		context.variable("or", c -> c.push(b(b(c.pop()) | b(c.pop()))));
 		context.variable("not", c -> c.push(b(!b(c.pop()))));
-		context.variable("/", c -> {
-			int r = i(c.pop());
-			c.push(i(i(c.pop()) / r));
-		});
-		context.variable("%", c -> {
-			int r = i(c.pop());
-			c.push(i(i(c.pop()) % r));
-		});
+		context.variable("/", c -> { int r = i(c.pop()); c.push(i(i(c.pop()) / r)); });
+		context.variable("%", c -> { int r = i(c.pop()); c.push(i(i(c.pop()) % r)); });
 		context.variable("null?", c -> c.push(b(c.pop().equals(List.NIL))));
 		context.variable("car", c -> c.push(c(c.pop()).car));
 		context.variable("cdr", c -> c.push(c(c.pop()).cdr));

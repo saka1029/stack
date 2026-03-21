@@ -11,6 +11,7 @@ import java.util.logging.Logger;
 import org.junit.Test;
 
 import saka1029.Common;
+import saka1029.stack.Bool;
 import saka1029.stack.Cons;
 import saka1029.stack.Context;
 import saka1029.stack.Int;
@@ -27,6 +28,70 @@ public class TestStack {
 		assertEquals(Int.of(3), eval(c, "1 2 + "));
 		assertEquals(Int.of(3), eval(c, "(1 2) + "));
 		assertEquals(Int.of(3), eval(c, "1 2 (+) "));
+	}
+
+	@Test
+	public void testDivide() {
+		Context c = context();
+		assertEquals(Int.of(2), eval(c, "4 2 / "));
+		assertEquals(Int.of(4), eval(c, "(8 2) / "));
+		assertEquals(Int.of(3), eval(c, "7 2 (/) "));
+	}
+
+	@Test
+	public void testModulo() {
+		Context c = context();
+		assertEquals(Int.of(0), eval(c, "4 2 % "));
+		assertEquals(Int.of(3), eval(c, "(8 5) % "));
+		assertEquals(Int.of(1), eval(c, "7 2 (%) "));
+	}
+
+	@Test
+	public void testEQ() {
+		Context c = context();
+		assertEquals(Bool.FALSE, eval(c, "4 2 == "));
+		assertEquals(Bool.TRUE, eval(c, "2 2 == "));
+		assertEquals(Bool.FALSE, eval(c, "2 4 == "));
+	}
+
+	@Test
+	public void testNE() {
+		Context c = context();
+		assertEquals(Bool.TRUE, eval(c, "4 2 != "));
+		assertEquals(Bool.FALSE, eval(c, "2 2 != "));
+		assertEquals(Bool.TRUE, eval(c, "2 4 != "));
+	}
+
+	@Test
+	public void testLT() {
+		Context c = context();
+		assertEquals(Bool.FALSE, eval(c, "4 2 < "));
+		assertEquals(Bool.FALSE, eval(c, "2 2 < "));
+		assertEquals(Bool.TRUE, eval(c, "2 4 < "));
+	}
+
+	@Test
+	public void testLE() {
+		Context c = context();
+		assertEquals(Bool.FALSE, eval(c, "4 2 <= "));
+		assertEquals(Bool.TRUE, eval(c, "2 2 <= "));
+		assertEquals(Bool.TRUE, eval(c, "2 4 <= "));
+	}
+
+	@Test
+	public void testGT() {
+		Context c = context();
+		assertEquals(Bool.TRUE, eval(c, "4 2 > "));
+		assertEquals(Bool.FALSE, eval(c, "2 2 > "));
+		assertEquals(Bool.FALSE, eval(c, "2 4 > "));
+	}
+
+	@Test
+	public void testGE() {
+		Context c = context();
+		assertEquals(Bool.TRUE, eval(c, "4 2 >= "));
+		assertEquals(Bool.TRUE, eval(c, "2 2 >= "));
+		assertEquals(Bool.FALSE, eval(c, "2 4 >= "));
 	}
 
 	@Test
