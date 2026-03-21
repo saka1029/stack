@@ -167,6 +167,10 @@ public class Stack {
 				return i == null ? null : Cons.list(i, closure);
 			});
 		});
+		context.variable("append", c -> {
+			List right = l(c.pop()), left = l(c.pop());
+			c.push(Cons.append(left, right));
+		});
 		/*
 		 * COND BODY while はCONDをexecuteして結果がtrueである間、BODYを実行する。
 		 * 実装はリスト (COND 'BODY 'END if) を繰り返し返すSequenceをinstructionsにプッシュする。
