@@ -232,7 +232,7 @@ public class TestStack {
 	@Test
 	public void testAppendRecursive() {
 		Context c = context();
-		run(c, "'(swap dup null? 'drop '(uncons rot append cons) if) 'append define");
+		run(c, "'(swap dup null 'drop '(uncons rot append cons) if) 'append define");
 		assertEquals(eval(c, "'(3 4)"), eval(c, "'() '(3 4) append"));
 		assertEquals(eval(c, "'(2 3 4)"), eval(c, "'(2) '(3 4) append"));
 		assertEquals(eval(c, "'(1 2 3 4)"), eval(c, "'(1 2) '(3 4) append"));
@@ -260,8 +260,8 @@ public class TestStack {
 	@Test
 	public void testReverseRecursive() {
 		Context c = context();
-		run(c, "'(swap dup null? 'drop '(uncons rot append cons) if) 'append define");
-		run(c, "'(dup null? '() '(uncons reverse swap '() cons append) if) 'reverse define");
+		run(c, "'(swap dup null 'drop '(uncons rot append cons) if) 'append define");
+		run(c, "'(dup null '() '(uncons reverse swap '() cons append) if) 'reverse define");
 		assertEquals(eval(c, "'()"), eval(c, "'() reverse"));
 		assertEquals(eval(c, "'(1)"), eval(c, "'(1) reverse"));
 		assertEquals(eval(c, "'(2 1)"), eval(c, "'(1 2) reverse"));
@@ -304,7 +304,7 @@ public class TestStack {
 	@Test
 	public void testMapCarFirst() {
 		Context c = context();
-		run(c, "'(swap dup null? '() '(uncons swap dup2 execute swap dup2 map cons) if ret1) 'map define");
+		run(c, "'(swap dup null '() '(uncons swap dup2 execute swap dup2 map cons) if ret1) 'map define");
 		assertEquals(eval(c, "'()"), eval(c, "'() '(1 +) map"));
 		assertEquals(eval(c, "'(1)"), eval(c, "'(0) '(1 +) map"));
 		assertEquals(eval(c, "'(1 2 3)"), eval(c, "'(0 1 2) '(1 +) map"));
@@ -345,7 +345,7 @@ public class TestStack {
 	@Test
 	public void testFilterRecursiveCdrFirst() {
 		Context c = context();
-		run(c, "'(swap dup null? '() '(uncons dup2 filter swap dup dup3 execute 'rcons 'drop if) if ret1) 'filter define");
+		run(c, "'(swap dup null '() '(uncons dup2 filter swap dup dup3 execute 'rcons 'drop if) if ret1) 'filter define");
 		assertEquals(eval(c, "'(0 2)"), eval(c, "'(0 1 2 3) '(2 % 0 ==) filter"));
 		assertEquals(eval(c, "'(1 3)"), eval(c, "'(0 1 2 3) '(2 % 0 !=) filter"));
 	}
@@ -353,7 +353,7 @@ public class TestStack {
 	@Test
 	public void testFilterRecursiveCarFirst() {
 		Context c = context();
-		run(c, "'(swap dup null? '() '(uncons swap dup dup3 execute rot dup3 filter swap 'cons 'ret1 if) if ret1) 'filter define");
+		run(c, "'(swap dup null '() '(uncons swap dup dup3 execute rot dup3 filter swap 'cons 'ret1 if) if ret1) 'filter define");
 		assertEquals(eval(c, "'(0 2)"), eval(c, "'(0 1 2 3) '(2 % 0 ==) filter"));
 		assertEquals(eval(c, "'(1 3)"), eval(c, "'(0 1 2 3) '(2 % 0 !=) filter"));
 	}
@@ -442,7 +442,7 @@ public class TestStack {
 		c.output(sb::append);
 		run(c, "'('(!=) cons filter) 'remove define");
 		assertEquals(eval(c, "'(0 1 3)"), eval(c, "'(0 1 2 3) 2 remove"));
-		run(c, "'(dup1 null?" + " '(dup reverse print)"
+		run(c, "'(dup1 null" + " '(dup reverse print)"
 				+ " '(dup1 '(dup2 dup1 remove swap dup2 cons perm) for) if drop2) 'perm define");
 		run(c, "'('() perm) 'permutations define");
 		sb.setLength(0);
@@ -475,7 +475,7 @@ public class TestStack {
 //        logger.info(Common.methodName());
 		Context c = Stack.context();
 		run(c, "'('(!=) cons filter) 'remove define");
-		run(c, "'(dup1 null?" + " '(dup reverse yield)"
+		run(c, "'(dup1 null" + " '(dup reverse yield)"
 				+ " '(dup1 '(dup2 dup1 remove swap dup2 cons perm) for) if drop2) 'perm define");
 		run(c, "'('() 'perm generator2) 'permutations define");
 		assertEquals(eval(c, "'(())"), eval(c, "'() permutations"));
