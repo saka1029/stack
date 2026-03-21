@@ -50,6 +50,10 @@ public class Context {
         return stack[--sp];
     }
     
+    public Instruction peek() {
+        return peek(0);
+    }
+
     public Instruction peek(int index) {
         return stack[sp - 1 - index];
     }

@@ -11,6 +11,44 @@ import saka1029.stack.Stack;
 public class TestContext {
 
     @Test
+    public void testDup() {
+        Context c = Stack.context();
+        c.push(Int.of(1));
+        c.push(Int.of(2));
+        c.dup();
+        assertEquals(Int.of(2), c.pop());
+        assertEquals(Int.of(2), c.pop());
+        assertEquals(Int.of(1), c.pop());
+        assertEquals(0, c.sp);
+    }
+
+    @Test
+    public void testDup1() {
+        Context c = Stack.context();
+        c.push(Int.of(1));
+        c.push(Int.of(2));
+        c.dup(1);
+        assertEquals(Int.of(1), c.pop());
+        assertEquals(Int.of(2), c.pop());
+        assertEquals(Int.of(1), c.pop());
+        assertEquals(0, c.sp);
+    }
+
+    @Test
+    public void testDup2() {
+        Context c = Stack.context();
+        c.push(Int.of(1));
+        c.push(Int.of(2));
+        c.push(Int.of(3));
+        c.dup(2);
+        assertEquals(Int.of(1), c.pop());
+        assertEquals(Int.of(3), c.pop());
+        assertEquals(Int.of(2), c.pop());
+        assertEquals(Int.of(1), c.pop());
+        assertEquals(0, c.sp);
+    }
+
+    @Test
     public void testDrop() {
         Context c = Stack.context();
         c.push(Int.of(1));
