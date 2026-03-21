@@ -11,14 +11,15 @@ import java.util.stream.Stream;
 
 public class Context {
     
+    public static final int STACK_SIZE = 500;
     public final Instruction[] stack;
     public int sp;
     final java.util.List<Sequence> instructions;
     final Map<Symbol, Instruction> variables;
     Consumer<String> output;
     
-    Context(java.util.Map<Symbol, Instruction> variables, Consumer<String> output) {
-        this.stack = new Instruction[500];
+    Context(Map<Symbol, Instruction> variables, Consumer<String> output) {
+        this.stack = new Instruction[STACK_SIZE];
         this.sp = 0;
         this.instructions = new ArrayList<>();
         this.variables = variables;
