@@ -69,7 +69,7 @@ public class Context {
     }
     
     public void drop() {
-        --sp;
+        drop(1);
     }
     
     public void drop(int n) {
