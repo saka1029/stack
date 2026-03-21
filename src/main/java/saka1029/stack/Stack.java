@@ -101,6 +101,7 @@ public class Stack {
 		context.variable("dup2", c -> c.dup(2));
 		context.variable("dup3", c -> c.dup(3));
 		context.variable("drop", Context::drop);
+		context.variable("drop1", Context::drop);
 		context.variable("drop2", c -> c.drop(2));
 		context.variable("drop3", c -> c.drop(3));
 		context.variable("swap", Context::swap);

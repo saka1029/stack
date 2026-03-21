@@ -108,4 +108,29 @@ public class TestContext {
         assertEquals(Int.of(3), c.pop());
         assertEquals(0, c.sp);
     }
+
+    @Test
+    public void testRet1() {
+        Context c = Stack.context();
+        c.push(Int.of(1));
+        c.push(Int.of(2));
+        c.push(Int.of(3));
+        c.ret(1);
+        assertEquals(Int.of(3), c.pop());
+        assertEquals(Int.of(1), c.pop());
+        assertEquals(0, c.sp);
+    }
+
+    @Test
+    public void testRet2() {
+        Context c = Stack.context();
+        c.push(Int.of(1));
+        c.push(Int.of(2));
+        c.push(Int.of(3));
+        c.push(Int.of(4));
+        c.ret(2);
+        assertEquals(Int.of(4), c.pop());
+        assertEquals(Int.of(1), c.pop());
+        assertEquals(0, c.sp);
+    }
 }
