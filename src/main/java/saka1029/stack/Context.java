@@ -1,64 +1,56 @@
 package saka1029.stack;
 
 import java.util.ArrayList;
-import java.util.Collections;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.function.Consumer;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 public class Context {
     
-    private final java.util.List<Instruction> stack;
-    private final java.util.List<Sequence> instructions;
-    private final java.util.Map<Symbol, Instruction> variables;
-    private Consumer<String> output;
+    public final Instruction[] stack;
+    public int sp;
+    final java.util.List<Sequence> instructions;
+    final Map<Symbol, Instruction> variables;
+    Consumer<String> output;
     
     Context(java.util.Map<Symbol, Instruction> variables, Consumer<String> output) {
-        this.stack = new ArrayList<>();
+        this.stack = new Instruction[500];
+        this.sp = 0;
         this.instructions = new ArrayList<>();
         this.variables = variables;
         this.output = output;
     }
     
-    public static Context of(java.util.Map<Symbol, Instruction> variables, Consumer<String> output) {
+    public static Context of(Map<Symbol, Instruction> variables, Consumer<String> output) {
         return new Context(variables, output);
     }
     
-    public static Context of(java.util.Map<Symbol, Instruction> variables) {
+    public static Context of(Map<Symbol, Instruction> variables) {
         return new Context(variables, System.out::print);
     }
     
     public static Context of() {
-        return new Context(new java.util.HashMap<Symbol, Instruction>(), System.out::print);
+        return new Context(new HashMap<Symbol, Instruction>(), System.out::print);
     }
     
     public Context fork() {
         return of(variables, output);
     }
 
-    public int size() {
-        return stack.size();
+    public void push(Instruction value) {
+        stack[sp++] = value;
     }
     
-    public void clear() {
-        stack.clear();
-    }
-    
-
-    public void push(Instruction i) {
-        stack.add(i);
-    }
-    
-    public Instruction removeLast() {
-        return stack.remove(stack.size() - 1);
-    }
-
     public Instruction pop() {
-        return removeLast();
+        return stack[--sp];
     }
     
     public Instruction peek(int index) {
-        return stack.get(size() - index - 1);
+        return stack[sp - 1 - index];
     }
 
     public void dup(int index) {
@@ -70,39 +62,42 @@ public class Context {
     }
     
     public void swap() {
-        int top = size() - 1, second = top - 1;
-        Collections.swap(stack, top, second);
+        var top = stack[sp - 1];
+        stack[sp - 1] = stack[sp - 2];
+        stack[sp - 2] = top;
     }
     
     public void drop() {
-        removeLast();
+        --sp;
     }
     
     public void drop(int n) {
-        for (int i = 0; i < n; ++i)
-            drop();
+        sp -= n;
     }
     
+    /**
+     * A, B, C -> B, C, A
+     */
     public void rot() {
-        int size = size();
-        Instruction temp = stack.get(size - 3);
-        stack.set(size - 3, stack.get(size - 2));
-        stack.set(size - 2, stack.get(size - 1));
-        stack.set(size - 1, temp);
+        Instruction temp = stack[sp - 3];
+        stack[sp - 3] = stack[sp - 2];
+        stack[sp - 2] = stack[sp - 1];
+        stack[sp - 1] = temp;
     }
     
+    /**
+     * A, B, C -> C, A, B
+     */
     public void rrot() {
-        int size = size();
-        Instruction temp = stack.get(size - 1);
-        stack.set(size - 1, stack.get(size - 2));
-        stack.set(size - 2, stack.get(size - 3));
-        stack.set(size - 3, temp);
+        Instruction temp = stack[sp - 1];
+        stack[sp - 1] = stack[sp - 2];
+        stack[sp - 2] = stack[sp - 3];
+        stack[sp - 3] = temp;
     }
     
     public void ret(int n) {
-        Instruction top = removeLast();
-        for (int i = 0; i < n; ++i)
-            removeLast();
+        Instruction top = pop();
+        sp -= n;
         push(top);
     }
     
@@ -147,7 +142,7 @@ public class Context {
             L1: while ((ins = it.next()) != null) {
                 int oldSize = instructions.size();
                 execute(ins);
-                if (size() != 0 && peek(0) instanceof Terminal terminal) {
+                if (sp > 0 && peek(0) instanceof Terminal terminal) {
                     drop(); // drop Terminal;
                     switch (terminal) {
                         case BREAK:
@@ -193,15 +188,20 @@ public class Context {
     }
     
     Instruction eval(List instructions) {
-        int oldSize = size();
+        int oldSp = sp;
         run(instructions);
-        if (size() - 1 != oldSize)
+        if (sp - 1 != oldSp)
             throw new RuntimeException("Illegal stack size %s".formatted(this));
         return pop();
     }
     
     @Override
     public String toString() {
-        return stack.toString();
+        return "Context(sp=%d, stack=%s)".formatted(
+            sp,
+            Stream.of(stack)
+                .limit(sp)
+                .map(e -> "" + e)
+                .collect(Collectors.joining(", ", "[", "]")));
     }
 }

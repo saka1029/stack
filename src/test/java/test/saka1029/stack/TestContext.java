@@ -20,7 +20,7 @@ public class TestContext {
         assertEquals(Int.of(1), c.pop());
         assertEquals(Int.of(3), c.pop());
         assertEquals(Int.of(2), c.pop());
-        assertEquals(0, c.size());
+        assertEquals(0, c.sp);
     }
 
     @Test
@@ -33,6 +33,6 @@ public class TestContext {
         assertEquals(Int.of(2), c.pop());
         assertEquals(Int.of(1), c.pop());
         assertEquals(Int.of(3), c.pop());
-        assertEquals(0, c.size());
+        assertEquals(0, c.sp);
     }
 }
