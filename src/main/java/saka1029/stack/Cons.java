@@ -50,8 +50,8 @@ public class Cons extends List {
     }
 
     public static List append(List left, List right) {
-        return left instanceof Cons cons
-            ? Cons.of(cons.car, append(cons.cdr, right))
+        return left instanceof Cons leftCons
+            ? Cons.of(leftCons.car, append(leftCons.cdr, right))
             : right;
     }
 }

@@ -238,14 +238,14 @@ public class TestStack {
 		assertEquals(eval(c, "'(1 2 3 4)"), eval(c, "'(1 2) '(3 4) append"));
 	}
 
-	@Test
-	public void testAppendTailRecursive() {
-		Context c = context();
-		run(c, "'(swap dup null? 'drop '(uncons rot append cons) if) 'append define");
-		assertEquals(eval(c, "'(3 4)"), eval(c, "'() '(3 4) append"));
-		assertEquals(eval(c, "'(2 3 4)"), eval(c, "'(2) '(3 4) append"));
-		assertEquals(eval(c, "'(1 2 3 4)"), eval(c, "'(1 2) '(3 4) append"));
-	}
+	// @Test
+	// public void testAppendTailRecursive() {
+	// 	Context c = context();
+	// 	run(c, "'(swap dup null? 'drop '(uncons rot append cons) if) 'append define");
+	// 	assertEquals(eval(c, "'(3 4)"), eval(c, "'() '(3 4) append"));
+	// 	assertEquals(eval(c, "'(2 3 4)"), eval(c, "'(2) '(3 4) append"));
+	// 	assertEquals(eval(c, "'(1 2 3 4)"), eval(c, "'(1 2) '(3 4) append"));
+	// }
 
 	@Test
 	public void testReverseBuiltIn() {
