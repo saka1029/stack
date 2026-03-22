@@ -184,6 +184,7 @@ public class TestStack {
 		assertEquals(Int.of(2), eval(c, "2 factorial"));
 		assertEquals(Int.of(6), eval(c, "3 factorial"));
 		assertEquals(Int.of(24), eval(c, "4 factorial"));
+		assertEquals(Int.of(120), eval(c, "5 factorial"));
 	}
 
 	@Test
@@ -208,6 +209,8 @@ public class TestStack {
 		assertEquals(Int.of(3), eval(c, "4 fibonacci"));
 		assertEquals(Int.of(5), eval(c, "5 fibonacci"));
 		assertEquals(Int.of(8), eval(c, "6 fibonacci"));
+		assertEquals(Int.of(13), eval(c, "7 fibonacci"));
+		assertEquals(Int.of(21), eval(c, "8 fibonacci"));
 	}
 
 	@Test
@@ -221,6 +224,8 @@ public class TestStack {
 		assertEquals(Int.of(3), eval(c, "4 fibonacci"));
 		assertEquals(Int.of(5), eval(c, "5 fibonacci"));
 		assertEquals(Int.of(8), eval(c, "6 fibonacci"));
+		assertEquals(Int.of(13), eval(c, "7 fibonacci"));
+		assertEquals(Int.of(21), eval(c, "8 fibonacci"));
 	}
 
 	@Test
