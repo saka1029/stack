@@ -234,6 +234,7 @@ public class TestStack {
 		assertEquals(eval(c, "'(3 4)"), eval(c, "'() '(3 4) append"));
 		assertEquals(eval(c, "'(2 3 4)"), eval(c, "'(2) '(3 4) append"));
 		assertEquals(eval(c, "'(1 2 3 4)"), eval(c, "'(1 2) '(3 4) append"));
+		assertEquals(eval(c, "'(1 2 (3) 4)"), eval(c, "'(1 2) '((3) 4) append"));
 	}
 
 	@Test
