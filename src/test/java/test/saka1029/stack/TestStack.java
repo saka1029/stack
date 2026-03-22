@@ -15,6 +15,7 @@ import saka1029.stack.Bool;
 import saka1029.stack.Cons;
 import saka1029.stack.Context;
 import saka1029.stack.Int;
+import saka1029.stack.Range;
 import saka1029.stack.Stack;
 import saka1029.stack.Symbol;
 
@@ -161,6 +162,7 @@ public class TestStack {
 	@Test
 	public void testRange() {
 		Context c = context();
+		assertEquals(Range.of(1, 3, 1), eval(c, "1 3 1 range"));
 		assertEquals(Int.of(6), eval(c, "0 1 3 1 range '+ for"));
 	}
 
