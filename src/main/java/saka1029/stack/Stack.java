@@ -100,6 +100,7 @@ public class Stack {
 		context.variable("dup1", c -> c.dup(1));
 		context.variable("dup2", c -> c.dup(2));
 		context.variable("dup3", c -> c.dup(3));
+		context.variable("dup4", c -> c.dup(4));
 		context.variable("drop", Context::drop);
 		context.variable("drop1", Context::drop);
 		context.variable("drop2", c -> c.drop(2));
@@ -127,6 +128,7 @@ public class Stack {
 		context.variable("not", c -> c.push(b(!b(c.pop()))));
 		context.variable("/", c -> { int r = i(c.pop()); c.push(i(i(c.pop()) / r)); });
 		context.variable("%", c -> { int r = i(c.pop()); c.push(i(i(c.pop()) % r)); });
+		// context.variable("nil", c -> c.push(List.NIL));
 		context.variable("null", c -> c.push(b(c.pop().equals(List.NIL))));
 		context.variable("car", c -> c.push(c(c.pop()).car));
 		context.variable("cdr", c -> c.push(c(c.pop()).cdr));

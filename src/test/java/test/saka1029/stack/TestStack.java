@@ -23,6 +23,15 @@ public class TestStack {
 
 	static final Logger logger = Common.logger(TestStack.class);
 
+	// @Test
+	// public void testNil() {
+	// 	Context c = context();
+	// 	run(c, "()");
+	// 	assertEquals(0, c.sp);
+	// 	assertEquals(eval(c, "nil"), eval(c, "nil"));
+	// 	assertEquals(eval(c, "nil"), eval(c, "'()"));
+	// }
+
 	@Test
 	public void testPlus() {
 		Context c = context();
@@ -624,5 +633,25 @@ public class TestStack {
 		run(c, "'(2 dup1 1 range 2 rot isqrt 1 range 'sieve for) 'primes define");
 		assertEquals(eval(c, "'(2 3 5 7 11 13 17 19)"), eval(c, "20 primes"));
 		assertEquals(eval(c, "'(2 3 5 7 11 13 17 19 23 29 31 37 41 43 47 53 59 61 67 71 73 79 83 89 97)"), eval(c, "100 primes"));
+	}
+
+	/**
+	 * ピボット リスト partition -> 分割リスト1 分割リスト2
+	 * リストの内、ピボット以下の要素を分割リスト１へ、
+	 * それ以外を分割リスト２へ追加して多値(２つの値)で返す。
+	 * ただし結果のリストは逆順となる。
+	 * 3 '(1 2 3 4 5 6) partition --> '(3 2 1) '(6 5 4)
+	 */
+	@Test
+	public void testPartition() {
+		Context c = Stack.context();
+		run(c, "'() '() '(1 2 3 4 5 6) '(dup 3 <= '(rot cons swap) 'rcons if) for");
+		assertEquals(eval(c, "'(6 5 4)"), c.pop());
+		assertEquals(eval(c, "'(3 2 1)"), c.pop());
+		run(c, "'('() '() rot stack '(dup dup4 stack <= '(rot cons swap) 'rcons if) for rot drop) 'partition define");
+		run(c, "3 '(1 2 3 4 5 6) partition");
+		assertEquals(eval(c, "'(6 5 4)"), c.pop());
+		assertEquals(eval(c, "'(3 2 1)"), c.pop());
+		assertEquals(0, c.sp);
 	}
 }
