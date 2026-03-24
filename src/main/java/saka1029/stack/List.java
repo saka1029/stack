@@ -4,7 +4,9 @@ import java.util.Iterator;
 import java.util.NoSuchElementException;
 
 /**
- * インターフェースにした場合、hashCode(), equals(), toString()を デフォルトメソッドとして実装することができない。
+ * インターフェースにした場合、
+ * hashCode(), equals(), toString()を
+ * デフォルトメソッドとして実装することができない。
  */
 public abstract class List implements Instruction, Iterable<Instruction> {
 
@@ -33,15 +35,9 @@ public abstract class List implements Instruction, Iterable<Instruction> {
     }
 
     public static final List NIL = new List() {
-
         @Override
         public Sequence sequence() {
             return () -> null;
-        }
-
-        @Override
-        public String toString() {
-            return "()";
         }
     };
     
