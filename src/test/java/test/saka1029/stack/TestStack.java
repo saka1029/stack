@@ -1,11 +1,13 @@
 package test.saka1029.stack;
 
+import static org.junit.Assert.assertArrayEquals;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.fail;
 import static saka1029.stack.Stack.context;
 import static saka1029.stack.Stack.eval;
 import static saka1029.stack.Stack.run;
 
+import java.util.Arrays;
 import java.util.logging.Logger;
 
 import org.junit.Test;
@@ -114,6 +116,13 @@ public class TestStack {
 	public void testCdr() {
 		Context c = context();
 		assertEquals(Cons.list(Int.of(2)), eval(c, "'(1 2) cdr"));
+	}
+
+	@Test
+	public void testSize() {
+		Context c = context();
+		assertEquals(Int.of(2), eval(c, "'(1 2) size"));
+		assertEquals(Int.of(2), eval(c, "0 2 array size"));
 	}
 
 	@Test
@@ -582,8 +591,10 @@ public class TestStack {
 		assertEquals(eval(c, "2"), eval(c, "7 int-sqrt"));
 		assertEquals(eval(c, "2"), eval(c, "8 int-sqrt"));
 		assertEquals(eval(c, "3"), eval(c, "9 int-sqrt"));
-		c.variable(Symbol.of("expected-int-sqrt"), x -> x.push(Int.of((int)Math.sqrt(((Int)c.pop()).value))));
-		assertEquals(eval(c, "1 200 1 range 'expected-int-sqrt map"), eval(c, "1 200 1 range 'int-sqrt map"));
+		c.variable(Symbol.of("expected-int-sqrt"),
+			x -> x.push(Int.of((int)Math.sqrt(((Int)c.pop()).value))));
+		assertEquals(eval(c, "1 200 1 range 'expected-int-sqrt map"),
+			eval(c, "1 200 1 range 'int-sqrt map"));
 	}
 
 	/**
@@ -618,12 +629,13 @@ public class TestStack {
 	@Test
 	public void testPrimes() {
 		Context c = Stack.context();
-//		run(c, "'('(dup1 dup1 == true '(dup1 dup1 % 0 !=) if ret2) cons filter) 'sieve define");
 		run(c, "'('(dup1 dup1 == '(true ret2) '(% 0 !=) if) cons filter) 'sieve define");
 		assertEquals(eval(c, "'(2)"), eval(c, "2 2 1 range 2 sieve"));
 		assertEquals(eval(c, "'(2 3 5 7)"), eval(c, "2 7 1 range 2 sieve"));
-		assertEquals(eval(c, "'(2 3 4 5 7 8 10 11 13 14 16 17 19 20)"), eval(c, "2 20 1 range 3 sieve"));
-		assertEquals(eval(c, "'(2 3 5 7 11 13 17 19)"), eval(c, "2 20 1 range 2 20 1 range 'sieve for"));
+		assertEquals(eval(c, "'(2 3 4 5 7 8 10 11 13 14 16 17 19 20)"),
+			eval(c, "2 20 1 range 3 sieve"));
+		assertEquals(eval(c, "'(2 3 5 7 11 13 17 19)"),
+			eval(c, "2 20 1 range 2 20 1 range 'sieve for"));
 		run(c, "'(dup 1 <="
 		    + "   '()"
 		    + "   '(dup dup 2 /"
@@ -632,7 +644,9 @@ public class TestStack {
 		    + "   if) 'isqrt define");
 		run(c, "'(2 dup1 1 range 2 rot isqrt 1 range 'sieve for) 'primes define");
 		assertEquals(eval(c, "'(2 3 5 7 11 13 17 19)"), eval(c, "20 primes"));
-		assertEquals(eval(c, "'(2 3 5 7 11 13 17 19 23 29 31 37 41 43 47 53 59 61 67 71 73 79 83 89 97)"), eval(c, "100 primes"));
+		assertEquals(eval(c,
+			"'(2 3 5 7 11 13 17 19 23 29 31 37 41 43 47 53 59 61 67 71 73 79 83 89 97)"),
+			eval(c, "100 primes"));
 	}
 
 	/**
@@ -648,10 +662,44 @@ public class TestStack {
 		run(c, "'() '() '(1 2 3 4 5 6) '(dup 3 <= '(rot cons swap) 'rcons if) for");
 		assertEquals(eval(c, "'(6 5 4)"), c.pop());
 		assertEquals(eval(c, "'(3 2 1)"), c.pop());
-		run(c, "'('() '() rot stack '(dup dup4 stack <= '(rot cons swap) 'rcons if) for rot drop) 'partition define");
+		run(c, "'('() '() rot '(dup dup4 <= '(rot cons swap) 'rcons if) for rot drop) 'partition define");
 		run(c, "3 '(1 2 3 4 5 6) partition");
 		assertEquals(eval(c, "'(6 5 4)"), c.pop());
 		assertEquals(eval(c, "'(3 2 1)"), c.pop());
 		assertEquals(0, c.sp);
+	}
+
+	static void swap(int[] arr, int i, int j) {
+		int temp = arr[i];
+		arr[i] = arr[j];
+		arr[j] = temp;
+	}
+
+	static void quickSort(int[] arr, int low, int high) {
+		if (low >= high)
+			return;
+		int pivot = arr[(low + high) / 2];
+		int i = low, j = high;
+		while (true) {
+			while (arr[i] < pivot)
+				++i;
+			while (arr[j] > pivot)
+				--j;
+			if (i >= j)
+				break;
+			swap(arr, i, j);
+		}
+		quickSort(arr, low, j);
+		quickSort(arr, j + 1, high);
+	}
+
+	@Test
+	public void testQuickSort() {
+		int[] arr = {4, 3, 5, 1, 2, 6};
+		int[] expected = Arrays.copyOf(arr, arr.length);
+		Arrays.sort(expected);
+		int[] actual = Arrays.copyOf(arr, arr.length);
+		quickSort(actual, 0, actual.length - 1);
+		assertArrayEquals(expected, actual);
 	}
 }

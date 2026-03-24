@@ -64,6 +64,14 @@ public abstract class List implements Instruction, Iterable<Instruction> {
         context.instruction(sequence());
     }
 
+    public int size() {
+        Sequence it = sequence();
+        int size = 0;
+        while (it.next() != null)
+            ++size;
+        return size;
+    }
+
     @Override
     public int hashCode() {
         int hash = 17;

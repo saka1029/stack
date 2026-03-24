@@ -24,6 +24,7 @@ public class Array extends List {
         return new Array(array);
     }
 
+    @Override
     public int size() {
         return array.length;
     }

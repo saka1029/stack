@@ -20,5 +20,6 @@ public class TestArray {
         assertEquals(eval(c, "'(false false false false false)"), eval(c, "false 5 array"));
         assertEquals(eval(c, "3"), eval(c, "3 (1 5 1 range to-array) at"));
         assertEquals(eval(c, "'(1 2 0 4 5)"), eval(c, "(1 5 1 range to-array) 0 3 dup2 put"));
+        assertEquals(eval(c, "'(2 4 6)"), eval(c, "'(1 2 3) to-array '(2 *) map"));
     }
 }
