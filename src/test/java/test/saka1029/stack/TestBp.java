@@ -74,6 +74,7 @@ public class TestBp {
     }
 
     /**
+     * 引数の更新
      * 引数の数は3個
      * ($0, $1, $2) = (8, 9, 10)
      * $0 = $0 + $1, $1 = $1 + $2; 
@@ -89,6 +90,7 @@ public class TestBp {
     }
 
     /**
+     * ローカル変数の初期化
      * 引数の数は3個
      * ($0, $1, $2) = (8, 9, 10)
      * local %0 = $0 + $1, %1 = $1 + $2; 
@@ -104,6 +106,7 @@ public class TestBp {
     }
 
     /**
+     * ローカル変数の設定
      * 引数の数は3個
      * ($0, $1, $2) = (8, 9, 10)
      * local %0 = 0, %1 = 0;
@@ -113,6 +116,7 @@ public class TestBp {
     @Test
     public void testLocalUpdate() {
         Context c = context();
+        // @3の後の「0 0」はローカル変数%0および%1の定義と初期化
         run(c, "8 9 10 (@3 0 0 $0 $1 + set%0 $1 $2 + set%1 %0 %1 ^2)");
         assertEquals(Int.of(19), c.pop());
         assertEquals(Int.of(17), c.pop());

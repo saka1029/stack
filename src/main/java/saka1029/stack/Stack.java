@@ -312,47 +312,35 @@ public class Stack {
 		context.variable("size", c -> c.push(i(l(c.pop()).size())));
 		context.variable("at", c -> c.push(a(c.pop()).at(i(c.pop()))));
 		context.variable("put", c -> a(c.pop()).put(i(c.pop()), c.pop()));
-		context.variable("@0", c -> c.nargs(0));
-		context.variable("@1", c -> c.nargs(1));
-		context.variable("@2", c -> c.nargs(2));
-		context.variable("@3", c -> c.nargs(3));
-		context.variable("@4", c -> c.nargs(4));
-		context.variable("@5", c -> c.nargs(5));
-		context.variable("@6", c -> c.nargs(6));
-		context.variable("$0", c -> c.arg(0));
-		context.variable("$1", c -> c.arg(1));
-		context.variable("$2", c -> c.arg(2));
-		context.variable("$3", c -> c.arg(3));
-		context.variable("$4", c -> c.arg(4));
-		context.variable("$5", c -> c.arg(5));
-		context.variable("$6", c -> c.arg(6));
-		context.variable("set$0", c -> c.setArg(0));
-		context.variable("set$1", c -> c.setArg(1));
-		context.variable("set$2", c -> c.setArg(2));
-		context.variable("set$3", c -> c.setArg(3));
-		context.variable("set$4", c -> c.setArg(4));
-		context.variable("set$5", c -> c.setArg(5));
-		context.variable("set$6", c -> c.setArg(6));
-		context.variable("%0", c -> c.local(0));
-		context.variable("%1", c -> c.local(1));
-		context.variable("%2", c -> c.local(2));
-		context.variable("%3", c -> c.local(3));
-		context.variable("%4", c -> c.local(4));
-		context.variable("%5", c -> c.local(5));
-		context.variable("%6", c -> c.local(6));
-		context.variable("set%0", c -> c.setLocal(0));
-		context.variable("set%1", c -> c.setLocal(1));
-		context.variable("set%2", c -> c.setLocal(2));
-		context.variable("set%3", c -> c.setLocal(3));
-		context.variable("set%4", c -> c.setLocal(4));
-		context.variable("set%5", c -> c.setLocal(5));
-		context.variable("set%6", c -> c.setLocal(6));
-		context.variable("^0", c -> c.result(0));
-		context.variable("^1", c -> c.result(1));
-		context.variable("^2", c -> c.result(2));
-		context.variable("^3", c -> c.result(3));
-		context.variable("^4", c -> c.result(4));
-		context.variable("^5", c -> c.result(5));
-		context.variable("^6", c -> c.result(6));
+		// 引数の数の定義とbpの設定
+		for (int n = 0; n < 10; ++n) {
+			int nn = n;
+			context.variable("@" + n, c -> c.nargs(nn));
+		}
+		// 引数の参照
+		for (int n = 0; n < 10; ++n) {
+			int nn = n;
+			context.variable("$" + n, c -> c.arg(nn));
+		}
+		// 引数の設定
+		for (int n = 0; n < 10; ++n) {
+			int nn = n;
+			context.variable("set$" + n, c -> c.setArg(nn));
+		}
+		// ローカル変数の参照
+		for (int n = 0; n < 10; ++n) {
+			int nn = n;
+			context.variable("%" + n, c -> c.local(nn));
+		}
+		// ローカル変数の設定
+		for (int n = 0; n < 10; ++n) {
+			int nn = n;
+			context.variable("set%" + n, c -> c.setLocal(nn));
+		}
+		// 戻り値の設定とbpの回復
+		for (int n = 0; n < 10; ++n) {
+			int nn = n;
+			context.variable("^" + n, c -> c.result(nn));
+		}
 	}
 }
