@@ -121,7 +121,7 @@ public class Context {
             output.accept("%s%n".formatted(i));
     }
 
-    public void args(int n) {
+    public void nargs(int n) {
         push(Int.of(n));    // number of arguments
         push(Int.of(bp));   // save old bp;
         bp = sp - 1;        // new bp points old bp

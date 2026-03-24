@@ -312,12 +312,12 @@ public class Stack {
 		context.variable("size", c -> c.push(i(l(c.pop()).size())));
 		context.variable("at", c -> c.push(a(c.pop()).at(i(c.pop()))));
 		context.variable("put", c -> a(c.pop()).put(i(c.pop()), c.pop()));
-		context.variable("@0", c -> c.args(0));
-		context.variable("@1", c -> c.args(1));
-		context.variable("@2", c -> c.args(2));
-		context.variable("@3", c -> c.args(3));
-		context.variable("@4", c -> c.args(4));
-		context.variable("@5", c -> c.args(5));
+		context.variable("@0", c -> c.nargs(0));
+		context.variable("@1", c -> c.nargs(1));
+		context.variable("@2", c -> c.nargs(2));
+		context.variable("@3", c -> c.nargs(3));
+		context.variable("@4", c -> c.nargs(4));
+		context.variable("@5", c -> c.nargs(5));
 		context.variable("$0", c -> c.arg(0));
 		context.variable("$1", c -> c.arg(1));
 		context.variable("$2", c -> c.arg(2));
