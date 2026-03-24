@@ -73,4 +73,50 @@ public class TestBp {
         assertEquals(0, c.sp);
     }
 
+    /**
+     * 引数の数は3個
+     * ($0, $1, $2) = (8, 9, 10)
+     * $0 = $0 + $1, $1 = $1 + $2; 
+     * return $1, $2;
+     */
+    @Test
+    public void testSetArg() {
+        Context c = context();
+        run(c, "8 9 10 (@3 $0 $1 + set$0 $1 $2 + set$1 $0 $1 ^2)");
+        assertEquals(Int.of(19), c.pop());
+        assertEquals(Int.of(17), c.pop());
+        assertEquals(0, c.sp);
+    }
+
+    /**
+     * 引数の数は3個
+     * ($0, $1, $2) = (8, 9, 10)
+     * local %0 = $0 + $1, %1 = $1 + $2; 
+     * return %0, %1;
+     */
+    @Test
+    public void testLocal() {
+        Context c = context();
+        run(c, "8 9 10 (@3 $0 $1 + $1 $2 + %0 %1 ^2)");
+        assertEquals(Int.of(19), c.pop());
+        assertEquals(Int.of(17), c.pop());
+        assertEquals(0, c.sp);
+    }
+
+    /**
+     * 引数の数は3個
+     * ($0, $1, $2) = (8, 9, 10)
+     * local %0 = 0, %1 = 0;
+     * %0 = $0 + $1, %1 = $1 + $2; 
+     * return %0, %1;
+     */
+    @Test
+    public void testLocalUpdate() {
+        Context c = context();
+        run(c, "8 9 10 (@3 0 0 $0 $1 + set%0 $1 $2 + set%1 %0 %1 ^2)");
+        assertEquals(Int.of(19), c.pop());
+        assertEquals(Int.of(17), c.pop());
+        assertEquals(0, c.sp);
+    }
+
 }
