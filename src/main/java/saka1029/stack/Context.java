@@ -13,7 +13,7 @@ public class Context {
     
     public static final int STACK_SIZE = 500;
     public final Instruction[] stack;
-    public int sp;
+    public int sp, bp;
     final java.util.List<Sequence> instructions;
     final Map<Symbol, Instruction> variables;
     Consumer<String> output;
@@ -21,6 +21,7 @@ public class Context {
     Context(Map<Symbol, Instruction> variables, Consumer<String> output) {
         this.stack = new Instruction[STACK_SIZE];
         this.sp = 0;
+        this.bp = 0;
         this.instructions = new ArrayList<>();
         this.variables = variables;
         this.output = output;
@@ -118,6 +119,32 @@ public class Context {
     public void println(Instruction i) {
         if (output != null)
             output.accept("%s%n".formatted(i));
+    }
+
+    public void args(int n) {
+        push(Int.of(n));    // number of arguments
+        push(Int.of(bp));   // save old bp;
+        bp = sp - 1;        // new bp points old bp
+    }
+
+    public static int asInt(Instruction i) {
+        return ((Int)i).value;
+    }
+
+    int argStart() {
+        return bp - asInt(stack[bp - 1]) - 1;
+    }
+
+    public void arg(int n) {
+        push(stack[argStart() + n]);
+    }
+
+    public void result(int n) {
+        int argStart = argStart(), oldBp = asInt(stack[bp]);
+        for (int i = 0, from = sp - n, to = argStart; i < n; ++i)
+            stack[to++] = stack[from++];
+        bp = oldBp;
+        sp = argStart + n;
     }
 
     public void instruction(Sequence it) {
