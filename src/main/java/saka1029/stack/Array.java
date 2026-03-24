@@ -18,6 +18,10 @@ public class Array extends List {
         return new Array(x.toArray(Instruction[]::new));
     }
 
+    public static Array of(Instruction... elements) {
+        return new Array(elements.clone());
+    }
+
     public static Array of(int size, Instruction value) {
         Instruction[] array = new Instruction[size];
         Arrays.fill(array, value);

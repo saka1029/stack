@@ -22,9 +22,15 @@ public class TestList {
     @Test
     public void testAppend() {
         assertEquals(Cons.list(Int.of(1), Int.of(2), Int.of(3)),
-            List.append(Cons.list(Int.of(1), Int.of(2)), List.NIL, Cons.list(Int.of(3))));
+            List.append(
+                Cons.list(Int.of(1), Int.of(2)),
+                List.NIL,
+                Cons.list(Int.of(3))));
         assertEquals(Cons.list(Int.of(1), Int.of(2), Int.of(3)),
-            List.append(Array.of(Cons.list(Int.of(1), Int.of(2))), Cons.list(Int.of(3))));
+            List.append(
+                Array.of(Int.of(1), Int.of(2)),
+                Array.of(),
+                Cons.list(Int.of(3))));
     }
 
 }
