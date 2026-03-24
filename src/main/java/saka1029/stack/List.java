@@ -59,6 +59,35 @@ public abstract class List implements Instruction, Iterable<Instruction> {
         };
     }
 
+    public static List append(List... lists) {
+        return new List() {
+            int index = 0;
+            Sequence sequence = advance();
+
+            Sequence advance() {
+                if (index < lists.length)
+                    return lists[index++].sequence();
+                return null;
+            }
+
+            @Override
+            public Sequence sequence() {
+                return new Sequence() {
+                    @Override
+                    public Instruction next() {
+                        while (sequence != null) {
+                            Instruction current = sequence.next();
+                            if  (current != null)
+                                return current;
+                            sequence = advance();
+                        }
+                        return null;
+                    }
+                };
+            }
+        };
+    }
+
     @Override
     public void execute(Context context) {
         context.instruction(sequence());

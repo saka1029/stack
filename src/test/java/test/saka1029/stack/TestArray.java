@@ -32,7 +32,7 @@ public class TestArray {
     }
 
     @Test
-    public void testPut() {
+    public void testToArray() {
         Context c = Stack.context();
         assertEquals(eval(c, "'(1 2 0 4 5)"), eval(c, "(1 5 1 range to-array) 0 3 dup2 put"));
     }

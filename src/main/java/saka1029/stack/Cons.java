@@ -48,10 +48,4 @@ public class Cons extends List {
             result = of(instructions[i], result);
         return result;
     }
-
-    public static List append(List left, List right) {
-        return left instanceof Cons leftCons
-            ? Cons.of(leftCons.car, append(leftCons.cdr, right))
-            : right;
-    }
 }

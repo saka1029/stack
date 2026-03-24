@@ -171,7 +171,7 @@ public class Stack {
 		});
 		context.variable("append", c -> {
 			List right = l(c.pop()), left = l(c.pop());
-			c.push(Cons.append(left, right));
+			c.push(List.append(left, right));
 		});
 		/*
 		 * COND BODY while はCONDをexecuteして結果がtrueである間、BODYを実行する。
