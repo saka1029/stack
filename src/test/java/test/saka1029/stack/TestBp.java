@@ -3,12 +3,12 @@ package test.saka1029.stack;
 import org.junit.Test;
 
 import static org.junit.Assert.assertEquals;
-import static saka1029.stack.Stack.context;
 import static saka1029.stack.Stack.run;
 import static saka1029.stack.Stack.eval;
 
 import saka1029.stack.Context;
 import saka1029.stack.Int;
+import saka1029.stack.Stack;
 
 /**
  * bpを使った手続きの定義
@@ -45,7 +45,7 @@ public class TestBp {
 
     @Test
     public void testArgs1Result1() {
-        Context c = context();
+        Context c = Stack.context();
         run(c, """
             '(@1                        {引数は1個}
                 $0 0 <=                 {if $0 <= 0}
@@ -64,7 +64,7 @@ public class TestBp {
 
     @Test
     public void testArgs2Result2() {
-        Context c = context();
+        Context c = Stack.context();
         // A B addition --> A B (A + B)
         run(c, """
             '(@2                {引数は2個}
@@ -83,7 +83,7 @@ public class TestBp {
 
     @Test
     public void testArgs3Result2() {
-        Context c = context();
+        Context c = Stack.context();
         run(c, """
             8 9 10
             (@3                 {引数は3個}
@@ -105,7 +105,7 @@ public class TestBp {
      */
     @Test
     public void testSetArg() {
-        Context c = context();
+        Context c = Stack.context();
         run(c, """
             8 9 10
             (@3                 {引数は3個}
@@ -128,7 +128,7 @@ public class TestBp {
      */
     @Test
     public void testLocal() {
-        Context c = context();
+        Context c = Stack.context();
         run(c, """
             8 9 10
             (@3             {引数は3個}
@@ -152,7 +152,7 @@ public class TestBp {
      */
     @Test
     public void testLocalUpdate() {
-        Context c = context();
+        Context c = Stack.context();
         // @3の後の「0 0」はローカル変数%0および%1の定義と初期化
         run(c, """
             8 9 10
@@ -169,4 +169,24 @@ public class TestBp {
         assertEquals(0, c.sp);
     }
 
+    @Test
+    public void testFactorialByBp() {
+        Context c = Stack.context();
+        run(c, """
+            '(@1                 {引数は1個}
+                1               {local %0 = 1}
+                1 $0 1 range    {for i in 1..$0}
+                '(%0 * set%0)   {"%0 = i * %0}
+                for
+                %0              {戻り値}
+            ^1)                 {戻り値は1個}
+            'fact define
+            """);
+        assertEquals(Int.of(1), eval(c, "0 fact"));
+        assertEquals(Int.of(1), eval(c, "1 fact"));
+        assertEquals(Int.of(2), eval(c, "2 fact"));
+        assertEquals(Int.of(6), eval(c, "3 fact"));
+        assertEquals(Int.of(24), eval(c, "4 fact"));
+        assertEquals(Int.of(120), eval(c, "5 fact"));
+    }
 }
