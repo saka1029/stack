@@ -44,7 +44,18 @@ public class TestBp {
     @Test
     public void testArgs1Result1() {
         Context c = context();
-        run(c, "'(@1 $0 0 <= '1 '($0 1 - fact $0 *) if ^1) 'fact define");
+        run(c, """
+            '(@1
+                $0 0 <=
+                '1
+                '(
+                    $0 1 - fact
+                    $0
+                    *
+                )
+                if
+            ^1) 'fact define
+            """);
         assertEquals(eval(c, "1"), eval(c, "0 fact"));
         assertEquals(eval(c, "1"), eval(c, "1 fact"));
         assertEquals(eval(c, "2"), eval(c, "2 fact"));
@@ -56,7 +67,13 @@ public class TestBp {
     public void testArgs2Result2() {
         Context c = context();
         // A B addition --> A B (A + B)
-        run(c, "'(@2 $0 $1 $0 $1 + ^3) 'addition define");
+        run(c, """
+            '(@2
+                $0
+                $1
+                $0 $1 +
+            ^3) 'addition define
+            """);
         run(c, "7 8 addition");
         assertEquals(Int.of(15), c.pop());
         assertEquals(Int.of(8), c.pop());
@@ -67,7 +84,11 @@ public class TestBp {
     @Test
     public void testArgs3Result2() {
         Context c = context();
-        run(c, "8 9 10 (@3 $0 $1 + $1 $2 + ^2)");
+        run(c, """
+            8 9 10 (@3
+                $0 $1 + $1 $2 +
+            ^2)
+            """);
         assertEquals(Int.of(19), c.pop());
         assertEquals(Int.of(17), c.pop());
         assertEquals(0, c.sp);
@@ -83,7 +104,14 @@ public class TestBp {
     @Test
     public void testSetArg() {
         Context c = context();
-        run(c, "8 9 10 (@3 $0 $1 + set$0 $1 $2 + set$1 $0 $1 ^2)");
+        run(c, """
+            8 9 10
+            (@3
+                $0 $1 + set$0
+                $1 $2 + set$1
+                $0 $1
+            ^2)
+            """);
         assertEquals(Int.of(19), c.pop());
         assertEquals(Int.of(17), c.pop());
         assertEquals(0, c.sp);
@@ -99,7 +127,14 @@ public class TestBp {
     @Test
     public void testLocal() {
         Context c = context();
-        run(c, "8 9 10 (@3 $0 $1 + $1 $2 + %0 %1 ^2)");
+        run(c, """
+            8 9 10
+            (@3
+                $0 $1 +
+                $1 $2 +
+                %0 %1
+            ^2)
+            """);
         assertEquals(Int.of(19), c.pop());
         assertEquals(Int.of(17), c.pop());
         assertEquals(0, c.sp);
@@ -117,7 +152,16 @@ public class TestBp {
     public void testLocalUpdate() {
         Context c = context();
         // @3の後の「0 0」はローカル変数%0および%1の定義と初期化
-        run(c, "8 9 10 (@3 0 0 $0 $1 + set%0 $1 $2 + set%1 %0 %1 ^2)");
+        run(c, """
+            8 9 10
+            (@3
+                0
+                0
+                $0 $1 + set%0
+                $1 $2 + set%1
+                %0 %1
+            ^2)
+            """);
         assertEquals(Int.of(19), c.pop());
         assertEquals(Int.of(17), c.pop());
         assertEquals(0, c.sp);
