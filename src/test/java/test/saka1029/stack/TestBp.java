@@ -173,7 +173,7 @@ public class TestBp {
     public void testFactorialByBp() {
         Context c = Stack.context();
         run(c, """
-            '(@1                 {引数は1個}
+            '(@1                {引数は1個}
                 1               {local %0 = 1}
                 1 $0 1 range    {for i in 1..$0}
                 '(%0 * set%0)   {"%0 = i * %0}
