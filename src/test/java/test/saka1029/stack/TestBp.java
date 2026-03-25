@@ -170,7 +170,7 @@ public class TestBp {
     }
 
     @Test
-    public void testFactorialByBp() {
+    public void testFactorialByForByBp() {
         Context c = Stack.context();
         run(c, """
             '(@1                {引数は1個}
