@@ -49,9 +49,7 @@ public class TestBp {
                 $0 0 <=
                 '1
                 '(
-                    $0 1 - fact
-                    $0
-                    *
+                    $0 1 - fact $0 *
                 )
                 if
             ^1) 'fact define
