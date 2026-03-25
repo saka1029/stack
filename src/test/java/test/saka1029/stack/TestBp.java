@@ -38,6 +38,8 @@ import saka1029.stack.Int;
  *      <dt>^2を実行した後の時点</dt>
  *      <dd>sp=2, bp=0, stack=[R(1つ目の戻り値), S(2つ目の戻り値)]</dd>
  * </dl>
+ * 手続きから復帰するときは引数の数、bp、戻り値の数をもとに
+ * スタック上の不要な要素(上記の例では「X(中間結果)」など)を自動的に削除する。
  */
 public class TestBp {
 
@@ -45,14 +47,13 @@ public class TestBp {
     public void testArgs1Result1() {
         Context c = context();
         run(c, """
-            '(@1
-                $0 0 <=
-                '1
-                '(
-                    $0 1 - fact $0 *
-                )
-                if
-            ^1) 'fact define
+            '(@1                        {引数は1個}
+                $0 0 <=                 {if $0 <= 0}
+                '1                      {then 1}
+                '($0 1 - fact $0 *)     {else fact($0 - 1) * $0}
+                if                      {end if}
+            ^1)                         {戻り値は1個}
+            'fact define
             """);
         assertEquals(eval(c, "1"), eval(c, "0 fact"));
         assertEquals(eval(c, "1"), eval(c, "1 fact"));
@@ -66,11 +67,12 @@ public class TestBp {
         Context c = context();
         // A B addition --> A B (A + B)
         run(c, """
-            '(@2
-                $0
-                $1
-                $0 $1 +
-            ^3) 'addition define
+            '(@2                {引数は2個}
+                $0              {戻り値1}
+                $1              {戻り値2}
+                $0 $1 +         {戻り値3}
+            ^3)                 {戻り値は3個}
+            'addition define
             """);
         run(c, "7 8 addition");
         assertEquals(Int.of(15), c.pop());
@@ -83,9 +85,11 @@ public class TestBp {
     public void testArgs3Result2() {
         Context c = context();
         run(c, """
-            8 9 10 (@3
-                $0 $1 + $1 $2 +
-            ^2)
+            8 9 10
+            (@3                 {引数は3個}
+                $0 $1 +         {戻り値1}
+                $1 $2 +         {戻り値2}
+            ^2)                 {戻り値は2個}
             """);
         assertEquals(Int.of(19), c.pop());
         assertEquals(Int.of(17), c.pop());
@@ -104,11 +108,11 @@ public class TestBp {
         Context c = context();
         run(c, """
             8 9 10
-            (@3
-                $0 $1 + set$0
-                $1 $2 + set$1
-                $0 $1
-            ^2)
+            (@3                 {引数は3個}
+                $0 $1 + set$0   {$0 = $0 + $1}
+                $1 $2 + set$1   {$1 = $1 + $2}
+                $0 $1           {戻り値1, 戻り値2}
+            ^2)                 {戻り値は2個}
             """);
         assertEquals(Int.of(19), c.pop());
         assertEquals(Int.of(17), c.pop());
@@ -127,11 +131,11 @@ public class TestBp {
         Context c = context();
         run(c, """
             8 9 10
-            (@3
-                $0 $1 +
-                $1 $2 +
-                %0 %1
-            ^2)
+            (@3             {引数は3個}
+                $0 $1 +     {local %0 = $0 + $1}
+                $1 $2 +     {local %1 = $1 + $2}
+                %0 %1       {戻り値1, 戻り値2}
+            ^2)             {戻り値は2個}
             """);
         assertEquals(Int.of(19), c.pop());
         assertEquals(Int.of(17), c.pop());
@@ -152,13 +156,13 @@ public class TestBp {
         // @3の後の「0 0」はローカル変数%0および%1の定義と初期化
         run(c, """
             8 9 10
-            (@3
-                0
-                0
-                $0 $1 + set%0
-                $1 $2 + set%1
-                %0 %1
-            ^2)
+            (@3                 {引数は3個}
+                0               {local %0 = 0}
+                0               {local %1 = 0}
+                $0 $1 + set%0   {"%0 = $0 + $1}
+                $1 $2 + set%1   {"%1 = $1 + $2}
+                %0 %1           {戻り値1, 戻り値2}
+            ^2)                 {戻り値は2個}
             """);
         assertEquals(Int.of(19), c.pop());
         assertEquals(Int.of(17), c.pop());

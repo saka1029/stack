@@ -40,8 +40,18 @@ public class Parser {
     }
 
     void spaces() {
-        while (Character.isWhitespace(ch))
-            ch();
+        while (true) {
+            while (Character.isWhitespace(ch))
+                ch();
+            // コメントスキップ
+            if (ch == '{') {
+                while (ch != -1 && ch != '}')
+                    ch();
+                if (ch == '}')
+                    ch();
+            } else
+                break;
+        }
     }
 
     RuntimeException error(String format, Object... args) {
