@@ -161,6 +161,16 @@ public class Stack {
 			else
 				c.execute(orElse);
 		});
+		context.variable("when", c -> {
+			Instruction then = c.pop();
+			if (b(c.pop()))
+				c.execute(then);
+		});
+		context.variable("unless", c -> {
+			Instruction unless = c.pop();
+			if (!b(c.pop()))
+				c.execute(unless);
+		});
 		context.variable("for", c -> {
 			Instruction closure = c.pop();
 			Sequence it = l(c.pop()).sequence();

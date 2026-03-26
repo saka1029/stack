@@ -158,6 +158,20 @@ public class TestStack {
 	}
 
 	@Test
+	public void testWhen() {
+		Context c = context();
+		assertEquals(Int.of(2), eval(c, "1 true '(1 +) when"));
+		assertEquals(Int.of(1), eval(c, "1 false '(1 +) when"));
+	}
+
+	@Test
+	public void testUnless() {
+		Context c = context();
+		assertEquals(Int.of(1), eval(c, "1 true '(1 +) unless"));
+		assertEquals(Int.of(2), eval(c, "1 false '(1 +) unless"));
+	}
+
+	@Test
 	public void testFor() {
 		Context c = context();
 		assertEquals(Int.of(6), eval(c, "0 '(1 2 3) '+ for"));
@@ -714,39 +728,40 @@ public class TestStack {
 				$0 $2 at 			{ local %0 = $2[$0] }
 				$1 $2 at $0 $2 put 	{ $2[$0] = $2[$1] }
 				%0 $1 $2 put 		{ $2[$1] = %0 }
-			^0) 'swap define
+			^0) 'swap-elements define
 		""");
-		assertEquals(eval(c, "'(1 2 5 4 3)"), eval(c, "'(1 2 3 4 5) to-array 2 4 dup2 swap"));
+		assertEquals(eval(c, "'(1 2 5 4 3)"), eval(c, "'(1 2 3 4 5) to-array 2 4 dup2 swap-elements"));
 		run(c, """
-			'(@3			{ $0:low $1:hight $2:array }
-				stack
-				$0 $1 >=	{if low >= high then}
-					'()			{do nothing}
-					'(		{else}
-						$0 $1 + 2 / $2 at	{ local pivot:%0 = array[($0 + $1) / 2]}
-						$0					{ local i:%1 = low }
-						$1					{ local j:%2 = hight }
-						'(%1 %2 <)			{ while %1 < %2 do}
-						'(
-							'(%1 $2 at %0 <)	{while arr[i] < pivot do}
-							'(%1 1 + set%1)			{i = i + 1}
-							while				{end while}
-							'(%2 $2 at %0 >)	{while arr[j] > pivot do}
-							'(%2 1 - set%2)			{j = j - 1}
-							while				{end while}
-							%1 %2 <				{if i < j then}
-							'(%1 %2 $2 swap)		{i j array swap}
-							'()					{else do nothing}
-							if					{end if}
-						)
-						while				{end while}
-						$0 %2 $2 quick-sort
-						%2 1 + $1 $2 quick-sort
+			'(@3							{ $0:low $1:hight $2:array }
+				$0 $1 <						{when low < high}
+				'(
+					$0 $1 + 2 / $2 at			{ local pivot:%0 = array[($0 + $1) / 2]}
+					$0							{ local i:%1 = low }
+					$1							{ local j:%2 = hight }
+					'(%1 %2 <)					{ while %1 < %2 do}
+					'(
+						'(%1 $2 at %0 <)			{while arr[i] < pivot do}
+						'(%1 1 + set%1)					{i = i + 1}
+						while						{end while}
+						'(%2 $2 at %0 >)			{while arr[j] > pivot do}
+						'(%2 1 - set%2)					{j = j - 1}
+						while						{end while}
+						%1 %2 <						{when i < j}
+						'(%1 %2 $2 swap-elements)		{i j array swap}
+						when						{end when}
 					)
-					if		{end if}
-			^0) 'quick-sort define
+					while						{end while}
+					$0 %2 $2 quick-sort-range
+					%2 1 + $1 $2 quick-sort-range
+				)
+				when						{end when}
+			^0) 'quick-sort-range define
 		""");
-		assertEquals(eval(c, "'(1 2 3 4 5 6)"),
-			eval(c, "'(4 3 5 1 2 6) to-array 0 5 dup2 quick-sort"));
+		run(c, "'(0 swap dup size 1 - swap quick-sort-range) 'quick-sort define");
+		assertEquals(eval(c, "'()"), eval(c, "'() to-array dup quick-sort stack"));
+		assertEquals(eval(c, "'(1)"), eval(c, "'(1) to-array dup quick-sort"));
+		assertEquals(eval(c, "'(1 2)"), eval(c, "'(2 1) to-array dup quick-sort"));
+		assertEquals(eval(c, "'(1 2 3)"), eval(c, "'(1 2 3) to-array dup quick-sort"));
+		assertEquals(eval(c, "'(1 2 3 4 5 6)"), eval(c, "'(4 3 5 1 2 6) to-array dup quick-sort"));
 	}
 }
