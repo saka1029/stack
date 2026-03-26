@@ -732,27 +732,27 @@ public class TestStack {
 		""");
 		assertEquals(eval(c, "'(1 2 5 4 3)"), eval(c, "'(1 2 3 4 5) to-array 2 4 dup2 swap-elements"));
 		run(c, """
-			'(@3							{ $0:low $1:hight $2:array }
-				$0 $1 <						{when low < high}
+			'(@3							    { $0:low $1:hight $2:array }
+				$0 $1 <						    {when low < high}
 				'(
-					$0 $1 + 2 / $2 at			{ local pivot:%0 = array[($0 + $1) / 2]}
-					$0							{ local i:%1 = low }
-					$1							{ local j:%2 = hight }
-					'(%1 %2 <)					{ while %1 < %2 do}
+					$0 $1 + 2 / $2 at			    {local pivot:%0 = array[($0 + $1) / 2]}
+					$0							    {local i:%1 = low}
+					$1							    {local j:%2 = hight}
+					'(%1 %2 <)					    {while %1 < %2 do}
 					'(
-						'(%1 $2 at %0 <)			{while arr[i] < pivot do}
-						'(%1 1 + set%1)					{i = i + 1}
-						while						{end while}
-						'(%2 $2 at %0 >)			{while arr[j] > pivot do}
-						'(%2 1 - set%2)					{j = j - 1}
-						while						{end while}
-						%1 %2 <						{when i < j}
-						'(%1 %2 $2 swap-elements)		{i j array swap}
-						when						{end when}
+						'(%1 $2 at %0 <)			    {while arr[i] < pivot do}
+						'(%1 1 + set%1)					    {i = i + 1}
+						while						    {end while}
+						'(%2 $2 at %0 >)			    {while arr[j] > pivot do}
+						'(%2 1 - set%2)					    {j = j - 1}
+						while						    {end while}
+						%1 %2 <						    {when i < j}
+						'(%1 %2 $2 swap-elements)    		{i j array swap}
+						when							{end when}
 					)
-					while						{end while}
-					$0 %2 $2 quick-sort-range
-					%2 1 + $1 $2 quick-sort-range
+					while							{end while}
+					$0 %2 $2 quick-sort-range		{quick-sort-range(low, j, array)}
+					%2 1 + $1 $2 quick-sort-range	{quick-sort-range(j + 1, high, array)}
 				)
 				when						{end when}
 			^0) 'quick-sort-range define
