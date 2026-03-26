@@ -705,4 +705,17 @@ public class TestStack {
 		quickSort(actual, 0, actual.length - 1);
 		assertArrayEquals(expected, actual);
 	}
+
+	@Test
+	public void testSwap() {
+		Context c = Stack.context();
+		run(c, """
+			'(@3
+				$0 $2 at 			{ local %0 = $2[$0] }
+				$1 $2 at $0 $2 put 	{ $2[$0] = $2[$1] }
+				%0 $1 $2 put 		{ $2[$1] = %0 }
+			^0) 'swap define
+		""");
+		assertEquals(eval(c, "'(1 2 5 4 3)"), eval(c, "'(1 2 3 4 5) to-array 2 4 dup2 swap"));
+	}
 }

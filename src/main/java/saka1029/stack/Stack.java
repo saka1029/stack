@@ -307,10 +307,14 @@ public class Stack {
 		context.variable("generator", c -> c.push(Generator.of(c, c.pop())));
 		context.variable("generator1", c -> c.push(Generator.of(c, c.pop(), c.pop())));
 		context.variable("generator2", c -> c.push(Generator.of(c, c.pop(), c.pop(), c.pop())));
+		// SIZE ELEMENT array --> ARRAY
 		context.variable("array", c -> c.push(Array.of(i(c.pop()), c.pop())));
+		// LIST array --> ARRAY
 		context.variable("to-array", c -> c.push(Array.of(l(c.pop()))));
 		context.variable("size", c -> c.push(i(l(c.pop()).size())));
+		// INDEX ARRAY at --> ELEMENT
 		context.variable("at", c -> c.push(a(c.pop()).at(i(c.pop()))));
+		// NEW_ELEMENT INDEX ARRAY put -->
 		context.variable("put", c -> a(c.pop()).put(i(c.pop()), c.pop()));
 		// 引数の数の定義とbpの設定
 		for (int n = 0; n < 10; ++n) {
