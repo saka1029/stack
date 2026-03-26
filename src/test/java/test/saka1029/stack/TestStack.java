@@ -697,7 +697,7 @@ public class TestStack {
 	}
 
 	@Test
-	public void testQuickSort() {
+	public void testQuickSortJava() {
 		int[] arr = {4, 3, 5, 1, 2, 6};
 		int[] expected = Arrays.copyOf(arr, arr.length);
 		Arrays.sort(expected);
@@ -707,15 +707,45 @@ public class TestStack {
 	}
 
 	@Test
-	public void testSwap() {
+	public void testQuickSort() {
 		Context c = Stack.context();
 		run(c, """
-			'(@3
+			'(@3 					{ i j array }
 				$0 $2 at 			{ local %0 = $2[$0] }
 				$1 $2 at $0 $2 put 	{ $2[$0] = $2[$1] }
 				%0 $1 $2 put 		{ $2[$1] = %0 }
 			^0) 'swap define
 		""");
 		assertEquals(eval(c, "'(1 2 5 4 3)"), eval(c, "'(1 2 3 4 5) to-array 2 4 dup2 swap"));
+		run(c, """
+			'(@3			{ $0:low $1:hight $2:array }
+				$0 $1 >=	{if low >= high then}
+					'()			{do nothing}
+					'(		{else}
+						$0 $1 + 2 / $2 at	{ local pivot:%0 = array[($0 + $1) / 2]}
+						$0					{ local i:%1 = low }
+						$1					{ local j:%2 = hight }
+						'(%1 %2 <)			{ while %1 < %2 do}
+						'(
+							'(%1 $2 at %0 <)	{while arr[i] < pivot do}
+							'(%1 1 + set%1)			{i = i + 1}
+							while				{end while}
+							'(%2 $2 at %0 >)	{while arr[j] > pivot do}
+							'(%2 1 - set%2)			{j = j - 1}
+							while				{end while}
+							%1 %2 <				{if i < j then}
+							'(%1 %2 $2 swap)		{i j array swap}
+							'()					{else do nothing}
+							if					{end if}
+						)
+						while				{end while}
+						$0 %2 $2 quick-sort
+						%2 1 + $1 $2 quick-sort
+					)
+					if		{end if}
+			^0) 'quick-sort define
+		""");
+		assertEquals(eval(c, "'(1 2 3 4 5 6)"),
+			eval(c, "'(4 3 5 1 2 6) to-array 0 5 stack quick-sort"));
 	}
 }
