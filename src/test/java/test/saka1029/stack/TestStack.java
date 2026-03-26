@@ -719,6 +719,7 @@ public class TestStack {
 		assertEquals(eval(c, "'(1 2 5 4 3)"), eval(c, "'(1 2 3 4 5) to-array 2 4 dup2 swap"));
 		run(c, """
 			'(@3			{ $0:low $1:hight $2:array }
+				stack
 				$0 $1 >=	{if low >= high then}
 					'()			{do nothing}
 					'(		{else}
@@ -746,6 +747,6 @@ public class TestStack {
 			^0) 'quick-sort define
 		""");
 		assertEquals(eval(c, "'(1 2 3 4 5 6)"),
-			eval(c, "'(4 3 5 1 2 6) to-array 0 5 stack quick-sort"));
+			eval(c, "'(4 3 5 1 2 6) to-array 0 5 dup2 quick-sort"));
 	}
 }
