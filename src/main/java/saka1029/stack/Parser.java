@@ -136,8 +136,8 @@ public class Parser {
                 else
                     error("symbol expected after '@'");
                 return word;
-            }
-            return word;
+            } else
+                return word;
         }
     }
     
