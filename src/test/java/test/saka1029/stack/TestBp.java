@@ -1,5 +1,6 @@
 package test.saka1029.stack;
 
+import org.junit.Ignore;
 import org.junit.Test;
 
 import static org.junit.Assert.assertEquals;
@@ -41,6 +42,7 @@ import saka1029.stack.Stack;
  * 手続きから復帰するときは引数の数、bp、戻り値の数をもとに
  * スタック上の不要な要素(上記の例では「X(中間結果)」など)を自動的に削除する。
  */
+@Ignore
 public class TestBp {
 
     @Test

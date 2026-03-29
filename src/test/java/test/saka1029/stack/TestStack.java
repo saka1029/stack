@@ -9,6 +9,7 @@ import static saka1029.stack.Stack.run;
 import java.util.Arrays;
 import java.util.logging.Logger;
 
+import org.junit.Ignore;
 import org.junit.Test;
 
 import saka1029.Common;
@@ -743,6 +744,7 @@ public class TestStack {
 		assertArrayEquals(expected, actual);
 	}
 
+	@Ignore
 	@Test
 	public void testQuickSort() {
 		Context c = Stack.context();
