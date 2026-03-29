@@ -34,11 +34,11 @@ public class Array extends List {
     }
 
     public Instruction at(int index) {
-        return array[index - 1];
+        return array[index];
     }
 
     public void put(int index, Instruction value) {
-        array[index - 1] = value;
+        array[index] = value;
     }
 
     @Override

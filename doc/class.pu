@@ -1,0 +1,64 @@
+@startuml
+interface Sequence {
+    next():Instruction
+}
+interface Instruction {
+    execute(c:Context)
+}
+interface Value {
+    execute(c:Context)
+}
+Instruction <|-- Value
+interface Comparable {
+    compareTo(i:Instruction) : int
+}
+Value <|-- Comparable
+class Iterable<Instruction> {
+    hasNext():boolean
+    next():Instruction
+}
+abstract List {
+    {abstract}sequence():Sequence
+    hashCode():int
+    equals(obj:Object):boolean
+    {static} NIL:List
+}
+Instruction <|.. List
+Iterable <|-- List
+class Cons {
+}
+List <|-- Cons
+Instruction <-- Cons : car
+List <-- Cons : cdr
+class Array {
+    array:Instruction[]
+}
+List <|-- Array
+class Context {
+    stack:Instruction[]
+    sp, bp:int
+    instructions:java.util.List<Sequence>
+    variables:Map<Symbol, Instruction>
+}
+class Symbol {
+    name:String
+}
+Value <|.. Symbol
+class Quote
+Instruction <|...Quote
+Instruction <-- Quote : value
+class Int {
+    value:int
+}
+Comparable <|.. Int
+class Bool {
+    value:boolean
+}
+Comparable <|.. Bool
+class Generator {
+    args:Instruction[]
+}
+List <|-- Generator
+Context <-- Generator : context
+List <-- Generator : code
+@enduml
