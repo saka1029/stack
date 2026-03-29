@@ -269,8 +269,9 @@ public class Context {
     
     @Override
     public String toString() {
-        return "Context(sp=%d, stack=%s)".formatted(
+        return "Context(sp=%d, bp=%d stack=%s)".formatted(
             sp,
+            bp,
             Stream.of(stack)
                 .limit(sp)
                 .map(e -> "" + e)
