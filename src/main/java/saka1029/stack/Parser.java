@@ -114,11 +114,13 @@ public class Parser {
         return Cons.list(list);
     }
 
+    static final Symbol AT = Symbol.of("@");
+
     Instruction element() {
         if (token.equals(Token.EOF)) {
             return null;
         } else if (token.equals(Token.QUOTE)) {
-            token(); // sip '\''
+            token(); // skip '\''
             return Quote.of(element());
         } else if (token.equals(Token.LP)) {
             return list();
@@ -127,6 +129,14 @@ public class Parser {
         } else {
             Instruction word = token;
             token();
+            if (word == AT) {
+                Instruction next = element();
+                if (next instanceof Symbol symbol)
+                    return new StoreGlobal(symbol);
+                else
+                    error("symbol expected after '@'");
+                return word;
+            }
             return word;
         }
     }

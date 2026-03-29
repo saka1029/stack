@@ -13,7 +13,7 @@ public class TestStore {
     @Test
     public void testStore() {
         Context c = Stack.context();
-        assertEquals(Int.of(3), Stack.eval(c, "1 2 + 'v define v"));
-        assertEquals(Int.of(4), Stack.eval(c, "v 1 + 'v define v"));
+        assertEquals(Int.of(3), Stack.eval(c, "1 2 + @ v v"));
+        assertEquals(Int.of(4), Stack.eval(c, "v 1 + @ v v"));
     }
 }

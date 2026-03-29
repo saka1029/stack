@@ -312,7 +312,7 @@ public class Stack {
 			int step = i(c.pop()), end = i(c.pop()), start = i(c.pop());
 			c.push(Range.of(start, end, step));
 		});
-		context.variable("define", c -> c.variable(s(c.pop()), c.pop()));
+		// context.variable("define", c -> c.variable(s(c.pop()), c.pop()));
 		context.variable("yield", Terminal.YIELD);
 		context.variable("generator", c -> c.push(Generator.of(c, c.pop())));
 		context.variable("generator1", c -> c.push(Generator.of(c, c.pop(), c.pop())));
