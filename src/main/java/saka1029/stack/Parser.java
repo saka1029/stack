@@ -9,7 +9,7 @@ import java.util.regex.Pattern;
 public class Parser {
 
     enum Token implements Value {
-        EOF, QUOTE, LP, RP;
+        EOF, QUOTE, LP, RP, AT;
     }
 
     final Reader reader;
@@ -62,7 +62,7 @@ public class Parser {
 
     boolean isSymbol(int ch) {
         return switch (ch) {
-            case -1, '(', ')', '\'' -> false;
+            case -1, '(', ')', '\'', '@' -> false;
             default -> !Character.isWhitespace(ch);
         };
     }
@@ -83,22 +83,19 @@ public class Parser {
         };
     }
 
+    Instruction token(Instruction result) {
+        ch();
+        return result;
+    }
+
     Instruction token() {
         spaces();
         return token = switch (ch) {
             case -1 -> Token.EOF;
-            case '\'' -> {
-                ch();
-                yield Token.QUOTE;
-            }
-            case '(' -> {
-                ch();
-                yield Token.LP;
-            }
-            case ')' -> {
-                ch();
-                yield Token.RP;
-            }
+            case '\'' -> token(Token.QUOTE);
+            case '(' -> token(Token.LP);
+            case ')' -> token(Token.RP);
+            case '@' -> token(Token.AT);
             default -> word();
         };
     }
@@ -126,18 +123,17 @@ public class Parser {
             return list();
         } else if (token.equals(Token.RP)) {
             throw error("unexpected ')'");
-        } else {
+        } else if (token.equals(Token.AT)) {
+            token(); // skip '@'
+            Instruction next = element();
+            if (next instanceof Symbol symbol)
+                return new StoreGlobal(symbol);
+            else
+                throw error("symbol expected after '@'");
+        } else { // ID or INTEGER
             Instruction word = token;
             token();
-            if (word == AT) {
-                Instruction next = element();
-                if (next instanceof Symbol symbol)
-                    return new StoreGlobal(symbol);
-                else
-                    error("symbol expected after '@'");
-                return word;
-            } else
-                return word;
+            return word;
         }
     }
     
