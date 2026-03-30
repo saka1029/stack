@@ -132,12 +132,17 @@ public class Parser {
             token(); // skip SYMBOL
             ++resultSize;
         }
+        frame = new Frame(arguments, resultSize);
+        list.add(frame.frameStart());
         java.util.List<Symbol> locals = new ArrayList<>();
         while (token == Token.COMMA) {
             token(); // skip ','
-            if (token == Token.SYMBOL)
-                locals.add(symbol());
-            else
+            list.add(new DummyInstruction(","));
+            if (token == Token.SYMBOL) {
+                Symbol local = symbol();
+                locals.add(local);
+                list.add(new LoadLocalDummy(local, locals.size()));
+            } else
                 throw error("symbol expected");
             if (token == Token.EOF || token == Token.COLON
                 || token == Token.COMMA || token == Token.RP)
@@ -145,10 +150,12 @@ public class Parser {
             while (token != Token.EOF && token != Token.COLON)
                 list.add(element(frame));
         }
+        frame.locals(locals);
         if (token != Token.COLON)
             throw error("':' expected");
         token(); // skip ':'
-        return new Frame(arguments, locals, resultSize);
+        list.add(new DummyInstruction(":"));
+        return frame;
     }
 
     List list(Frame frame) {
@@ -157,7 +164,6 @@ public class Parser {
         java.util.List<Instruction> list = new ArrayList<>();
         if (token == Token.COLON) {
             frame = frame(list, frame);
-            list.add(frame.frameStart());
             isFrame = true;
         }
         while (token != Token.EOF && token != Token.RP)

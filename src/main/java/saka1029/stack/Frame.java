@@ -1,5 +1,6 @@
 package saka1029.stack;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -7,8 +8,8 @@ import java.util.stream.Collectors;
 public class Frame {
 
     public final Map<Symbol, Integer> offsets = new HashMap<>();
-    public final java.util.List<Symbol> arguments;
-    public final java.util.List<Symbol> locals;
+    public final java.util.List<Symbol> arguments = new ArrayList<>();
+    public final java.util.List<Symbol> locals = new ArrayList<>();
     public final int argSize, resultSize;
 
     void checkPut(Symbol symbol, int offset) {
@@ -18,16 +19,21 @@ public class Frame {
         offsets.put(symbol, offset);
     }
 
-    public Frame(java.util.List<Symbol> arguments, java.util.List<Symbol> locals, int resultSize) {
-        this.arguments = arguments;
-        this.locals = locals;
+    public Frame(java.util.List<Symbol> arguments, int resultSize) {
         this.argSize = arguments.size();
-        for (int i = 0; i < argSize; ++i) 
+        for (int i = 0; i < argSize; ++i) {
+            this.arguments.add(arguments.get(i));
             checkPut(arguments.get(i), i - this.argSize);
-        int localSize = locals.size();
-        for (int i = 0; i < localSize; ++i)
-            checkPut(locals.get(i), i + 1);
+        }
         this.resultSize = resultSize;
+    }
+
+    public void locals(java.util.List<Symbol> locals) {
+        int localSize = locals.size();
+        for (int i = 0; i < localSize; ++i) {
+            this.locals.add(locals.get(i));
+            checkPut(locals.get(i), i + 1);
+        }
     }
 
     public Instruction frameStart() {
@@ -40,10 +46,10 @@ public class Frame {
 
             @Override
             public String toString() {
-                return "frameStart(%s->%d)".formatted(
+                return ": %s -> %d".formatted(
                     arguments.stream()
                         .map(s -> s.toString())
-                        .collect(Collectors.joining(",")), resultSize);
+                        .collect(Collectors.joining(" ")), resultSize);
             }
         };
     }
