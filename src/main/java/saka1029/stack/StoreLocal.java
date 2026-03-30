@@ -13,4 +13,9 @@ public class StoreLocal extends Store {
     public void execute(Context c) {
         c.stack[c.bp + offset] = c.pop();
     }
+
+    @Override
+    public String toString() {
+        return "@%s(%d)".formatted(symbol, offset);
+    }
 }

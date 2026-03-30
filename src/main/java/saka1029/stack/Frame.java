@@ -6,6 +6,7 @@ import java.util.Map;
 public class Frame {
 
     public final Map<Symbol, Integer> offsets = new HashMap<>();
+    public final int argSize, resultSize;
 
     void checkPut(Symbol symbol, int offset) {
         if (offsets.containsKey(symbol))
@@ -14,12 +15,43 @@ public class Frame {
         offsets.put(symbol, offset);
     }
 
-    public Frame(java.util.List<Symbol> arguments, java.util.List<Symbol> locals) {
-        int argSize = arguments.size();
+    public Frame(java.util.List<Symbol> arguments, java.util.List<Symbol> locals, int resultSize) {
+        this.argSize = arguments.size();
         for (int i = 0; i < argSize; ++i) 
-            checkPut(arguments.get(i), i - argSize);
+            checkPut(arguments.get(i), i - this.argSize);
         int localSize = locals.size();
         for (int i = 0; i < localSize; ++i)
             checkPut(locals.get(i), i + 1);
+        this.resultSize = resultSize;
+    }
+
+    public Instruction frameStart() {
+        return new Instruction() {
+
+            @Override
+            public void execute(Context context) {
+                context.frameStart();
+            }
+
+            @Override
+            public String toString() {
+                return "frameStart";
+            }
+        };
+    }
+
+    public Instruction frameEnd() {
+        return new Instruction() {
+
+            @Override
+            public void execute(Context context) {
+                context.frameEnd(argSize, resultSize);
+            }
+
+            @Override
+            public String toString() {
+                return "frameEnd(%d,%d)".formatted(argSize, resultSize);
+            }
+        };
     }
 }

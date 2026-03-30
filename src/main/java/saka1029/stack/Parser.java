@@ -122,11 +122,16 @@ public class Parser {
             throw error("nested frame");
         java.util.List<Symbol> arguments = new ArrayList<>();
         // todo: とりあえず"->"はシンボルなので前後に空白が必要！！
-        while (token == Token.SYMBOL && string != "->")
+        while (token == Token.SYMBOL && !string.equals("->"))
             arguments.add(symbol());
-        if (string != "->")
+        if (!string.equals("->"))
             throw error("'->' expected");
         token();    // skip '->'
+        int resultSize = 0;
+        while (token == Token.SYMBOL) {
+            token(); // skip SYMBOL
+            ++resultSize;
+        }
         java.util.List<Symbol> locals = new ArrayList<>();
         while (token == Token.COMMA) {
             token(); // skip ','
@@ -143,26 +148,37 @@ public class Parser {
         if (token != Token.COLON)
             throw error("':' expected");
         token(); // skip ':'
-        return new Frame(arguments, locals);
+        return new Frame(arguments, locals, resultSize);
     }
 
     List list(Frame frame) {
+        boolean isFrame = false;
         token(); // skip '('
         java.util.List<Instruction> list = new ArrayList<>();
-        if (token == Token.COLON)
+        if (token == Token.COLON) {
             frame = frame(list, frame);
+            list.add(frame.frameStart());
+            isFrame = true;
+        }
         while (token != Token.EOF && token != Token.RP)
             list.add(element(frame));
         if (token != Token.RP)
             throw error("')' expected");
         token(); // skip ')'
+        if (isFrame)
+            list.add(frame.frameEnd());
         return Cons.list(list);
     }
 
     Instruction element(Frame frame) {
         switch (token) {
             case EOF: return null;
-            case SYMBOL: return symbol();
+            case SYMBOL:
+                Symbol symbol =  symbol();
+                if (frame != null && frame.offsets.containsKey(symbol))
+                    return new LoadLocal(symbol, frame.offsets.get(symbol));
+                else
+                    return symbol;
             case TRUE:
                 token();
                 return Bool.TRUE;
@@ -175,9 +191,13 @@ public class Parser {
                 return Quote.of(element(frame));
             case AT:
                 token();
-                if (token == Token.SYMBOL)
-                    return new StoreGlobal(symbol());
-                else
+                if (token == Token.SYMBOL) {
+                    Symbol storeSymbol = symbol();
+                    if (frame != null && frame.offsets.containsKey(storeSymbol))
+                        return new StoreLocal(storeSymbol, frame.offsets.get(storeSymbol));
+                    else
+                        return new StoreGlobal(storeSymbol);
+                } else
                     throw error("symbol expected after '@'");
             case LP:
                 return list(frame);
@@ -197,7 +217,6 @@ public class Parser {
     
     public List read() {
         List list = expression();
-        System.out.println(list);
         return list;
     }
 }
