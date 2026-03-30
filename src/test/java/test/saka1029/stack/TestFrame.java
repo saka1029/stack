@@ -22,6 +22,8 @@ public class TestFrame {
         assertEquals(eval(c, "1"), eval(c, "1 fact"));
         assertEquals(eval(c, "2"), eval(c, "2 fact"));
         assertEquals(eval(c, "6"), eval(c, "3 fact"));
+        assertEquals(eval(c, "24"), eval(c, "4 fact"));
+        assertEquals(eval(c, "120"), eval(c, "5 fact"));
     }
 
 }
