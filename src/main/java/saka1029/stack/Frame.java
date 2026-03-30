@@ -2,10 +2,13 @@ package saka1029.stack;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 public class Frame {
 
     public final Map<Symbol, Integer> offsets = new HashMap<>();
+    public final java.util.List<Symbol> arguments;
+    public final java.util.List<Symbol> locals;
     public final int argSize, resultSize;
 
     void checkPut(Symbol symbol, int offset) {
@@ -16,6 +19,8 @@ public class Frame {
     }
 
     public Frame(java.util.List<Symbol> arguments, java.util.List<Symbol> locals, int resultSize) {
+        this.arguments = arguments;
+        this.locals = locals;
         this.argSize = arguments.size();
         for (int i = 0; i < argSize; ++i) 
             checkPut(arguments.get(i), i - this.argSize);
@@ -35,7 +40,10 @@ public class Frame {
 
             @Override
             public String toString() {
-                return "frameStart";
+                return "frameStart(%s->%d)".formatted(
+                    arguments.stream()
+                        .map(s -> s.toString())
+                        .collect(Collectors.joining(",")), resultSize);
             }
         };
     }
