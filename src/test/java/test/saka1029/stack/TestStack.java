@@ -746,7 +746,7 @@ public class TestStack {
 
 	@Ignore
 	@Test
-	public void testQuickSort() {
+	public void testQuickSortOld() {
 		Context c = Stack.context();
 		run(c, """
 			'(@3 					{ i j array }
@@ -788,5 +788,18 @@ public class TestStack {
 		assertEquals(eval(c, "'(1 2)"), eval(c, "'(2 1) to-array dup quick-sort"));
 		assertEquals(eval(c, "'(1 2 3)"), eval(c, "'(1 2 3) to-array dup quick-sort"));
 		assertEquals(eval(c, "'(1 2 3 4 5 6)"), eval(c, "'(4 3 5 1 2 6) to-array dup quick-sort"));
+	}
+
+	@Test
+	public void testQuckSort() {
+		Context c = Stack.context();
+		run(c, """
+			'(: i j array -> ,				{proc (i, j, array) -> ()}
+				temp i array at :				{local temp = array[i]}
+				j array at i array put			{array[i] = array[j]}
+				temp j array put				{array[j] = temp}
+			) @swap-elements
+		""");
+		assertEquals(eval(c, "'(1 2 5 4 3)"), eval(c, "'(1 2 3 4 5) to-array 2 4 dup2 swap-elements"));
 	}
 }

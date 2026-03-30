@@ -223,6 +223,7 @@ public class Parser {
     
     public List read() {
         List list = expression();
+        // System.out.println(list);
         return list;
     }
 }
