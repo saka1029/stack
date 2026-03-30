@@ -104,17 +104,6 @@ public class Parser {
         };
     }
 
-    List list() {
-        token(); // skip '('
-        java.util.List<Instruction> list = new ArrayList<>();
-        while (token != Token.EOF && token != Token.RP)
-            list.add(element());
-        if (token != Token.RP)
-            throw error("')' expected");
-        token(); // skip ')'
-        return Cons.list(list);
-    }
-
     Symbol symbol() {
         String v = string;
         token();
@@ -127,7 +116,44 @@ public class Parser {
         return Int.of(Integer.parseInt(v));
     }
 
-    Instruction element() {
+    Frame frame(java.util.List<Instruction> list, Frame frame) {
+        if (frame != null)
+            throw error("nested frame");
+        java.util.List<Symbol> arguments = new ArrayList<>();
+        while (token == Token.SYMBOL && string != "->")
+            arguments.add(symbol());
+        if (string != "->")
+            throw error("'->' expected");
+        token();    // skip '->'
+        java.util.List<Symbol> locals = new ArrayList<>();
+        while (token == Token.COMMA) {
+            token(); // skip ','
+            if (token == Token.SYMBOL)
+                locals.add(symbol());
+            else
+                throw error("symbol expected");
+            if (token == Token.EOF || token == Token.COLON || token == Token.COMMA)
+                throw error("element expected");
+            while (token != Token.EOF && token != Token.COLON)
+                list.add(element(frame));
+        }
+        return new Frame(arguments, locals);
+    }
+
+    List list(Frame frame) {
+        token(); // skip '('
+        java.util.List<Instruction> list = new ArrayList<>();
+        if (token == Token.COLON)
+            frame = frame(list, frame);
+        while (token != Token.EOF && token != Token.RP)
+            list.add(element(frame));
+        if (token != Token.RP)
+            throw error("')' expected");
+        token(); // skip ')'
+        return Cons.list(list);
+    }
+
+    Instruction element(Frame frame) {
         switch (token) {
             case EOF: return null;
             case SYMBOL: return symbol();
@@ -140,7 +166,7 @@ public class Parser {
             case INT: return integer();
             case QUOTE:
                 token();
-                return Quote.of(element());
+                return Quote.of(element(frame));
             case AT:
                 token();
                 if (token == Token.SYMBOL)
@@ -148,7 +174,7 @@ public class Parser {
                 else
                     throw error("symbol expected after '@'");
             case LP:
-                return list();
+                return list(frame);
             default:
                 throw error("unexpected element '%s'", token);
         }
@@ -158,7 +184,7 @@ public class Parser {
     List expression() {
         java.util.List<Instruction> list = new ArrayList<>();
         Instruction e;
-        while ((e = element()) != null)
+        while ((e = element(null)) != null)
             list.add(e);
         return Cons.list(list);
     }

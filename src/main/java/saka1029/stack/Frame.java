@@ -14,13 +14,10 @@ public class Frame {
         offsets.put(symbol, offset);
     }
 
-    public void arguments(java.util.List<Symbol> arguments) {
+    public Frame(java.util.List<Symbol> arguments, java.util.List<Symbol> locals) {
         int argSize = arguments.size();
         for (int i = 0; i < argSize; ++i) 
             checkPut(arguments.get(i), i - argSize);
-    }
-
-    public void locals(java.util.List<Symbol> locals) {
         int localSize = locals.size();
         for (int i = 0; i < localSize; ++i)
             checkPut(locals.get(i), i + 1);
