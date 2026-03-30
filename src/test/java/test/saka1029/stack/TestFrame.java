@@ -14,7 +14,13 @@ public class TestFrame {
     @Test
     public void testFrame() {
         Context c = context();
-        String source = "'( : n -> r : n 0 <= 1 '(n 1 - fact n *) if) @fact";
+        String source = """
+            '( : n -> r :
+                 n 0 <=
+                    1
+                    '(n 1 - fact n *) if
+            ) @fact
+            """;
         List list = Parser.parse(source).read();
         System.out.println(list);
         run(c, source);
@@ -29,7 +35,12 @@ public class TestFrame {
     @Test
     public void testLocals() {
         Context c = context();
-        String source = "'( : n -> r, f 1 : 1 n 1 range '(f * @f) for f) @fact";
+        String source = """
+            '( : n -> r, f 1 :
+                1 n 1 range '(f * @f) for
+                f
+            ) @fact
+            """;
         List list = Parser.parse(source).read();
         System.out.println(list);
         run(c, source);
