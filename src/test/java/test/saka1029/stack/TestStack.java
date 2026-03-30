@@ -794,7 +794,7 @@ public class TestStack {
 	public void testQuckSort() {
 		Context c = Stack.context();
 		run(c, """
-			'(: i j array -> ,				{proc (i, j, array) -> ()}
+			'(: i j array -> ,				{proc swap-elements(i, j, array) -> ()}
 				temp i array at :				{local temp = array[i]}
 				j array at i array put			{array[i] = array[j]}
 				temp j array put				{array[j] = temp}
