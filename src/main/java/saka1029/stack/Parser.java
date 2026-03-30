@@ -117,6 +117,7 @@ public class Parser {
     }
 
     Frame frame(java.util.List<Instruction> list, Frame frame) {
+        token(); // skip ':'
         if (frame != null)
             throw error("nested frame");
         java.util.List<Symbol> arguments = new ArrayList<>();
@@ -133,11 +134,15 @@ public class Parser {
                 locals.add(symbol());
             else
                 throw error("symbol expected");
-            if (token == Token.EOF || token == Token.COLON || token == Token.COMMA)
+            if (token == Token.EOF || token == Token.COLON
+                || token == Token.COMMA || token == Token.RP)
                 throw error("element expected");
             while (token != Token.EOF && token != Token.COLON)
                 list.add(element(frame));
         }
+        if (token != Token.COLON)
+            throw error("':' expected");
+        token(); // skip ':'
         return new Frame(arguments, locals);
     }
 
