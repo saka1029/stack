@@ -9,7 +9,7 @@ import java.util.regex.Pattern;
 public class Parser {
 
     enum Token implements Value {
-        EOF, QUOTE, LP, RP, AT;
+        EOF, QUOTE, LP, RP, AT, COLON, COMMA;
     }
 
     final Reader reader;
@@ -62,7 +62,7 @@ public class Parser {
 
     boolean isSymbol(int ch) {
         return switch (ch) {
-            case -1, '(', ')', '\'', '@' -> false;
+            case -1, '(', ')', '\'', '@', ':', ',' -> false;
             default -> !Character.isWhitespace(ch);
         };
     }
@@ -96,6 +96,8 @@ public class Parser {
             case '(' -> token(Token.LP);
             case ')' -> token(Token.RP);
             case '@' -> token(Token.AT);
+            case ':' -> token(Token.COLON);
+            case ',' -> token(Token.COMMA);
             default -> word();
         };
     }
@@ -114,22 +116,28 @@ public class Parser {
     static final Symbol AT = Symbol.of("@");
 
     Instruction element() {
-        if (token.equals(Token.EOF)) {
+        if (token == Token.EOF) {
             return null;
-        } else if (token.equals(Token.QUOTE)) {
+        } else if (token == Token.QUOTE) {
             token(); // skip '\''
             return Quote.of(element());
-        } else if (token.equals(Token.LP)) {
+        } else if (token == Token.LP) {
             return list();
-        } else if (token.equals(Token.RP)) {
+        } else if (token == Token.RP) {
             throw error("unexpected ')'");
-        } else if (token.equals(Token.AT)) {
+        } else if (token == Token.AT) {
             token(); // skip '@'
             Instruction next = element();
             if (next instanceof Symbol symbol)
                 return new StoreGlobal(symbol);
             else
                 throw error("symbol expected after '@'");
+        } else if (token == Token.COLON) {
+            token();
+            return Token.COLON;
+        } else if (token == Token.COMMA) {
+            token();
+            return Token.COMMA;
         } else { // ID or INTEGER
             Instruction word = token;
             token();
