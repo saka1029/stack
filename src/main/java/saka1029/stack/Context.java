@@ -125,68 +125,6 @@ public class Context {
         return ((Int)i).value;
     }
 
-    // /**
-    //  * 引数の数を定義
-    //  * @param n 引数の数
-    //  */
-    // public void nargs(int n) {
-    //     push(Int.of(n));    // 引数の数
-    //     push(Int.of(bp));   // 旧bp
-    //     bp = sp - 1;        // 新bpは旧bpを指す
-    // }
-
-    // /**
-    //  * 引数の開始位置
-    //  * @return
-    //  */
-    // int argStart() {
-    //     return bp - asInt(stack[bp - 1]) - 1;
-    // }
-
-    // /**
-    //  * 引数の参照
-    //  * @param n 引数の番号(0から始まる)
-    //  */
-    // public void arg(int n) {
-    //     push(stack[argStart() + n]);
-    // }
-
-    // /**
-    //  * 引数の設定
-    //  * @param n 引数の番号(0から始まる)
-    //  */
-    // public void setArg(int n) {
-    //     stack[argStart() + n] = pop();
-    // }
-
-    // /**
-    //  * ローカル変数の参照
-    //  * @param n ローカル変数の番号(0から始まる)
-    //  */
-    // public void local(int n) {
-    //     push(stack[bp + 1 + n]);
-    // }
-
-    // /**
-    //  * ローカル変数の設定
-    //  * @param n ローカル変数の番号(0から始まる)
-    //  */
-    // public void setLocal(int n) {
-    //     stack[bp + 1 + n] = pop();
-    // }
-
-    // /**
-    //  * 戻り値の設定とbpの回復
-    //  * @param n 戻り値の数
-    //  */
-    // public void result(int n) {
-    //    int argStart = argStart(), oldBp = asInt(stack[bp]);
-    //     for (int i = 0, from = sp - n, to = argStart; i < n; ++i)
-    //         stack[to++] = stack[from++];
-    //     bp = oldBp;
-    //     sp = argStart + n;
-    // }
-
     public void frameStart() {
         push(Int.of(bp));   // 旧bp
         bp = sp - 1;        // 新bpは旧bpを指す
@@ -204,10 +142,11 @@ public class Context {
     public void frameEnd(int argSize, int resultSize) {
         int argStart = bp - argSize;
         int oldBp = asInt(stack[bp]);
-        for (int i = 0, from = sp - resultSize, to = argStart; i < resultSize; ++i)
-            stack[to++] = stack[from++];
+        int from = sp - resultSize;
+        sp = argStart;
+        for (int i = 0; i < resultSize; ++i)
+            push(stack[from++]);
         bp = oldBp;
-        sp = argStart + resultSize;
     }
 
     public void instruction(Sequence it) {

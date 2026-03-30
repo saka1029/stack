@@ -16,9 +16,10 @@ public class TestFrame {
         Context c = context();
         String source = """
             '( : n -> r :
-                 n 0 <=
-                    1
-                    '(n 1 - fact n *) if
+                 n 0 <=                     {if (n <= 0)}
+                    1                           {then return 1}
+                    '(n 1 - fact n *)           {else return fact(n - 1) * n}
+                if                          {end if}
             ) @fact
             """;
         List list = Parser.parse(source).read();
@@ -36,9 +37,11 @@ public class TestFrame {
     public void testLocals() {
         Context c = context();
         String source = """
-            '( : n -> r, f 1 :
-                1 n 1 range '(f * @f) for
-                f
+            '( : n -> r, f 1 :      {var f = 1}
+                1 n 1 range         {for i = 1 to n by 1}
+                    '(f * @f)           {f = i * f}
+                for                 {end for}
+                f                   {return f}
             ) @fact
             """;
         List list = Parser.parse(source).read();
@@ -50,7 +53,6 @@ public class TestFrame {
         assertEquals(eval(c, "6"), eval(c, "3 fact"));
         assertEquals(eval(c, "24"), eval(c, "4 fact"));
         assertEquals(eval(c, "120"), eval(c, "5 fact"));
-
     }
 
 }
