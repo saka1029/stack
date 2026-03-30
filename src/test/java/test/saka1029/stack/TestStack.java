@@ -209,7 +209,7 @@ public class TestStack {
 		// Context(sp=2, bp=0 stack=[(3 2 1), 4])		// 4, 5についてはrconsはしないが、forの処理は継続する。
 		// Context(sp=2, bp=0 stack=[(3 2 1), 5])
 		// 結果としてどのブロックからbreakするのかの指定がなければ使えない、ということになる。
-		assertEquals(eval(c, "'(3 2 1)"), eval(c, "'() 1 5 1 range '(stack dup 3 > '(drop break) 'rcons if) for"));
+		assertEquals(eval(c, "'(3 2 1)"), eval(c, "'() 1 5 1 range '(dup 3 > '(drop break) 'rcons if) for"));
 		// 以下はbreakせずに最後まで処理した結果、例外を投げる。
 		// assertEquals(eval(c, "'(3 2 1)"), eval(c, "'() 1 5 1 range '(stack dup 3 > 'break 'rcons if) for"));
 		// java.lang.RuntimeException: Illegal stack size Context(sp=3, bp=0 stack=[(3 2 1), 4, 5])
