@@ -55,7 +55,7 @@ public class TestBp {
                 '($0 1 - fact $0 *)     {else fact($0 - 1) * $0}
                 if                      {end if}
             ^1)                         {戻り値は1個}
-            @ fact
+            @fact
             """);
         assertEquals(eval(c, "1"), eval(c, "0 fact"));
         assertEquals(eval(c, "1"), eval(c, "1 fact"));
@@ -74,7 +74,7 @@ public class TestBp {
                 $1              {戻り値2}
                 $0 $1 +         {戻り値3}
             ^3)                 {戻り値は3個}
-            @ addition
+            @addition
             """);
         run(c, "7 8 addition");
         assertEquals(Int.of(15), c.pop());
@@ -182,7 +182,7 @@ public class TestBp {
                 for
                 %0              {戻り値}
             ^1)                 {戻り値は1個}
-            @ fact
+            @fact
             """);
         assertEquals(Int.of(1), eval(c, "0 fact"));
         assertEquals(Int.of(1), eval(c, "1 fact"));

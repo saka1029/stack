@@ -182,7 +182,7 @@ public class TestStack {
 	public void testWhile() {
 		Context c = Stack.context();
 		assertEquals(eval(c, "6"), eval(c, "3 0 '(dup1 0 >) '(dup1 1 - rrot +) while ret1"));
-		run(c,"'(1 '(dup1 0 >) '(dup1 1 - rrot *) while ret1) @ factorial");
+		run(c,"'(1 '(dup1 0 >) '(dup1 1 - rrot *) while ret1) @factorial");
 		assertEquals(eval(c, "1"), eval(c, "0 factorial"));
 		assertEquals(eval(c, "1"), eval(c, "1 factorial"));
 		assertEquals(eval(c, "2"), eval(c, "2 factorial"));
@@ -225,16 +225,16 @@ public class TestStack {
 	@Test
 	public void testDefine() {
 		Context c = Stack.context();
-		run(c, "'+ @ plus");
+		run(c, "'+ @plus");
 		assertEquals(Int.of(3), eval(c, "1 2 plus"));
-		run(c, "3 @ three");
+		run(c, "3 @three");
 		assertEquals(Int.of(3), eval(c, "three"));
 	}
 
 	@Test
 	public void testFactorialRecuesive() {
 		Context c = Stack.context();
-		run(c, "'(dup 0 <= '(drop 1) '(dup 1 - factorial *) if) @ factorial");
+		run(c, "'(dup 0 <= '(drop 1) '(dup 1 - factorial *) if) @factorial");
 		assertEquals(Int.of(1), eval(c, "0 factorial"));
 		assertEquals(Int.of(1), eval(c, "1 factorial"));
 		assertEquals(Int.of(2), eval(c, "2 factorial"));
@@ -246,7 +246,7 @@ public class TestStack {
 	@Test
 	public void testFactorialFor() {
 		Context c = Stack.context();
-		run(c, "'(1 swap 1 swap 1 range '* for) @ factorial");
+		run(c, "'(1 swap 1 swap 1 range '* for) @factorial");
 		assertEquals(Int.of(1), eval(c, "0 factorial"));
 		assertEquals(Int.of(1), eval(c, "1 factorial"));
 		assertEquals(Int.of(2), eval(c, "2 factorial"));
@@ -257,7 +257,7 @@ public class TestStack {
 	@Test
 	public void testFibonacciRecuesive() {
 		Context c = Stack.context();
-		run(c, "'(dup 1 <= '() '(dup 1 - fibonacci swap 2 - fibonacci +) if) @ fibonacci");
+		run(c, "'(dup 1 <= '() '(dup 1 - fibonacci swap 2 - fibonacci +) if) @fibonacci");
 		assertEquals(Int.of(0), eval(c, "0 fibonacci"));
 		assertEquals(Int.of(1), eval(c, "1 fibonacci"));
 		assertEquals(Int.of(1), eval(c, "2 fibonacci"));
@@ -272,7 +272,7 @@ public class TestStack {
 	@Test
 	public void testFibonacciFor() {
 		Context c = Stack.context();
-		run(c, "'(0 swap 1 swap 1 swap 1 range '(drop dup rrot +) for drop) @ fibonacci");
+		run(c, "'(0 swap 1 swap 1 swap 1 range '(drop dup rrot +) for drop) @fibonacci");
 		assertEquals(Int.of(0), eval(c, "0 fibonacci"));
 		assertEquals(Int.of(1), eval(c, "1 fibonacci"));
 		assertEquals(Int.of(1), eval(c, "2 fibonacci"));
@@ -299,7 +299,7 @@ public class TestStack {
 	@Test
 	public void testAppendRecursive() {
 		Context c = Stack.context();
-		run(c, "'(swap dup null 'drop '(uncons rot append cons) if) @ append");
+		run(c, "'(swap dup null 'drop '(uncons rot append cons) if) @append");
 		assertEquals(eval(c, "'(3 4)"), eval(c, "'() '(3 4) append"));
 		assertEquals(eval(c, "'(2 3 4)"), eval(c, "'(2) '(3 4) append"));
 		assertEquals(eval(c, "'(1 2 3 4)"), eval(c, "'(1 2) '(3 4) append"));
@@ -327,8 +327,8 @@ public class TestStack {
 	@Test
 	public void testReverseRecursive() {
 		Context c = Stack.context();
-		run(c, "'(swap dup null 'drop '(uncons rot append cons) if) @ append");
-		run(c, "'(dup null '() '(uncons reverse swap '() cons append) if) @ reverse");
+		run(c, "'(swap dup null 'drop '(uncons rot append cons) if) @append");
+		run(c, "'(dup null '() '(uncons reverse swap '() cons append) if) @reverse");
 		assertEquals(eval(c, "'()"), eval(c, "'() reverse"));
 		assertEquals(eval(c, "'(1)"), eval(c, "'(1) reverse"));
 		assertEquals(eval(c, "'(2 1)"), eval(c, "'(1 2) reverse"));
@@ -340,7 +340,7 @@ public class TestStack {
 	@Test
 	public void testReverseFor() {
 		Context c = Stack.context();
-		run(c, "'('() swap '(swap cons) for) @ reverse");
+		run(c, "'('() swap '(swap cons) for) @reverse");
 		assertEquals(eval(c, "'()"), eval(c, "'() reverse"));
 		assertEquals(eval(c, "'(1)"), eval(c, "'(1) reverse"));
 		assertEquals(eval(c, "'(2 1)"), eval(c, "'(1 2) reverse"));
@@ -352,7 +352,7 @@ public class TestStack {
 	@Test
 	public void testReverseForRcons() {
 		Context c = Stack.context();
-		run(c, "'('() swap 'rcons for) @ reverse");
+		run(c, "'('() swap 'rcons for) @reverse");
 		assertEquals(eval(c, "'()"), eval(c, "'() reverse"));
 		assertEquals(eval(c, "'(1)"), eval(c, "'(1) reverse"));
 		assertEquals(eval(c, "'(2 1)"), eval(c, "'(1 2) reverse"));
@@ -371,7 +371,7 @@ public class TestStack {
 	@Test
 	public void testMapCarFirst() {
 		Context c = Stack.context();
-		run(c, "'(swap dup null '() '(uncons swap dup2 execute swap dup2 map cons) if ret1) @ map");
+		run(c, "'(swap dup null '() '(uncons swap dup2 execute swap dup2 map cons) if ret1) @map");
 		assertEquals(eval(c, "'()"), eval(c, "'() '(1 +) map"));
 		assertEquals(eval(c, "'(1)"), eval(c, "'(0) '(1 +) map"));
 		assertEquals(eval(c, "'(1 2 3)"), eval(c, "'(0 1 2) '(1 +) map"));
@@ -384,7 +384,7 @@ public class TestStack {
 	@Test
 	public void testMapByReverse() {
 		Context c = Stack.context();
-		run(c, "'('() rrot '(rcons) cons for reverse) @ map");
+		run(c, "'('() rrot '(rcons) cons for reverse) @map");
 		assertEquals(eval(c, "'()"), eval(c, "'() '(1 +) map"));
 		assertEquals(eval(c, "'(1)"), eval(c, "'(0) '(1 +) map"));
 		assertEquals(eval(c, "'(1 2 3)"), eval(c, "'(0 1 2) '(1 +) map"));
@@ -412,7 +412,7 @@ public class TestStack {
 	@Test
 	public void testFilterRecursiveCdrFirst() {
 		Context c = Stack.context();
-		run(c, "'(swap dup null '() '(uncons dup2 filter swap dup dup3 execute 'rcons 'drop if) if ret1) @ filter");
+		run(c, "'(swap dup null '() '(uncons dup2 filter swap dup dup3 execute 'rcons 'drop if) if ret1) @filter");
 		assertEquals(eval(c, "'(0 2)"), eval(c, "'(0 1 2 3) '(2 % 0 ==) filter"));
 		assertEquals(eval(c, "'(1 3)"), eval(c, "'(0 1 2 3) '(2 % 0 !=) filter"));
 	}
@@ -420,7 +420,7 @@ public class TestStack {
 	@Test
 	public void testFilterRecursiveCarFirst() {
 		Context c = Stack.context();
-		run(c, "'(swap dup null '() '(uncons swap dup dup3 execute rot dup3 filter swap 'cons 'ret1 if) if ret1) @ filter");
+		run(c, "'(swap dup null '() '(uncons swap dup dup3 execute rot dup3 filter swap 'cons 'ret1 if) if ret1) @filter");
 		assertEquals(eval(c, "'(0 2)"), eval(c, "'(0 1 2 3) '(2 % 0 ==) filter"));
 		assertEquals(eval(c, "'(1 3)"), eval(c, "'(0 1 2 3) '(2 % 0 !=) filter"));
 	}
@@ -430,7 +430,7 @@ public class TestStack {
 		Context c = Stack.context();
 		assertEquals(eval(c, "'(0 2)"), eval(c, "'(0 1 2 3) '(2 % 0 ==) filter"));
 		assertEquals(eval(c, "'(1 3)"), eval(c, "'(0 1 2 3) '(2 % 0 !=) filter"));
-		run(c, "'('(!=) cons filter) @ remove");
+		run(c, "'('(!=) cons filter) @remove");
 		assertEquals(eval(c, "'(0 1 3 1 0)"), eval(c, "'(0 1 2 3 2 1 0) 2 remove"));
 	}
 
@@ -450,11 +450,11 @@ public class TestStack {
 		assertEquals(eval(c, "1"), eval(c, "0 '(swap dup 0 <= '(drop 1) '(dup 1 - dup2 dup execute *) if ret1) dup execute"));
 		assertEquals(eval(c, "1"), eval(c, "1 '(swap dup 0 <= '(drop 1) '(dup 1 - dup2 dup execute *) if ret1) dup execute"));
 		assertEquals(eval(c, "2"), eval(c, "2 '(swap dup 0 <= '(drop 1) '(dup 1 - dup2 dup execute *) if ret1) dup execute"));
-		run(c, "'(dup execute) @ rexecute"); 
+		run(c, "'(dup execute) @rexecute"); 
 		assertEquals(eval(c, "6"), eval(c, "3 '(swap dup 0 <= '(drop 1) '(dup 1 - dup2 rexecute *) if ret1) rexecute"));
 		assertEquals(eval(c, "24"), eval(c, "4 '(swap dup 0 <= '(drop 1) '(dup 1 - dup2 rexecute *) if ret1) dup execute"));
 		// 無名関数に名前を付けた場合(先頭がクォート2個である点に注意する)
-		run(c, "''(swap dup 0 <= '(drop 1) '(dup 1 - dup2 rexecute *) if ret1) @ fact");
+		run(c, "''(swap dup 0 <= '(drop 1) '(dup 1 - dup2 rexecute *) if ret1) @fact");
 		assertEquals(eval(c, "24"), eval(c, "4 fact rexecute"));
 		assertEquals(eval(c, "120"), eval(c, "5 fact rexecute"));
 	}
@@ -479,7 +479,7 @@ public class TestStack {
 		assertEquals(eval(c, "6"), eval(c, "3 '(dup1 0 <= '1 '(dup1 dup 1 - dup2 dup execute *) if ret2) dup execute"));
 		assertEquals(eval(c, "24"),
 				eval(c, "4 '(dup1 0 <= '1 '(dup1 dup 1 - dup2 dup execute *) if ret2) dup execute"));
-		run(c, "'('() rrot '(rcons) cons for reverse) @ map");
+		run(c, "'('() rrot '(rcons) cons for reverse) @map");
 		assertEquals(eval(c, "'(1 1 2 6 24)"), eval(c,
 				"0 4 1 range" + " '('(dup1 0 <= '1 '(dup1 dup 1 - dup2 dup execute *) if ret2) dup execute) map"));
 	}
@@ -506,11 +506,11 @@ public class TestStack {
 		Context c = Stack.context();
 		StringBuilder sb = new StringBuilder();
 		c.output(sb::append);
-		run(c, "'('(!=) cons filter) @ remove");
+		run(c, "'('(!=) cons filter) @remove");
 		assertEquals(eval(c, "'(0 1 3)"), eval(c, "'(0 1 2 3) 2 remove"));
 		run(c, "'(dup1 null" + " '(dup reverse print)"
-				+ " '(dup1 '(dup2 dup1 remove swap dup2 cons perm) for) if drop2) @ perm");
-		run(c, "'('() perm) @ permutations");
+				+ " '(dup1 '(dup2 dup1 remove swap dup2 cons perm) for) if drop2) @perm");
+		run(c, "'('() perm) @permutations");
 		sb.setLength(0);
 		run(c, "'() permutations");
 		assertEquals("()", sb.toString());
@@ -540,10 +540,10 @@ public class TestStack {
 	public void testPermutationsByGenerator() {
 //        logger.info(Common.methodName());
 		Context c = Stack.context();
-		run(c, "'('(!=) cons filter) @ remove");
+		run(c, "'('(!=) cons filter) @remove");
 		run(c, "'(dup1 null" + " '(dup reverse yield)"
-				+ " '(dup1 '(dup2 dup1 remove swap dup2 cons perm) for) if drop2) @ perm");
-		run(c, "'('() 'perm generator2) @ permutations");
+				+ " '(dup1 '(dup2 dup1 remove swap dup2 cons perm) for) if drop2) @perm");
+		run(c, "'('() 'perm generator2) @permutations");
 		assertEquals(eval(c, "'(())"), eval(c, "'() permutations"));
 		assertEquals(eval(c, "'((1))"), eval(c, "'(1) permutations"));
 		assertEquals(eval(c, "'((1 2) (2 1))"), eval(c, "'(1 2) permutations"));
@@ -622,7 +622,7 @@ public class TestStack {
 		    + "   '(dup dup 2 /"
 		    + "     '(dup1 dup1 >) '(swap drop dup1 dup1 / dup1 + 2 /) while"
 		    + "     drop ret1)"
-		    + "   if) @ int-sqrt");
+		    + "   if) @int-sqrt");
 		assertEquals(eval(c, "1"), eval(c, "1 int-sqrt"));
 		assertEquals(eval(c, "1"), eval(c, "2 int-sqrt"));
 		assertEquals(eval(c, "1"), eval(c, "3 int-sqrt"));
@@ -670,7 +670,7 @@ public class TestStack {
 	@Test
 	public void testPrimes() {
 		Context c = Stack.context();
-		run(c, "'('(dup1 dup1 == '(true ret2) '(% 0 !=) if) cons filter) @ sieve");
+		run(c, "'('(dup1 dup1 == '(true ret2) '(% 0 !=) if) cons filter) @sieve");
 		assertEquals(eval(c, "'(2)"), eval(c, "2 2 1 range 2 sieve"));
 		assertEquals(eval(c, "'(2 3 5 7)"), eval(c, "2 7 1 range 2 sieve"));
 		assertEquals(eval(c, "'(2 3 4 5 7 8 10 11 13 14 16 17 19 20)"),
@@ -682,8 +682,8 @@ public class TestStack {
 		    + "   '(dup dup 2 /"
 		    + "     '(dup1 dup1 >) '(swap drop dup1 dup1 / dup1 + 2 /) while"
 		    + "     drop ret1)"
-		    + "   if) @ isqrt");
-		run(c, "'(2 dup1 1 range 2 rot isqrt 1 range 'sieve for) @ primes");
+		    + "   if) @isqrt");
+		run(c, "'(2 dup1 1 range 2 rot isqrt 1 range 'sieve for) @primes");
 		assertEquals(eval(c, "'(2 3 5 7 11 13 17 19)"), eval(c, "20 primes"));
 		assertEquals(eval(c,
 			"'(2 3 5 7 11 13 17 19 23 29 31 37 41 43 47 53 59 61 67 71 73 79 83 89 97)"),
@@ -703,7 +703,7 @@ public class TestStack {
 		run(c, "'() '() '(1 2 3 4 5 6) '(dup 3 <= '(rot cons swap) 'rcons if) for");
 		assertEquals(eval(c, "'(6 5 4)"), c.pop());
 		assertEquals(eval(c, "'(3 2 1)"), c.pop());
-		run(c, "'('() '() rot '(dup dup4 <= '(rot cons swap) 'rcons if) for rot drop) @ partition");
+		run(c, "'('() '() rot '(dup dup4 <= '(rot cons swap) 'rcons if) for rot drop) @partition");
 		run(c, "3 '(1 2 3 4 5 6) partition");
 		assertEquals(eval(c, "'(6 5 4)"), c.pop());
 		assertEquals(eval(c, "'(3 2 1)"), c.pop());
@@ -753,7 +753,7 @@ public class TestStack {
 				$0 $2 at 			{ local %0 = $2[$0] }
 				$1 $2 at $0 $2 put 	{ $2[$0] = $2[$1] }
 				%0 $1 $2 put 		{ $2[$1] = %0 }
-			^0) @ swap-elements
+			^0) @swap-elements
 		""");
 		assertEquals(eval(c, "'(1 2 5 4 3)"), eval(c, "'(1 2 3 4 5) to-array 2 4 dup2 swap-elements"));
 		run(c, """
@@ -780,9 +780,9 @@ public class TestStack {
 					%2 1 + $1 $2 quick-sort-range	{quick-sort-range(j + 1, high, array)}
 				)
 				when						{end when}
-			^0) @ quick-sort-range
+			^0) @quick-sort-range
 		""");
-		run(c, "'(0 swap dup size 1 - swap quick-sort-range) @ quick-sort");
+		run(c, "'(0 swap dup size 1 - swap quick-sort-range) @quick-sort");
 		assertEquals(eval(c, "'()"), eval(c, "'() to-array dup quick-sort stack"));
 		assertEquals(eval(c, "'(1)"), eval(c, "'(1) to-array dup quick-sort"));
 		assertEquals(eval(c, "'(1 2)"), eval(c, "'(2 1) to-array dup quick-sort"));
