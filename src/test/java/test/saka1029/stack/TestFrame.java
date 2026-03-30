@@ -16,7 +16,7 @@ public class TestFrame {
         Context c = context();
         String source = """
             '( : n -> r :
-                 n 0 <=                     {if (n <= 0)}
+                 n 0 <=                     {if n <= 0}
                     1                           {then return 1}
                     '(n 1 - fact n *)           {else return fact(n - 1) * n}
                 if                          {end if}
