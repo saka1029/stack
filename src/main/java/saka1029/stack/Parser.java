@@ -120,6 +120,7 @@ public class Parser {
         if (frame != null)
             throw error("nested frame");
         java.util.List<Symbol> arguments = new ArrayList<>();
+        // todo: とりあえず"->"はシンボルなので前後に空白が必要！！
         while (token == Token.SYMBOL && string != "->")
             arguments.add(symbol());
         if (string != "->")
