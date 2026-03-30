@@ -3,8 +3,9 @@
 ## syntax
 
 ```
-program    = {expression}
-expression = SYMBOL | INT | quote | store | list
+program    = expression
+espression = element { element }
+element    = SYMBOL | INT | quote | store | list
 quote      = "'" expression
 store      = "@" SYMBOL
 list       = "(" [frame] {expression} ")"

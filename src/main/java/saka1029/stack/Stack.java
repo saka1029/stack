@@ -326,35 +326,35 @@ public class Stack {
 		context.variable("at", c -> c.push(a(c.pop()).at(i(c.pop()))));
 		// NEW_ELEMENT INDEX ARRAY put -->
 		context.variable("put", c -> a(c.pop()).put(i(c.pop()), c.pop()));
-		// // 引数の数の定義とbpの設定
-		// for (int n = 0; n < 10; ++n) {
-		// 	int nn = n;
-		// 	context.variable("@" + n, c -> c.nargs(nn));
-		// }
-		// // 引数の参照
-		// for (int n = 0; n < 10; ++n) {
-		// 	int nn = n;
-		// 	context.variable("$" + n, c -> c.arg(nn));
-		// }
-		// // 引数の設定
-		// for (int n = 0; n < 10; ++n) {
-		// 	int nn = n;
-		// 	context.variable("set$" + n, c -> c.setArg(nn));
-		// }
-		// // ローカル変数の参照
-		// for (int n = 0; n < 10; ++n) {
-		// 	int nn = n;
-		// 	context.variable("%" + n, c -> c.local(nn));
-		// }
-		// // ローカル変数の設定
-		// for (int n = 0; n < 10; ++n) {
-		// 	int nn = n;
-		// 	context.variable("set%" + n, c -> c.setLocal(nn));
-		// }
-		// // 戻り値の設定とbpの回復
-		// for (int n = 0; n < 10; ++n) {
-		// 	int nn = n;
-		// 	context.variable("^" + n, c -> c.result(nn));
-		// }
+		// 引数の数の定義とbpの設定
+		for (int n = 0; n < 10; ++n) {
+			int nn = n;
+			context.variable("@" + n, c -> c.nargs(nn));
+		}
+		// 引数の参照
+		for (int n = 0; n < 10; ++n) {
+			int nn = n;
+			context.variable("$" + n, c -> c.arg(nn));
+		}
+		// 引数の設定
+		for (int n = 0; n < 10; ++n) {
+			int nn = n;
+			context.variable("set$" + n, c -> c.setArg(nn));
+		}
+		// ローカル変数の参照
+		for (int n = 0; n < 10; ++n) {
+			int nn = n;
+			context.variable("%" + n, c -> c.local(nn));
+		}
+		// ローカル変数の設定
+		for (int n = 0; n < 10; ++n) {
+			int nn = n;
+			context.variable("set%" + n, c -> c.setLocal(nn));
+		}
+		// 戻り値の設定とbpの回復
+		for (int n = 0; n < 10; ++n) {
+			int nn = n;
+			context.variable("^" + n, c -> c.result(nn));
+		}
 	}
 }

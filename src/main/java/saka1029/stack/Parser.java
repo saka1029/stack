@@ -9,12 +9,14 @@ import java.util.regex.Pattern;
 public class Parser {
 
     enum Token implements Value {
-        EOF, QUOTE, LP, RP, AT, COLON, COMMA;
+        EOF, QUOTE, LP, RP, AT, COLON, COMMA,
+        SYMBOL, INT, TRUE, FALSE;
     }
 
     final Reader reader;
     int ch;
-    Instruction token;
+    Token token;
+    String string;
 
     Parser(Reader reader) {
         this.reader = reader;
@@ -67,28 +69,28 @@ public class Parser {
         };
     }
 
-    Instruction word() {
+    Token word() {
         StringBuilder sb = new StringBuilder();
         while (isSymbol(ch)) {
             sb.append((char) ch);
             ch();
         }
-        String s = sb.toString();
-        if (INT_PAT.matcher(s).matches())
-            return Int.of(Integer.parseInt(s));
-        return switch (s) {
-            case "true" -> Bool.TRUE;
-            case "false" -> Bool.FALSE;
-            default -> Symbol.of(s);
+        string = sb.toString();
+        if (INT_PAT.matcher(string).matches())
+            return Token.INT;
+        return switch (string) {
+            case "true" -> Token.TRUE;
+            case "false" -> Token.FALSE;
+            default -> Token.SYMBOL;
         };
     }
 
-    Instruction token(Instruction result) {
+    Token token(Token result) {
         ch();
         return result;
     }
 
-    Instruction token() {
+    Token token() {
         spaces();
         return token = switch (ch) {
             case -1 -> Token.EOF;
@@ -113,43 +115,57 @@ public class Parser {
         return Cons.list(list);
     }
 
-    static final Symbol AT = Symbol.of("@");
+    Symbol symbol() {
+        String v = string;
+        token();
+        return Symbol.of(v);
+    }
+
+    Int integer() {
+        String v = string;
+        token();
+        return Int.of(Integer.parseInt(v));
+    }
 
     Instruction element() {
-        if (token == Token.EOF) {
-            return null;
-        } else if (token == Token.QUOTE) {
-            token(); // skip '\''
-            return Quote.of(element());
-        } else if (token == Token.LP) {
-            return list();
-        } else if (token == Token.RP) {
-            throw error("unexpected ')'");
-        } else if (token == Token.AT) {
-            token(); // skip '@'
-            Instruction next = element();
-            if (next instanceof Symbol symbol)
-                return new StoreGlobal(symbol);
-            else
-                throw error("symbol expected after '@'");
-        } else if (token == Token.COLON) {
-            token();
-            return Token.COLON;
-        } else if (token == Token.COMMA) {
-            token();
-            return Token.COMMA;
-        } else { // ID or INTEGER
-            Instruction word = token;
-            token();
-            return word;
+        switch (token) {
+            case EOF: return null;
+            case SYMBOL: return symbol();
+            case TRUE:
+                token();
+                return Bool.TRUE;
+            case FALSE:
+                token();
+                return Bool.FALSE;
+            case INT: return integer();
+            case QUOTE:
+                token();
+                return Quote.of(element());
+            case AT:
+                token();
+                if (token == Token.SYMBOL)
+                    return new StoreGlobal(symbol());
+                else
+                    throw error("symbol expected after '@'");
+            case LP:
+                return list();
+            default:
+                throw error("unexpected element '%s'", token);
         }
+
     }
-    
-    public List read() {
+
+    List expression() {
         java.util.List<Instruction> list = new ArrayList<>();
         Instruction e;
         while ((e = element()) != null)
             list.add(e);
         return Cons.list(list);
+    }
+    
+    public List read() {
+        List list = expression();
+        System.out.println(list);
+        return list;
     }
 }
