@@ -793,6 +793,31 @@ public class TestStack {
 		assertEquals(eval(c, "'(1 2 3 4 5 6)"), eval(c, "'(4 3 5 1 2 6) to-array dup quick-sort"));
 	}
 
+	/**
+	 * [Python]
+	 * def partition(arr, low, high):
+     *     pivot = arr[high]
+     *     i = low - 1
+     * 
+     *     for j in range(low, high):
+     *         if arr[j] <= pivot:
+     *             i += 1
+     *             arr[i], arr[j] = arr[j], arr[i]
+     *     arr[i + 1], arr[high] = arr[high], arr[i + 1]
+     *     return i + 1
+     * 
+     * def quick_sort(arr, low, high):
+     *     if low < high:
+     *         pi = partition(arr, low, high)
+     * 
+     *         quick_sort(arr, low, pi - 1)
+     *         quick_sort(arr, pi + 1, high)
+     * 
+     * # 使用例
+     * arr = [64, 34, 25, 12, 22, 11, 90]
+     * quick_sort(arr, 0, len(arr) - 1)
+     * print("Sorted array is:", arr)
+	 */
 	@Test
 	public void testQuickSortPatition() {
 		Context c = Stack.context();
@@ -825,16 +850,30 @@ public class TestStack {
 				pi 0 :									{local pi = 0}
 				low high <								{when low < high do}
 				'(
-					stack
 					low high array partition @pi			{pi = partition(low, high, array)}
-					stack
 					low pi 1 - array quick-sort				{quick-sort(low, pi - 1, array)}
 					pi 1 + high array quick-sort			{quick-sort(pi + 1, high, array)}
 				)
 				when									{end when}
 			) @quick-sort							{end proc}
 			""");
+		assertEquals(eval(c, "'()"),
+			eval(c, "'() to-array 0 dup1 size 1 - dup2 quick-sort"));
+		assertEquals(eval(c, "'(1)"),
+			eval(c, "'(1) to-array 0 dup1 size 1 - dup2 quick-sort"));
+		assertEquals(eval(c, "'(1 2)"),
+			eval(c, "'(1 2) to-array 0 dup1 size 1 - dup2 quick-sort"));
+		assertEquals(eval(c, "'(1 2)"),
+			eval(c, "'(2 1) to-array 0 dup1 size 1 - dup2 quick-sort"));
+		assertEquals(eval(c, "'(1 2 3)"),
+			eval(c, "'(1 2 3) to-array 0 dup1 size 1 - dup2 quick-sort"));
+		assertEquals(eval(c, "'(1 2 3)"),
+			eval(c, "'(1 3 2) to-array 0 dup1 size 1 - dup2 quick-sort"));
+		assertEquals(eval(c, "'(1 2 3)"),
+			eval(c, "'(3 1 2) to-array 0 dup1 size 1 - dup2 quick-sort"));
+		assertEquals(eval(c, "'(1 2 3)"),
+			eval(c, "'(2 1 3) to-array 0 dup1 size 1 - dup2 quick-sort"));
 		assertEquals(eval(c, "'(1 2 3 4 5 6)"),
-			eval(c, "'(1 5 2 4 6 3) to-array 0 dup1 size 1 - dup2 stack quick-sort"));
+			eval(c, "'(1 5 2 4 6 3) to-array 0 dup1 size 1 - dup2 quick-sort"));
 	}
 }
