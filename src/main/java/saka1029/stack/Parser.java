@@ -127,12 +127,10 @@ public class Parser {
         if (!string.equals("->"))
             throw error("'->' expected");
         token();    // skip '->'
-        int resultSize = 0;
-        while (token == Token.SYMBOL) {
-            token(); // skip SYMBOL
-            ++resultSize;
-        }
-        frame = new Frame(arguments, resultSize);
+        java.util.List<Symbol> results = new ArrayList<>();
+        while (token == Token.SYMBOL)
+            results.add(symbol());
+        frame = new Frame(arguments, results);
         list.add(frame.frameStart());
         java.util.List<Symbol> locals = new ArrayList<>();
         while (token == Token.COMMA) {

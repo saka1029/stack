@@ -9,6 +9,7 @@ public class Frame {
 
     public final Map<Symbol, Integer> offsets = new HashMap<>();
     public final java.util.List<Symbol> arguments = new ArrayList<>();
+    public final java.util.List<Symbol> results = new ArrayList<>();
     public final java.util.List<Symbol> locals = new ArrayList<>();
     public final int argSize, resultSize;
 
@@ -19,13 +20,15 @@ public class Frame {
         offsets.put(symbol, offset);
     }
 
-    public Frame(java.util.List<Symbol> arguments, int resultSize) {
+    public Frame(java.util.List<Symbol> arguments, java.util.List<Symbol> results) {
         this.argSize = arguments.size();
         for (int i = 0; i < argSize; ++i) {
             this.arguments.add(arguments.get(i));
             checkPut(arguments.get(i), i - this.argSize);
         }
-        this.resultSize = resultSize;
+        this.resultSize = results.size();
+        for (Symbol result : results)
+            this.results.add(result);
     }
 
     public void locals(java.util.List<Symbol> locals) {
@@ -46,10 +49,13 @@ public class Frame {
 
             @Override
             public String toString() {
-                return ": %s -> %d".formatted(
+                return ": %s -> %s".formatted(
                     arguments.stream()
                         .map(s -> s.toString())
-                        .collect(Collectors.joining(" ")), resultSize);
+                        .collect(Collectors.joining(" ")),
+                    results.stream()
+                        .map(s -> s.toString())
+                        .collect(Collectors.joining(" ")));
             }
         };
     }

@@ -9,7 +9,6 @@ import static saka1029.stack.Stack.run;
 import java.util.Arrays;
 import java.util.logging.Logger;
 
-import org.junit.Ignore;
 import org.junit.Test;
 
 import saka1029.Common;
@@ -762,7 +761,7 @@ public class TestStack {
 				j high :									{local j = high}
 				low high <									{when low < high do}
 				'(
-					low high + 2 / array at @pivot				{pivot = arra[(low + high) / 2]}
+					low high + 2 / array at @pivot				{pivot = array[(low + high) / 2]}
 					'(i j <)									{while i < j do}
 					'(
 						'(i array at pivot <)						{while array[i] < pivot do}
@@ -783,7 +782,7 @@ public class TestStack {
 			) @quick-sort-range
 			""");
 		run(c, "'(0 swap dup size 1 - swap quick-sort-range) @quick-sort");
-		assertEquals(eval(c, "'()"), eval(c, "'() to-array dup quick-sort stack"));
+		assertEquals(eval(c, "'()"), eval(c, "'() to-array dup quick-sort"));
 		assertEquals(eval(c, "'(1)"), eval(c, "'(1) to-array dup quick-sort"));
 		assertEquals(eval(c, "'(1 2)"), eval(c, "'(2 1) to-array dup quick-sort"));
 		assertEquals(eval(c, "'(1 2 3)"), eval(c, "'(1 2 3) to-array dup quick-sort"));
