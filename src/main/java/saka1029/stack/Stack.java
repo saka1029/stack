@@ -95,22 +95,22 @@ public class Stack {
 	}
 
 	static void standard(Context context) {
-		context.variable("dup", Context::dup);
-		context.variable("dup0", Context::dup);
-		context.variable("dup1", c -> c.dup(1));
-		context.variable("dup2", c -> c.dup(2));
-		context.variable("dup3", c -> c.dup(3));
-		context.variable("dup4", c -> c.dup(4));
-		context.variable("drop", Context::drop);
-		context.variable("drop1", Context::drop);
-		context.variable("drop2", c -> c.drop(2));
-		context.variable("drop3", c -> c.drop(3));
-		context.variable("swap", Context::swap);
-		context.variable("rot", Context::rot);
-		context.variable("rrot", Context::rrot);
-		context.variable("ret1", c -> c.ret(1));
-		context.variable("ret2", c -> c.ret(2));
-		context.variable("ret3", c -> c.ret(3));
+		context.variable("dup", Context::dup); 		// [A] -> [A A]
+		context.variable("dup0", Context::dup);		// [A] -> [A A]
+		context.variable("dup1", c -> c.dup(1)); 	// [A B] -> [A B A]
+		context.variable("dup2", c -> c.dup(2)); 	// [A B C] -> [A B C A]
+		context.variable("dup3", c -> c.dup(3)); 	// [A B C D] -> [A B C D A]
+		context.variable("dup4", c -> c.dup(4)); 	// [A B C D E] -> [A B C D E A]
+		context.variable("drop", Context::drop);	// [A] -> []
+		context.variable("drop1", Context::drop);	// [A B] -> [B]
+		context.variable("drop2", c -> c.drop(2));	// [A B C] -> [B C]
+		context.variable("drop3", c -> c.drop(3));	// [A B C D] -> [B C D]
+		context.variable("swap", Context::swap);    // [A B] -> [B A]
+		context.variable("rot", Context::rot);		// [A B C] -> [B C A]
+		context.variable("rrot", Context::rrot);	// [A B C] -> [C A B]
+		context.variable("ret1", c -> c.ret(1));	// [A B] -> [B]
+		context.variable("ret2", c -> c.ret(2));	// [A B C] -> [C]
+		context.variable("ret3", c -> c.ret(3));	// [A B C D] -> [D]
 //		context.variable("true", Bool.TRUE);
 //		context.variable("false", Bool.FALSE);
 		context.variable("==", c -> c.push(b(c.pop().equals(c.pop()))));
@@ -232,6 +232,7 @@ public class Stack {
 //			});
 //		});
 		/*
+		 * LIST CLOSUER map -> LIST
 		 * このmapの実装は結果をConsで返す。
 		 * closure(mapper)の評価は現在のContext内で行う。
 		 */
@@ -289,6 +290,7 @@ public class Stack {
 //			});
 //		});
 		/*
+		 * LIST CLOSUER filter -> LIST
 		 * このfilterの実装はConsのリストを返す。
 		 */
 		context.variable("filter", c -> {
@@ -308,6 +310,7 @@ public class Stack {
                 }
 			});
 		});
+		// START END STEP range -> RANGE
 		context.variable("range", c -> {
 			int step = i(c.pop()), end = i(c.pop()), start = i(c.pop());
 			c.push(Range.of(start, end, step));
@@ -317,14 +320,14 @@ public class Stack {
 		context.variable("generator", c -> c.push(Generator.of(c, c.pop())));
 		context.variable("generator1", c -> c.push(Generator.of(c, c.pop(), c.pop())));
 		context.variable("generator2", c -> c.push(Generator.of(c, c.pop(), c.pop(), c.pop())));
-		// SIZE ELEMENT array --> ARRAY
+		// SIZE ELEMENT array -> ARRAY
 		context.variable("array", c -> c.push(Array.of(i(c.pop()), c.pop())));
-		// LIST array --> ARRAY
+		// LIST array -> ARRAY
 		context.variable("to-array", c -> c.push(Array.of(l(c.pop()))));
 		context.variable("size", c -> c.push(i(l(c.pop()).size())));
-		// INDEX ARRAY at --> ELEMENT
+		// INDEX ARRAY at -> ELEMENT
 		context.variable("at", c -> c.push(a(c.pop()).at(i(c.pop()))));
-		// NEW_ELEMENT INDEX ARRAY put -->
+		// NEW_ELEMENT INDEX ARRAY put ->
 		context.variable("put", c -> a(c.pop()).put(i(c.pop()), c.pop()));
 	}
 }
