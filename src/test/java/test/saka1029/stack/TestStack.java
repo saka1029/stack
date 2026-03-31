@@ -3,8 +3,7 @@ package test.saka1029.stack;
 import static org.junit.Assert.assertArrayEquals;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.fail;
-import static saka1029.stack.Stack.eval;
-import static saka1029.stack.Stack.run;
+import static saka1029.stack.Stack.*;
 
 import java.util.Arrays;
 import java.util.logging.Logger;
@@ -17,7 +16,6 @@ import saka1029.stack.Cons;
 import saka1029.stack.Context;
 import saka1029.stack.Int;
 import saka1029.stack.Range;
-import saka1029.stack.Stack;
 import saka1029.stack.Symbol;
 import saka1029.stack.Terminal;
 
@@ -36,7 +34,7 @@ public class TestStack {
 
 	@Test
 	public void testPlus() {
-		Context c = Stack.context();
+		Context c = context();
 		assertEquals(Int.of(3), eval(c, "1 2 + "));
 		assertEquals(Int.of(3), eval(c, "(1 2) + "));
 		assertEquals(Int.of(3), eval(c, "1 2 (+) "));
@@ -44,7 +42,7 @@ public class TestStack {
 
 	@Test
 	public void testDivide() {
-		Context c = Stack.context();
+		Context c = context();
 		assertEquals(Int.of(2), eval(c, "4 2 / "));
 		assertEquals(Int.of(4), eval(c, "(8 2) / "));
 		assertEquals(Int.of(3), eval(c, "7 2 (/) "));
@@ -52,7 +50,7 @@ public class TestStack {
 
 	@Test
 	public void testModulo() {
-		Context c = Stack.context();
+		Context c = context();
 		assertEquals(Int.of(0), eval(c, "4 2 % "));
 		assertEquals(Int.of(3), eval(c, "(8 5) % "));
 		assertEquals(Int.of(1), eval(c, "7 2 (%) "));
@@ -60,7 +58,7 @@ public class TestStack {
 
 	@Test
 	public void testEQ() {
-		Context c = Stack.context();
+		Context c = context();
 		assertEquals(Bool.FALSE, eval(c, "4 2 == "));
 		assertEquals(Bool.TRUE, eval(c, "2 2 == "));
 		assertEquals(Bool.FALSE, eval(c, "2 4 == "));
@@ -68,7 +66,7 @@ public class TestStack {
 
 	@Test
 	public void testNE() {
-		Context c = Stack.context();
+		Context c = context();
 		assertEquals(Bool.TRUE, eval(c, "4 2 != "));
 		assertEquals(Bool.FALSE, eval(c, "2 2 != "));
 		assertEquals(Bool.TRUE, eval(c, "2 4 != "));
@@ -76,7 +74,7 @@ public class TestStack {
 
 	@Test
 	public void testLT() {
-		Context c = Stack.context();
+		Context c = context();
 		assertEquals(Bool.FALSE, eval(c, "4 2 < "));
 		assertEquals(Bool.FALSE, eval(c, "2 2 < "));
 		assertEquals(Bool.TRUE, eval(c, "2 4 < "));
@@ -84,7 +82,7 @@ public class TestStack {
 
 	@Test
 	public void testLE() {
-		Context c = Stack.context();
+		Context c = context();
 		assertEquals(Bool.FALSE, eval(c, "4 2 <= "));
 		assertEquals(Bool.TRUE, eval(c, "2 2 <= "));
 		assertEquals(Bool.TRUE, eval(c, "2 4 <= "));
@@ -92,7 +90,7 @@ public class TestStack {
 
 	@Test
 	public void testGT() {
-		Context c = Stack.context();
+		Context c = context();
 		assertEquals(Bool.TRUE, eval(c, "4 2 > "));
 		assertEquals(Bool.FALSE, eval(c, "2 2 > "));
 		assertEquals(Bool.FALSE, eval(c, "2 4 > "));
@@ -100,7 +98,7 @@ public class TestStack {
 
 	@Test
 	public void testGE() {
-		Context c = Stack.context();
+		Context c = context();
 		assertEquals(Bool.TRUE, eval(c, "4 2 >= "));
 		assertEquals(Bool.TRUE, eval(c, "2 2 >= "));
 		assertEquals(Bool.FALSE, eval(c, "2 4 >= "));
@@ -108,26 +106,26 @@ public class TestStack {
 
 	@Test
 	public void testCar() {
-		Context c = Stack.context();
+		Context c = context();
 		assertEquals(Int.of(1), eval(c, "'(1 2) car"));
 	}
 
 	@Test
 	public void testCdr() {
-		Context c = Stack.context();
+		Context c = context();
 		assertEquals(Cons.list(Int.of(2)), eval(c, "'(1 2) cdr"));
 	}
 
 	@Test
 	public void testSize() {
-		Context c = Stack.context();
+		Context c = context();
 		assertEquals(Int.of(2), eval(c, "'(1 2) size"));
 		assertEquals(Int.of(2), eval(c, "0 2 array size"));
 	}
 
 	@Test
 	public void testUncons() {
-		Context c = Stack.context();
+		Context c = context();
 		run(c, "'(1 2) uncons");
 		assertEquals(Cons.list(Int.of(2)), c.pop());
 		assertEquals(Int.of(1), c.pop());
@@ -135,19 +133,19 @@ public class TestStack {
 
 	@Test
 	public void testCons() {
-		Context c = Stack.context();
+		Context c = context();
 		assertEquals(Cons.list(Int.of(1)), eval(c, "1 '() cons"));
 	}
 
 	@Test
 	public void testRcons() {
-		Context c = Stack.context();
+		Context c = context();
 		assertEquals(Cons.list(Int.of(1)), eval(c, "'() 1 rcons"));
 	}
 
 	@Test
 	public void testIf() {
-		Context c = Stack.context();
+		Context c = context();
 		assertEquals(Int.of(1), eval(c, "true 1 2 if"));
 		assertEquals(Int.of(2), eval(c, "false 1 2 if"));
 		assertEquals(Int.of(1), eval(c, "true '1 '2 if"));
@@ -159,27 +157,27 @@ public class TestStack {
 
 	@Test
 	public void testWhen() {
-		Context c = Stack.context();
+		Context c = context();
 		assertEquals(Int.of(2), eval(c, "1 true '(1 +) when"));
 		assertEquals(Int.of(1), eval(c, "1 false '(1 +) when"));
 	}
 
 	@Test
 	public void testUnless() {
-		Context c = Stack.context();
+		Context c = context();
 		assertEquals(Int.of(1), eval(c, "1 true '(1 +) unless"));
 		assertEquals(Int.of(2), eval(c, "1 false '(1 +) unless"));
 	}
 
 	@Test
 	public void testFor() {
-		Context c = Stack.context();
+		Context c = context();
 		assertEquals(Int.of(6), eval(c, "0 '(1 2 3) '+ for"));
 	}
 
 	@Test
 	public void testWhile() {
-		Context c = Stack.context();
+		Context c = context();
 		assertEquals(eval(c, "6"), eval(c, "3 0 '(dup1 0 >) '(dup1 1 - rrot +) while ret1"));
 		run(c,"'(1 '(dup1 0 >) '(dup1 1 - rrot *) while ret1) @factorial");
 		assertEquals(eval(c, "1"), eval(c, "0 factorial"));
@@ -196,7 +194,7 @@ public class TestStack {
 	 */
 	@Test
 	public void testBreak() {
-		Context c = Stack.context();
+		Context c = context();
 		c.variable("break", x -> x.push(Terminal.BREAK)); 
 		// forで要素が3を超えたらbreakする。
 		// ただしブロック'(drop break)がbreakするだけなので'(drop)と変わらない。
@@ -216,14 +214,14 @@ public class TestStack {
 
 	@Test
 	public void testRange() {
-		Context c = Stack.context();
+		Context c = context();
 		assertEquals(Range.of(1, 3, 1), eval(c, "1 3 1 range"));
 		assertEquals(Int.of(6), eval(c, "0 1 3 1 range '+ for"));
 	}
 
 	@Test
 	public void testDefine() {
-		Context c = Stack.context();
+		Context c = context();
 		run(c, "'+ @plus");
 		assertEquals(Int.of(3), eval(c, "1 2 plus"));
 		run(c, "3 @three");
@@ -232,7 +230,7 @@ public class TestStack {
 
 	@Test
 	public void testFactorialRecuesive() {
-		Context c = Stack.context();
+		Context c = context();
 		run(c, "'(dup 0 <= '(drop 1) '(dup 1 - factorial *) if) @factorial");
 		assertEquals(Int.of(1), eval(c, "0 factorial"));
 		assertEquals(Int.of(1), eval(c, "1 factorial"));
@@ -244,7 +242,7 @@ public class TestStack {
 
 	@Test
 	public void testFactorialFor() {
-		Context c = Stack.context();
+		Context c = context();
 		run(c, "'(1 swap 1 swap 1 range '* for) @factorial");
 		assertEquals(Int.of(1), eval(c, "0 factorial"));
 		assertEquals(Int.of(1), eval(c, "1 factorial"));
@@ -255,7 +253,7 @@ public class TestStack {
 
 	@Test
 	public void testFibonacciRecuesive() {
-		Context c = Stack.context();
+		Context c = context();
 		run(c, "'(dup 1 <= '() '(dup 1 - fibonacci swap 2 - fibonacci +) if) @fibonacci");
 		assertEquals(Int.of(0), eval(c, "0 fibonacci"));
 		assertEquals(Int.of(1), eval(c, "1 fibonacci"));
@@ -270,7 +268,7 @@ public class TestStack {
 
 	@Test
 	public void testFibonacciFor() {
-		Context c = Stack.context();
+		Context c = context();
 		run(c, "'(0 swap 1 swap 1 swap 1 range '(drop dup rrot +) for drop) @fibonacci");
 		assertEquals(Int.of(0), eval(c, "0 fibonacci"));
 		assertEquals(Int.of(1), eval(c, "1 fibonacci"));
@@ -285,7 +283,7 @@ public class TestStack {
 
 	@Test
 	public void testAppendBuiltin() {
-		Context c = Stack.context();
+		Context c = context();
 		assertEquals(eval(c, "'(3 4)"), eval(c, "'() '(3 4) append"));
 		assertEquals(eval(c, "'(2 3 4)"), eval(c, "'(2) '(3 4) append"));
 		assertEquals(eval(c, "'(1 2 3 4)"), eval(c, "'(1 2) '(3 4) append"));
@@ -297,7 +295,7 @@ public class TestStack {
 
 	@Test
 	public void testAppendRecursive() {
-		Context c = Stack.context();
+		Context c = context();
 		run(c, "'(swap dup null 'drop '(uncons rot append cons) if) @append");
 		assertEquals(eval(c, "'(3 4)"), eval(c, "'() '(3 4) append"));
 		assertEquals(eval(c, "'(2 3 4)"), eval(c, "'(2) '(3 4) append"));
@@ -306,7 +304,7 @@ public class TestStack {
 
 	// @Test
 	// public void testAppendTailRecursive() {
-	// 	Context c = Stack.context();
+	// 	Context c = context();
 	// 	run(c, "'(swap dup null? 'drop '(uncons rot append cons) if) 'append define");
 	// 	assertEquals(eval(c, "'(3 4)"), eval(c, "'() '(3 4) append"));
 	// 	assertEquals(eval(c, "'(2 3 4)"), eval(c, "'(2) '(3 4) append"));
@@ -315,7 +313,7 @@ public class TestStack {
 
 	@Test
 	public void testReverseBuiltIn() {
-		Context c = Stack.context();
+		Context c = context();
 		assertEquals(eval(c, "'()"), eval(c, "'() reverse"));
 		assertEquals(eval(c, "'(1)"), eval(c, "'(1) reverse"));
 		assertEquals(eval(c, "'(2 1)"), eval(c, "'(1 2) reverse"));
@@ -325,7 +323,7 @@ public class TestStack {
 
 	@Test
 	public void testReverseRecursive() {
-		Context c = Stack.context();
+		Context c = context();
 		run(c, "'(swap dup null 'drop '(uncons rot append cons) if) @append");
 		run(c, "'(dup null '() '(uncons reverse swap '() cons append) if) @reverse");
 		assertEquals(eval(c, "'()"), eval(c, "'() reverse"));
@@ -338,7 +336,7 @@ public class TestStack {
 
 	@Test
 	public void testReverseFor() {
-		Context c = Stack.context();
+		Context c = context();
 		run(c, "'('() swap '(swap cons) for) @reverse");
 		assertEquals(eval(c, "'()"), eval(c, "'() reverse"));
 		assertEquals(eval(c, "'(1)"), eval(c, "'(1) reverse"));
@@ -350,7 +348,7 @@ public class TestStack {
 
 	@Test
 	public void testReverseForRcons() {
-		Context c = Stack.context();
+		Context c = context();
 		run(c, "'('() swap 'rcons for) @reverse");
 		assertEquals(eval(c, "'()"), eval(c, "'() reverse"));
 		assertEquals(eval(c, "'(1)"), eval(c, "'(1) reverse"));
@@ -362,14 +360,14 @@ public class TestStack {
 
 	@Test
 	public void testExecute() {
-		Context c = Stack.context();
+		Context c = context();
 		assertEquals(Int.of(3), eval(c, "'(1 2 +) execute"));
 		assertEquals(Int.of(3), eval(c, "3 execute"));
 	}
 
 	@Test
 	public void testMapCarFirst() {
-		Context c = Stack.context();
+		Context c = context();
 		run(c, "'(swap dup null '() '(uncons swap dup2 execute swap dup2 map cons) if ret1) @map");
 		assertEquals(eval(c, "'()"), eval(c, "'() '(1 +) map"));
 		assertEquals(eval(c, "'(1)"), eval(c, "'(0) '(1 +) map"));
@@ -382,7 +380,7 @@ public class TestStack {
 	 */
 	@Test
 	public void testMapByReverse() {
-		Context c = Stack.context();
+		Context c = context();
 		run(c, "'('() rrot '(rcons) cons for reverse) @map");
 		assertEquals(eval(c, "'()"), eval(c, "'() '(1 +) map"));
 		assertEquals(eval(c, "'(1)"), eval(c, "'(0) '(1 +) map"));
@@ -392,7 +390,7 @@ public class TestStack {
 
 	@Test
 	public void testMapBuiltin() {
-		Context c = Stack.context();
+		Context c = context();
 		assertEquals(eval(c, "'()"), eval(c, "'() '(1 +) map"));
 		assertEquals(eval(c, "'(1)"), eval(c, "'(0) '(1 +) map"));
 		assertEquals(eval(c, "'(1 2 3)"), eval(c, "'(0 1 2) '(1 +) map"));
@@ -410,7 +408,7 @@ public class TestStack {
 
 	@Test
 	public void testFilterRecursiveCdrFirst() {
-		Context c = Stack.context();
+		Context c = context();
 		run(c, "'(swap dup null '() '(uncons dup2 filter swap dup dup3 execute 'rcons 'drop if) if ret1) @filter");
 		assertEquals(eval(c, "'(0 2)"), eval(c, "'(0 1 2 3) '(2 % 0 ==) filter"));
 		assertEquals(eval(c, "'(1 3)"), eval(c, "'(0 1 2 3) '(2 % 0 !=) filter"));
@@ -418,7 +416,7 @@ public class TestStack {
 
 	@Test
 	public void testFilterRecursiveCarFirst() {
-		Context c = Stack.context();
+		Context c = context();
 		run(c, "'(swap dup null '() '(uncons swap dup dup3 execute rot dup3 filter swap 'cons 'ret1 if) if ret1) @filter");
 		assertEquals(eval(c, "'(0 2)"), eval(c, "'(0 1 2 3) '(2 % 0 ==) filter"));
 		assertEquals(eval(c, "'(1 3)"), eval(c, "'(0 1 2 3) '(2 % 0 !=) filter"));
@@ -426,7 +424,7 @@ public class TestStack {
 
 	@Test
 	public void testFilterBuiltin() {
-		Context c = Stack.context();
+		Context c = context();
 		assertEquals(eval(c, "'(0 2)"), eval(c, "'(0 1 2 3) '(2 % 0 ==) filter"));
 		assertEquals(eval(c, "'(1 3)"), eval(c, "'(0 1 2 3) '(2 % 0 !=) filter"));
 		run(c, "'('(!=) cons filter) @remove");
@@ -445,7 +443,7 @@ public class TestStack {
 	 */
 	@Test
 	public void testAnonymousRecursion() {
-		Context c = Stack.context();
+		Context c = context();
 		assertEquals(eval(c, "1"), eval(c, "0 '(swap dup 0 <= '(drop 1) '(dup 1 - dup2 dup execute *) if ret1) dup execute"));
 		assertEquals(eval(c, "1"), eval(c, "1 '(swap dup 0 <= '(drop 1) '(dup 1 - dup2 dup execute *) if ret1) dup execute"));
 		assertEquals(eval(c, "2"), eval(c, "2 '(swap dup 0 <= '(drop 1) '(dup 1 - dup2 dup execute *) if ret1) dup execute"));
@@ -471,7 +469,7 @@ public class TestStack {
 	 */
 	@Test
 	public void testAnonymousRecursionArgsFunction() {
-		Context c = Stack.context();
+		Context c = context();
 		assertEquals(eval(c, "1"), eval(c, "0 '(dup1 0 <= '1 '(dup1 dup 1 - dup2 dup execute *) if ret2) dup execute"));
 		assertEquals(eval(c, "1"), eval(c, "1 '(dup1 0 <= '1 '(dup1 dup 1 - dup2 dup execute *) if ret2) dup execute"));
 		assertEquals(eval(c, "2"), eval(c, "2 '(dup1 0 <= '1 '(dup1 dup 1 - dup2 dup execute *) if ret2) dup execute"));
@@ -502,7 +500,7 @@ public class TestStack {
 	@Test
 	public void testPermutations() {
 //        logger.info(Common.methodName());
-		Context c = Stack.context();
+		Context c = context();
 		StringBuilder sb = new StringBuilder();
 		c.output(sb::append);
 		run(c, "'('(!=) cons filter) @remove");
@@ -538,7 +536,7 @@ public class TestStack {
 
 	public void testPermutationsByGenerator() {
 //        logger.info(Common.methodName());
-		Context c = Stack.context();
+		Context c = context();
 		run(c, "'('(!=) cons filter) @remove");
 		run(c, "'(dup1 null" + " '(dup reverse yield)"
 				+ " '(dup1 '(dup2 dup1 remove swap dup2 cons perm) for) if drop2) @perm");
@@ -551,7 +549,7 @@ public class TestStack {
 
 	@Test
 	public void testClassCastException() {
-		Context c = Stack.context();
+		Context c = context();
 		try {
 			run(c, "2 true +");
 			fail();
@@ -615,7 +613,7 @@ public class TestStack {
 	 */
 	@Test
 	public void testISqrtByNewton() {
-		Context c = Stack.context();
+		Context c = context();
 		run(c, "'(dup 1 <="
 		    + "   '()"
 		    + "   '(dup dup 2 /"
@@ -668,7 +666,7 @@ public class TestStack {
 	 */
 	@Test
 	public void testPrimes() {
-		Context c = Stack.context();
+		Context c = context();
 		run(c, "'('(dup1 dup1 == '(true ret2) '(% 0 !=) if) cons filter) @sieve");
 		assertEquals(eval(c, "'(2)"), eval(c, "2 2 1 range 2 sieve"));
 		assertEquals(eval(c, "'(2 3 5 7)"), eval(c, "2 7 1 range 2 sieve"));
@@ -698,7 +696,7 @@ public class TestStack {
 	 */
 	@Test
 	public void testPartition() {
-		Context c = Stack.context();
+		Context c = context();
 		run(c, "'() '() '(1 2 3 4 5 6) '(dup 3 <= '(rot cons swap) 'rcons if) for");
 		assertEquals(eval(c, "'(6 5 4)"), c.pop());
 		assertEquals(eval(c, "'(3 2 1)"), c.pop());
@@ -755,7 +753,7 @@ public class TestStack {
 
 	@Test
 	public void testQuckSort() {
-		Context c = Stack.context();
+		Context c = context();
 		defineSwapElements(c);
 		assertEquals(eval(c, "'(1 2 5 4 3)"), eval(c, "'(1 2 3 4 5) to-array 2 4 dup2 swap-elements"));
 		run(c, """
@@ -820,7 +818,7 @@ public class TestStack {
 	 */
 	@Test
 	public void testQuickSortPatition() {
-		Context c = Stack.context();
+		Context c = context();
 		defineSwapElements(c);
 		run(c, """
 			'(: low high array -> pos,			  		{proc partition(low, high, array) -> pos}
@@ -867,5 +865,50 @@ public class TestStack {
 		assertEquals(eval(c, "'(1 2 3)"), eval(c, "'(3 1 2) to-array dup quick-sort"));
 		assertEquals(eval(c, "'(1 2 3)"), eval(c, "'(2 1 3) to-array dup quick-sort"));
 		assertEquals(eval(c, "'(1 2 3 4 5 6)"), eval(c, "'(1 5 2 4 6 3) to-array dup quick-sort"));
+	}
+
+	/**
+	 *     public static int[] bubbleSort(int[] array) {
+     *        for (int i = 0; i < array.length; i++)
+     *            for (int j = 0; j < array.length - 1 - i; j++)
+     *                if (array[j + 1] < array[j]) {
+     *                    int temp = array[j + 1];
+     *                    array[j + 1] = array[j];
+     *                    array[j] = temp;
+     *                }
+     *        return array;
+     *    }
+     *
+	 */
+	@Test
+	public void testBubbleSort() {
+		Context c = context();
+		defineSwapElements(c);
+		run(c, """
+			'( : array -> ,								{proc bubble-sort(array -> )}
+				i 0,										{local i = 0}
+				j 0 :										{local j = 0}
+				0 array size 1 - 1 range					{for % in range(0, array.size - 1, 1) do}
+				'(  @i											{i = %}
+					0 array size 2 - i - 1 range				{for % in range(0, array.size - 2 - i, 1)}
+					'(  @j											{j = %}
+						j 1 + array at j array at <					{when array[j + 1] < array[j] do}
+							'(j j 1 + array swap-elements)				{swap-elements(j, j + 1, array)}
+						when										{end when}
+					) for										{end for}
+				) for										{end for}
+			) @bubble-sort								{end proc}
+				
+			""");
+		assertEquals(eval(c, "'()"), eval(c, "'() to-array dup bubble-sort"));
+		assertEquals(eval(c, "'(1)"), eval(c, "'(1) to-array dup bubble-sort"));
+		assertEquals(eval(c, "'(1 2)"), eval(c, "'(1 2) to-array dup bubble-sort"));
+		assertEquals(eval(c, "'(1 2)"), eval(c, "'(2 1) to-array dup bubble-sort"));
+		assertEquals(eval(c, "'(1 2 3)"), eval(c, "'(1 2 3) to-array dup bubble-sort"));
+		assertEquals(eval(c, "'(1 2 3)"), eval(c, "'(1 3 2) to-array dup bubble-sort"));
+		assertEquals(eval(c, "'(1 2 3)"), eval(c, "'(3 1 2) to-array dup bubble-sort"));
+		assertEquals(eval(c, "'(1 2 3)"), eval(c, "'(2 1 3) to-array dup bubble-sort"));
+		assertEquals(eval(c, "'(1 2 3 4 5 6)"), eval(c, "'(1 5 2 4 6 3) to-array dup bubble-sort"));
+
 	}
 }
