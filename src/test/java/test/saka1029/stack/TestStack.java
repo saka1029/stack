@@ -762,11 +762,9 @@ public class TestStack {
 				i low,										{local i = low}
 				j high :									{local j = high}
 				low high <									{when low < high do}
-				'(
-					low high + 2 / array at @pivot				{pivot = array[(low + high) / 2]}
+				'(  low high + 2 / array at @pivot				{pivot = array[(low + high) / 2]}
 					'(i j <)									{while i < j do}
-					'(
-						'(i array at pivot <)						{while array[i] < pivot do}
+					'(  '(i array at pivot <)						{while array[i] < pivot do}
 							'(i 1 + @i)									{i = i + 1}
 						while										{end while}
 						'(j array at pivot >)						{while array[j] > pivoit do}
@@ -775,13 +773,11 @@ public class TestStack {
 						i j <										{when i < j do}
 							'(i j array swap-elements)					{swap-elements(i, j, array)}
 						when										{end when}
-					)
-					while										{end while}
+					) while										{end while}
 					low j array quick-sort-range				{quick-sort-range(low, j, array)}
 					j 1 + high array quick-sort-range			{quick-sort-range(j + 1, high, array)}
-				)
-				when										{end when}
-			) @quick-sort-range
+				) when										{end when}
+			) @quick-sort-range							{end proc}
 			""");
 		run(c, "'(0 swap dup size 1 - swap quick-sort-range) @quick-sort");
 		assertEquals(eval(c, "'()"), eval(c, "'() to-array dup quick-sort"));
@@ -826,16 +822,12 @@ public class TestStack {
 				i low 1 -,								{local i = low - 1}
 				j low :									{local j = low}
 				'(j high <)								{while j < hight do}
-				'(
-					j array at pivot <=						{when array[j] <= pivot do}
-					'(
-						i 1 + @i								{i = i + 1}
+				'(  j array at pivot <=						{when array[j] <= pivot do}
+					'(  i 1 + @i								{i = i + 1}
 						i j array swap-elements					{swap-elements(i, j, array)}
-					)
-					when									{end when}
+					) when									{end when}
 					j 1 + @j								{j = j + 1}
-				)
-				while									{end while}
+				) while									{end while}
 				i 1 + high array swap-elements			{swap-elements(i + 1, hight, array)}
 				i 1	+								{return i + 1}
 			) @partition 							{end proc}
@@ -847,12 +839,10 @@ public class TestStack {
 			'(: low high array -> ,					{proc quick-sort-range(low, high, array) -> }
 				pi 0 :									{local pi = 0}
 				low high <								{when low < high do}
-				'(
-					low high array partition @pi			{pi = partition(low, high, array)}
+				'(  low high array partition @pi			{pi = partition(low, high, array)}
 					low pi 1 - array quick-sort-range		{quick-sort-range(low, pi - 1, array)}
 					pi 1 + high array quick-sort-range		{quick-sort-range(pi + 1, high, array)}
-				)
-				when									{end when}
+				) when									{end when}
 			) @quick-sort-range						{end proc}
 			""");
 		run(c, "'(0 swap dup size 1 - swap quick-sort-range) @quick-sort");
@@ -886,8 +876,7 @@ public class TestStack {
 		defineSwapElements(c);
 		run(c, """
 			'( : array -> ,								{proc bubble-sort(array -> )}
-				i 0,										{local i = 0}
-				j 0 :										{local j = 0}
+				i 0, j 0 :									{local i = 0, j = 0}
 				0 array size 1 - 1 range					{for % in range(0, array.size - 1, 1) do}
 				'(  @i											{i = %}
 					0 array size 2 - i - 1 range				{for % in range(0, array.size - 2 - i, 1)}
