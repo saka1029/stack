@@ -15,7 +15,7 @@ public class TestFrame {
     public void testFrame() {
         Context c = context();
         String source = """
-            '( : n -> r :
+            '( : n -> r :               {proc fact(n -> r)}
                  n 0 <=                     {if n <= 0}
                     1                           {then return 1}
                     '(n 1 - fact n *)           {else return fact(n - 1) * n}
@@ -39,7 +39,8 @@ public class TestFrame {
     public void testLocals() {
         Context c = context();
         String source = """
-            '( : n -> r, f 1 :      {var f = 1}
+            '( : n -> r,        {proc fact(n -> r)}
+                f 1 :               {local f = 1}
                 1 n 1 range         {for i = 1 to n by 1}
                     '(f * @f)           {f = i * f}
                 for                 {end for}
