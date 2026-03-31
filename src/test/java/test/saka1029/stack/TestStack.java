@@ -743,16 +743,20 @@ public class TestStack {
 		assertArrayEquals(expected, actual);
 	}
 
-	@Test
-	public void testQuckSort() {
-		Context c = Stack.context();
+	void defineSwapElements(Context c) {
 		run(c, """
 			'(: i j array -> ,				{proc swap-elements(i, j, array) -> ()}
 				temp i array at :				{local temp = array[i]}
 				j array at i array put			{array[i] = array[j]}
 				temp j array put				{array[j] = temp}
-			) @swap-elements
+			) @swap-elements				{end proc}
 			""");
+	}
+
+	@Test
+	public void testQuckSort() {
+		Context c = Stack.context();
+		defineSwapElements(c);
 		assertEquals(eval(c, "'(1 2 5 4 3)"), eval(c, "'(1 2 3 4 5) to-array 2 4 dup2 swap-elements"));
 		run(c, """
 			'(: low high array -> ,						{proc(row, high array) -> ()}
@@ -787,5 +791,50 @@ public class TestStack {
 		assertEquals(eval(c, "'(1 2)"), eval(c, "'(2 1) to-array dup quick-sort"));
 		assertEquals(eval(c, "'(1 2 3)"), eval(c, "'(1 2 3) to-array dup quick-sort"));
 		assertEquals(eval(c, "'(1 2 3 4 5 6)"), eval(c, "'(4 3 5 1 2 6) to-array dup quick-sort"));
+	}
+
+	@Test
+	public void testQuickSortPatition() {
+		Context c = Stack.context();
+		defineSwapElements(c);
+		run(c, """
+			'(: low high array -> pos,			  		{proc partition(low, high, array) -> pos}
+				pivot high array at,					{local pivot = array[hight]}
+				i low 1 -,								{local i = low - 1}
+				j low :									{local j = low}
+				'(j high <)								{while j < hight do}
+				'(
+					j array at pivot <=						{when array[j] <= pivot do}
+					'(
+						i 1 + @i								{i = i + 1}
+						i j array swap-elements					{swap-elements(i, j, array)}
+					)
+					when									{end when}
+					j 1 + @j								{j = j + 1}
+				)
+				while									{end while}
+				i 1 + high array swap-elements			{swap-elements(i + 1, hight, array)}
+				i + 1									{return i + 1}
+			) @partition 							{end proc}
+			""");
+		run(c, "'(1 5 2 4 6 3) to-array 0 dup1 size 1 - dup2 partition");
+		assertEquals(eval(c, "1"), c.pop());
+		assertEquals(eval(c, "'(1 2 3 4 6 5)"), c.pop());
+		run(c, """
+			'(: low high array -> ,					{proc quick-sort(low, high, array) -> }
+				pi 0 :									{local pi = 0}
+				low high <								{when low < high do}
+				'(
+					stack
+					low high array partition @pi			{pi = partition(low, high, array)}
+					stack
+					low pi 1 - array quick-sort				{quick-sort(low, pi - 1, array)}
+					pi 1 + high array quick-sort			{quick-sort(pi + 1, high, array)}
+				)
+				when									{end when}
+			) @quick-sort							{end proc}
+			""");
+		assertEquals(eval(c, "'(1 2 3 4 5 6)"),
+			eval(c, "'(1 5 2 4 6 3) to-array 0 dup1 size 1 - dup2 stack quick-sort"));
 	}
 }
