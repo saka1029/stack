@@ -839,11 +839,11 @@ public class TestStack {
 				)
 				while									{end while}
 				i 1 + high array swap-elements			{swap-elements(i + 1, hight, array)}
-				i + 1									{return i + 1}
+				i 1	+								{return i + 1}
 			) @partition 							{end proc}
 			""");
 		run(c, "'(1 5 2 4 6 3) to-array 0 dup1 size 1 - dup2 partition");
-		assertEquals(eval(c, "1"), c.pop());
+		assertEquals(eval(c, "2"), c.pop());
 		assertEquals(eval(c, "'(1 2 3 4 6 5)"), c.pop());
 		run(c, """
 			'(: low high array -> ,					{proc quick-sort(low, high, array) -> }
