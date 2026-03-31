@@ -846,34 +846,26 @@ public class TestStack {
 		assertEquals(eval(c, "2"), c.pop());
 		assertEquals(eval(c, "'(1 2 3 4 6 5)"), c.pop());
 		run(c, """
-			'(: low high array -> ,					{proc quick-sort(low, high, array) -> }
+			'(: low high array -> ,					{proc quick-sort-range(low, high, array) -> }
 				pi 0 :									{local pi = 0}
 				low high <								{when low < high do}
 				'(
 					low high array partition @pi			{pi = partition(low, high, array)}
-					low pi 1 - array quick-sort				{quick-sort(low, pi - 1, array)}
-					pi 1 + high array quick-sort			{quick-sort(pi + 1, high, array)}
+					low pi 1 - array quick-sort-range		{quick-sort-range(low, pi - 1, array)}
+					pi 1 + high array quick-sort-range		{quick-sort-range(pi + 1, high, array)}
 				)
 				when									{end when}
-			) @quick-sort							{end proc}
+			) @quick-sort-range						{end proc}
 			""");
-		assertEquals(eval(c, "'()"),
-			eval(c, "'() to-array 0 dup1 size 1 - dup2 quick-sort"));
-		assertEquals(eval(c, "'(1)"),
-			eval(c, "'(1) to-array 0 dup1 size 1 - dup2 quick-sort"));
-		assertEquals(eval(c, "'(1 2)"),
-			eval(c, "'(1 2) to-array 0 dup1 size 1 - dup2 quick-sort"));
-		assertEquals(eval(c, "'(1 2)"),
-			eval(c, "'(2 1) to-array 0 dup1 size 1 - dup2 quick-sort"));
-		assertEquals(eval(c, "'(1 2 3)"),
-			eval(c, "'(1 2 3) to-array 0 dup1 size 1 - dup2 quick-sort"));
-		assertEquals(eval(c, "'(1 2 3)"),
-			eval(c, "'(1 3 2) to-array 0 dup1 size 1 - dup2 quick-sort"));
-		assertEquals(eval(c, "'(1 2 3)"),
-			eval(c, "'(3 1 2) to-array 0 dup1 size 1 - dup2 quick-sort"));
-		assertEquals(eval(c, "'(1 2 3)"),
-			eval(c, "'(2 1 3) to-array 0 dup1 size 1 - dup2 quick-sort"));
-		assertEquals(eval(c, "'(1 2 3 4 5 6)"),
-			eval(c, "'(1 5 2 4 6 3) to-array 0 dup1 size 1 - dup2 quick-sort"));
+		run(c, "'(0 swap dup size 1 - swap quick-sort-range) @quick-sort");
+		assertEquals(eval(c, "'()"), eval(c, "'() to-array dup quick-sort"));
+		assertEquals(eval(c, "'(1)"), eval(c, "'(1) to-array dup quick-sort"));
+		assertEquals(eval(c, "'(1 2)"), eval(c, "'(1 2) to-array dup quick-sort"));
+		assertEquals(eval(c, "'(1 2)"), eval(c, "'(2 1) to-array dup quick-sort"));
+		assertEquals(eval(c, "'(1 2 3)"), eval(c, "'(1 2 3) to-array dup quick-sort"));
+		assertEquals(eval(c, "'(1 2 3)"), eval(c, "'(1 3 2) to-array dup quick-sort"));
+		assertEquals(eval(c, "'(1 2 3)"), eval(c, "'(3 1 2) to-array dup quick-sort"));
+		assertEquals(eval(c, "'(1 2 3)"), eval(c, "'(2 1 3) to-array dup quick-sort"));
+		assertEquals(eval(c, "'(1 2 3 4 5 6)"), eval(c, "'(1 5 2 4 6 3) to-array dup quick-sort"));
 	}
 }
