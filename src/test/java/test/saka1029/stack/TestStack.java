@@ -744,52 +744,6 @@ public class TestStack {
 		assertArrayEquals(expected, actual);
 	}
 
-	@Ignore
-	@Test
-	public void testQuickSortOld() {
-		Context c = Stack.context();
-		run(c, """
-			'(@3 					{ i j array }
-				$0 $2 at 			{ local %0 = $2[$0] }
-				$1 $2 at $0 $2 put 	{ $2[$0] = $2[$1] }
-				%0 $1 $2 put 		{ $2[$1] = %0 }
-			^0) @swap-elements
-		""");
-		assertEquals(eval(c, "'(1 2 5 4 3)"), eval(c, "'(1 2 3 4 5) to-array 2 4 dup2 swap-elements"));
-		run(c, """
-			'(@3							    { $0:low $1:hight $2:array }
-				$0 $1 <						    {when low < high}
-				'(
-					$0 $1 + 2 / $2 at			    {local pivot:%0 = array[($0 + $1) / 2]}
-					$0							    {local i:%1 = low}
-					$1							    {local j:%2 = hight}
-					'(%1 %2 <)					    {while %1 < %2 do}
-					'(
-						'(%1 $2 at %0 <)			    {while arr[i] < pivot do}
-						'(%1 1 + set%1)					    {i = i + 1}
-						while						    {end while}
-						'(%2 $2 at %0 >)			    {while arr[j] > pivot do}
-						'(%2 1 - set%2)					    {j = j - 1}
-						while						    {end while}
-						%1 %2 <						    {when i < j}
-						'(%1 %2 $2 swap-elements)    		{i j array swap}
-						when							{end when}
-					)
-					while							{end while}
-					$0 %2 $2 quick-sort-range		{quick-sort-range(low, j, array)}
-					%2 1 + $1 $2 quick-sort-range	{quick-sort-range(j + 1, high, array)}
-				)
-				when						{end when}
-			^0) @quick-sort-range
-		""");
-		run(c, "'(0 swap dup size 1 - swap quick-sort-range) @quick-sort");
-		assertEquals(eval(c, "'()"), eval(c, "'() to-array dup quick-sort stack"));
-		assertEquals(eval(c, "'(1)"), eval(c, "'(1) to-array dup quick-sort"));
-		assertEquals(eval(c, "'(1 2)"), eval(c, "'(2 1) to-array dup quick-sort"));
-		assertEquals(eval(c, "'(1 2 3)"), eval(c, "'(1 2 3) to-array dup quick-sort"));
-		assertEquals(eval(c, "'(1 2 3 4 5 6)"), eval(c, "'(4 3 5 1 2 6) to-array dup quick-sort"));
-	}
-
 	@Test
 	public void testQuckSort() {
 		Context c = Stack.context();
@@ -799,7 +753,40 @@ public class TestStack {
 				j array at i array put			{array[i] = array[j]}
 				temp j array put				{array[j] = temp}
 			) @swap-elements
-		""");
+			""");
 		assertEquals(eval(c, "'(1 2 5 4 3)"), eval(c, "'(1 2 3 4 5) to-array 2 4 dup2 swap-elements"));
+		run(c, """
+			'(: low high array -> ,						{proc(row, high array) -> ()}
+				pivot 0,									{local pivot = 0}
+				i low,										{local i = low}
+				j high :									{local j = high}
+				low high <									{when low < high do}
+				'(
+					low high + 2 / array at @pivot				{pivot = arra[(low + high) / 2]}
+					'(i j <)									{while i < j do}
+					'(
+						'(i array at pivot <)						{while array[i] < pivot do}
+							'(i 1 + @i)									{i = i + 1}
+						while										{end while}
+						'(j array at pivot >)						{while array[j] > pivoit do}
+							'(j 1 - @j)									{j = j - 1}
+						while										{end while}
+						i j <										{when i < j do}
+							'(i j array swap-elements)					{swap-elements(i, j, array)}
+						when										{end when}
+					)
+					while										{end while}
+					low j array quick-sort-range				{quick-sort-range(low, j, array)}
+					j 1 + high array quick-sort-range			{quick-sort-range(j + 1, high, array)}
+				)
+				when										{end when}
+			) @quick-sort-range
+			""");
+		run(c, "'(0 swap dup size 1 - swap quick-sort-range) @quick-sort");
+		assertEquals(eval(c, "'()"), eval(c, "'() to-array dup quick-sort stack"));
+		assertEquals(eval(c, "'(1)"), eval(c, "'(1) to-array dup quick-sort"));
+		assertEquals(eval(c, "'(1 2)"), eval(c, "'(2 1) to-array dup quick-sort"));
+		assertEquals(eval(c, "'(1 2 3)"), eval(c, "'(1 2 3) to-array dup quick-sort"));
+		assertEquals(eval(c, "'(1 2 3 4 5 6)"), eval(c, "'(4 3 5 1 2 6) to-array dup quick-sort"));
 	}
 }

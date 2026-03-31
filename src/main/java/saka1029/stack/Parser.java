@@ -147,7 +147,7 @@ public class Parser {
             if (token == Token.EOF || token == Token.COLON
                 || token == Token.COMMA || token == Token.RP)
                 throw error("element expected");
-            while (token != Token.EOF && token != Token.COLON)
+            while (token != Token.EOF && token != Token.COMMA && token != Token.COLON)
                 list.add(element(frame));
         }
         frame.locals(locals);
