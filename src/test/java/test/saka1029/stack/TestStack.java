@@ -105,6 +105,42 @@ public class TestStack {
 	}
 
 	@Test
+	public void testConditionalAnd() {
+		Context c = context();
+		assertEquals(Bool.TRUE, eval(c, "true 'true &&"));
+		assertEquals(Bool.FALSE, eval(c, "true 'false &&"));
+		assertEquals(Bool.FALSE, eval(c, "false 'true &&"));
+		assertEquals(Bool.FALSE, eval(c, "false 'false &&"));
+	}
+
+	@Test
+	public void testConditionalOr() {
+		Context c = context();
+		assertEquals(Bool.TRUE, eval(c, "true 'true ||"));
+		assertEquals(Bool.TRUE, eval(c, "true 'false ||"));
+		assertEquals(Bool.TRUE, eval(c, "false 'true ||"));
+		assertEquals(Bool.FALSE, eval(c, "false 'false ||"));
+	}
+
+	@Test
+	public void testAnd() {
+		Context c = context();
+		assertEquals(Bool.TRUE, eval(c, "true true and"));
+		assertEquals(Bool.FALSE, eval(c, "true false and"));
+		assertEquals(Bool.FALSE, eval(c, "false true and"));
+		assertEquals(Bool.FALSE, eval(c, "false false and"));
+	}
+
+	@Test
+	public void testOr() {
+		Context c = context();
+		assertEquals(Bool.TRUE, eval(c, "true true or"));
+		assertEquals(Bool.TRUE, eval(c, "true false or"));
+		assertEquals(Bool.TRUE, eval(c, "false true or"));
+		assertEquals(Bool.FALSE, eval(c, "false false or"));
+	}
+
+	@Test
 	public void testCar() {
 		Context c = context();
 		assertEquals(Int.of(1), eval(c, "'(1 2) car"));
