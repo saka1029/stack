@@ -956,6 +956,7 @@ public class TestStack {
 	@Test
 	public void testInsertionSort() {
 		Context c = context();
+		// whileの条件はCoditionalAND(&&)にしないと例外が発生する。
 		run(c, """
 			'( : array -> ,									{proc insertion-sort(array -> )}
 				i 0, j 0, tmp 0 :								{local i = 0, j = 0, tmp = 0}
