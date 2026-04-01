@@ -900,4 +900,51 @@ public class TestStack {
 		assertEquals(eval(c, "'(1 2 3 4 5 6)"), eval(c, "'(1 5 2 4 6 3) to-array dup bubble-sort"));
 
 	}
+
+	/**
+	 * void 
+     * insertion_sort(int data[], size_t n) {
+     *     for (size_t i = 1; i < n; i++) {
+     *         if (data[i - 1] > data[i]) {
+     *             size_t j = i;
+     *             int tmp = data[i];
+     *             do {
+     *                 data[j] = data[j - 1];
+     *                 j--;
+     *             } while (j > 0 && data[j - 1] > tmp);
+     *             data[j] = tmp;
+     *         }
+     *     }
+     * }
+	 */
+	@Test
+	public void testInsertionSort() {
+		Context c = context();
+		run(c, """
+			'( : array -> ,									{proc insertion-sort(array -> )}
+				i 0, j 0, tmp 0 :								{local i = 0, j = 0, tmp = 0}
+				1 array size 1 - 1 range						{for % in range(1, array.size - 1, 1) do}
+				'(  @i												{i = %}
+					i 1 - array at i array at >						{when array[i -1] > array[i] then}
+					'(  i @j											{j = i}
+						i array at @tmp									{tmp = array[i]}
+						'(j 0 > '(j 1 - array at tmp >) &&)				{while j > 0 && array[j - 1] > tmp do}
+						'(  j 1 - array at j array put						{array[j] = array[j - 1]}
+							j 1 - @j										{j = j - 1}
+						) while											{end while}
+						tmp j array put									{array[j] = tmp}
+					) when											{end when}
+				) for											{end for}
+			) @ insertion-sort
+			""");
+		assertEquals(eval(c, "'()"), eval(c, "'() to-array dup insertion-sort"));
+		assertEquals(eval(c, "'(1)"), eval(c, "'(1) to-array dup insertion-sort"));
+		assertEquals(eval(c, "'(1 2)"), eval(c, "'(1 2) to-array dup insertion-sort"));
+		assertEquals(eval(c, "'(1 2)"), eval(c, "'(2 1) to-array dup insertion-sort"));
+		assertEquals(eval(c, "'(1 2 3)"), eval(c, "'(1 2 3) to-array dup insertion-sort"));
+		assertEquals(eval(c, "'(1 2 3)"), eval(c, "'(1 3 2) to-array dup insertion-sort"));
+		assertEquals(eval(c, "'(1 2 3)"), eval(c, "'(3 1 2) to-array dup insertion-sort"));
+		assertEquals(eval(c, "'(1 2 3)"), eval(c, "'(2 1 3) to-array dup insertion-sort"));
+		assertEquals(eval(c, "'(1 2 3 4 5 6)"), eval(c, "'(1 5 2 4 6 3) to-array dup insertion-sort"));
+	}
 }

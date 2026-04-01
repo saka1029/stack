@@ -123,7 +123,25 @@ public class Stack {
 		context.variable("-", c -> c.push(i(-i(c.pop()) + i(c.pop()))));
 		context.variable("*", c -> c.push(i(i(c.pop()) * i(c.pop()))));
 //		context.variable(vars, "isqrt", c -> c.push(i((int)Math.sqrt(i(c.pop())))));
+		// condtional AND : L R && -> B
+		context.variable("&&", c -> {
+			Instruction right = c.pop();
+			if (b(c.pop()))
+				c.execute(right);
+			else
+				c.push(Bool.FALSE);
+		});
+		// condtional OR : L R || -> B
+		context.variable("||", c -> {
+			Instruction right = c.pop();
+			if (b(c.pop()))
+				c.push(Bool.TRUE);
+			else
+				c.execute(right);
+		});
+		// logical AND : L R and -> B
 		context.variable("and", c -> c.push(b(b(c.pop()) & b(c.pop()))));
+		// logical OR : L R or -> B
 		context.variable("or", c -> c.push(b(b(c.pop()) | b(c.pop()))));
 		context.variable("not", c -> c.push(b(!b(c.pop()))));
 		context.variable("/", c -> { int r = i(c.pop()); c.push(i(i(c.pop()) / r)); });
