@@ -123,7 +123,7 @@ public class Stack {
 		context.variable("-", c -> c.push(i(-i(c.pop()) + i(c.pop()))));
 		context.variable("*", c -> c.push(i(i(c.pop()) * i(c.pop()))));
 //		context.variable(vars, "isqrt", c -> c.push(i((int)Math.sqrt(i(c.pop())))));
-		// condtional AND : L R && -> B
+		// condtional AND : Bool 'Bool && -> Bool
 		context.variable("&&", c -> {
 			Instruction right = c.pop();
 			if (b(c.pop()))
@@ -131,7 +131,7 @@ public class Stack {
 			else
 				c.push(Bool.FALSE);
 		});
-		// condtional OR : L R || -> B
+		// condtional OR : Bool 'Bool || -> Bool
 		context.variable("||", c -> {
 			Instruction right = c.pop();
 			if (b(c.pop()))
@@ -139,9 +139,9 @@ public class Stack {
 			else
 				c.execute(right);
 		});
-		// logical AND : L R and -> B
+		// logical AND : Bool Bool and -> Bool
 		context.variable("and", c -> c.push(b(b(c.pop()) & b(c.pop()))));
-		// logical OR : L R or -> B
+		// logical OR : Bool Bool or -> Bool
 		context.variable("or", c -> c.push(b(b(c.pop()) | b(c.pop()))));
 		context.variable("not", c -> c.push(b(!b(c.pop()))));
 		context.variable("/", c -> { int r = i(c.pop()); c.push(i(i(c.pop()) / r)); });
