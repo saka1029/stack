@@ -1,12 +1,11 @@
 package saka1029.stack;
 
-public class LoadLocalDummy implements Instruction {
+public class LoadLocalDummy extends Load {
 
-    public final Symbol symbol;
     public final int offset;
 
     public LoadLocalDummy(Symbol symbol, int offset) {
-        this.symbol = symbol;
+        super(symbol);
         this.offset = offset;
     }
 
@@ -15,9 +14,9 @@ public class LoadLocalDummy implements Instruction {
         // do nothing
     }
 
-    @Override
-    public String toString() {
-        return "%s@%d".formatted(symbol, offset);
-    }
+    // @Override
+    // public String toString() {
+    //     return "%s@%d".formatted(symbol, offset);
+    // }
 
 }

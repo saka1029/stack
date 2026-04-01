@@ -1,12 +1,11 @@
 package saka1029.stack;
 
-public class LoadLocal implements Instruction {
+public class LoadLocal extends Load {
 
-    public final Symbol symbol;
     public final int offset;
 
     public LoadLocal(Symbol symbol, int offset) {
-        this.symbol = symbol;
+        super(symbol);
         this.offset = offset;
     }
 
@@ -15,9 +14,9 @@ public class LoadLocal implements Instruction {
         context.loadLocal(offset);
     }
 
-    @Override
-    public String toString() {
-        return "%s@%d".formatted(symbol, offset);
-    }
+    // @Override
+    // public String toString() {
+    //     return "%s@%d".formatted(symbol, offset);
+    // }
 
 }

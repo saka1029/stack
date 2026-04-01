@@ -70,7 +70,8 @@ public class Frame {
 
             @Override
             public String toString() {
-                return "frameEnd(%d,%d)".formatted(argSize, resultSize);
+                // return "frameEnd(%d,%d)".formatted(argSize, resultSize);
+                return "";
             }
         };
     }

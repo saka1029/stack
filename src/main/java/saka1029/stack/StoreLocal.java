@@ -14,8 +14,8 @@ public class StoreLocal extends Store {
         c.stack[c.bp + offset] = c.pop();
     }
 
-    @Override
-    public String toString() {
-        return "@%s@%d".formatted(symbol, offset);
-    }
+    // @Override
+    // public String toString() {
+    //     return "@%s@%d".formatted(symbol, offset);
+    // }
 }
