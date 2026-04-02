@@ -242,7 +242,7 @@ public class TestStack {
 		// Context(sp=2, bp=0 stack=[(3 2 1), 4])		// 4, 5についてはrconsはしないが、forの処理は継続する。
 		// Context(sp=2, bp=0 stack=[(3 2 1), 5])
 		// 結果としてどのブロックからbreakするのかの指定がなければ使えない、ということになる。
-		assertEquals(eval(c, "'(3 2 1)"), eval(c, "'() 1 5 1 range '(dup 3 > '(drop break) 'rcons if) for"));
+		assertEquals(eval(c, "'(3 2 1)"), eval(c, "'() 1 5 range '(dup 3 > '(drop break) 'rcons if) for"));
 		// 以下はbreakせずに最後まで処理した結果、例外を投げる。
 		// assertEquals(eval(c, "'(3 2 1)"), eval(c, "'() 1 5 1 range '(stack dup 3 > 'break 'rcons if) for"));
 		// java.lang.RuntimeException: Illegal stack size Context(sp=3, bp=0 stack=[(3 2 1), 4, 5])
@@ -251,8 +251,8 @@ public class TestStack {
 	@Test
 	public void testRange() {
 		Context c = context();
-		assertEquals(Range.of(1, 3, 1), eval(c, "1 3 1 range"));
-		assertEquals(Int.of(6), eval(c, "0 1 3 1 range '+ for"));
+		assertEquals(Range.of(1, 3, 1), eval(c, "1 3 range"));
+		assertEquals(Int.of(6), eval(c, "0 1 4 range '+ for"));
 	}
 
 	@Test
@@ -279,7 +279,7 @@ public class TestStack {
 	@Test
 	public void testFactorialFor() {
 		Context c = context();
-		run(c, "'(1 swap 1 swap 1 range '* for) @factorial");
+		run(c, "'(1 swap 1 swap 1 + range '* for) @factorial");
 		assertEquals(Int.of(1), eval(c, "0 factorial"));
 		assertEquals(Int.of(1), eval(c, "1 factorial"));
 		assertEquals(Int.of(2), eval(c, "2 factorial"));
@@ -305,7 +305,7 @@ public class TestStack {
 	@Test
 	public void testFibonacciFor() {
 		Context c = context();
-		run(c, "'(0 swap 1 swap 1 swap 1 range '(drop dup rrot +) for drop) @fibonacci");
+		run(c, "'(0 swap 1 swap 1 swap 1 + range '(drop dup rrot +) for drop) @fibonacci");
 		assertEquals(Int.of(0), eval(c, "0 fibonacci"));
 		assertEquals(Int.of(1), eval(c, "1 fibonacci"));
 		assertEquals(Int.of(1), eval(c, "2 fibonacci"));
@@ -354,7 +354,7 @@ public class TestStack {
 		assertEquals(eval(c, "'(1)"), eval(c, "'(1) reverse"));
 		assertEquals(eval(c, "'(2 1)"), eval(c, "'(1 2) reverse"));
 		assertEquals(eval(c, "'(3 2 1)"), eval(c, "'(1 2 3) reverse"));
-		assertEquals(eval(c, "'(3 2 1)"), eval(c, "1 3 1 range reverse"));
+		assertEquals(eval(c, "'(3 2 1)"), eval(c, "1 4 range reverse"));
 	}
 
 	@Test
@@ -379,7 +379,7 @@ public class TestStack {
 		assertEquals(eval(c, "'(2 1)"), eval(c, "'(1 2) reverse"));
 		assertEquals(eval(c, "'(3 2 1)"), eval(c, "'(1 2 3) reverse"));
 		// forはnext()だけを使うのでreverseできる。
-		assertEquals(eval(c, "'(3 2 1)"), eval(c, "1 3 1 range reverse"));
+		assertEquals(eval(c, "'(3 2 1)"), eval(c, "1 4 range reverse"));
 	}
 
 	@Test
@@ -391,7 +391,7 @@ public class TestStack {
 		assertEquals(eval(c, "'(2 1)"), eval(c, "'(1 2) reverse"));
 		assertEquals(eval(c, "'(3 2 1)"), eval(c, "'(1 2 3) reverse"));
 		// forはnext()だけを使うのでreverseできる。
-		assertEquals(eval(c, "'(3 2 1)"), eval(c, "1 3 1 range reverse"));
+		assertEquals(eval(c, "'(3 2 1)"), eval(c, "1 4 range reverse"));
 	}
 
 	@Test
@@ -514,7 +514,7 @@ public class TestStack {
 				eval(c, "4 '(dup1 0 <= '1 '(dup1 dup 1 - dup2 dup execute *) if ret2) dup execute"));
 		run(c, "'('() rrot '(rcons) cons for reverse) @map");
 		assertEquals(eval(c, "'(1 1 2 6 24)"), eval(c,
-				"0 4 1 range" + " '('(dup1 0 <= '1 '(dup1 dup 1 - dup2 dup execute *) if ret2) dup execute) map"));
+				"0 5 range" + " '('(dup1 0 <= '1 '(dup1 dup 1 - dup2 dup execute *) if ret2) dup execute) map"));
 	}
 
 	/**
@@ -667,8 +667,8 @@ public class TestStack {
 		assertEquals(eval(c, "3"), eval(c, "9 int-sqrt"));
 		c.variable(Symbol.of("expected-int-sqrt"),
 			x -> x.push(Int.of((int)Math.sqrt(((Int)c.pop()).value))));
-		assertEquals(eval(c, "1 200 1 range 'expected-int-sqrt map"),
-			eval(c, "1 200 1 range 'int-sqrt map"));
+		assertEquals(eval(c, "1 200 range 'expected-int-sqrt map"),
+			eval(c, "1 200 range 'int-sqrt map"));
 	}
 
 	/**
@@ -704,19 +704,19 @@ public class TestStack {
 	public void testPrimes() {
 		Context c = context();
 		run(c, "'('(dup1 dup1 == '(true ret2) '(% 0 !=) if) cons filter) @sieve");
-		assertEquals(eval(c, "'(2)"), eval(c, "2 2 1 range 2 sieve"));
-		assertEquals(eval(c, "'(2 3 5 7)"), eval(c, "2 7 1 range 2 sieve"));
+		assertEquals(eval(c, "'(2)"), eval(c, "2 3 range 2 sieve"));
+		assertEquals(eval(c, "'(2 3 5 7)"), eval(c, "2 8 range 2 sieve"));
 		assertEquals(eval(c, "'(2 3 4 5 7 8 10 11 13 14 16 17 19 20)"),
-			eval(c, "2 20 1 range 3 sieve"));
+			eval(c, "2 21 range 3 sieve"));
 		assertEquals(eval(c, "'(2 3 5 7 11 13 17 19)"),
-			eval(c, "2 20 1 range 2 20 1 range 'sieve for"));
+			eval(c, "2 20 range 2 20 range 'sieve for"));
 		run(c, "'(dup 1 <="
 		    + "   '()"
 		    + "   '(dup dup 2 /"
 		    + "     '(dup1 dup1 >) '(swap drop dup1 dup1 / dup1 + 2 /) while"
 		    + "     drop ret1)"
 		    + "   if) @isqrt");
-		run(c, "'(2 dup1 1 range 2 rot isqrt 1 range 'sieve for) @primes");
+		run(c, "'(2 dup1 range 2 rot isqrt range 'sieve for) @primes");
 		assertEquals(eval(c, "'(2 3 5 7 11 13 17 19)"), eval(c, "20 primes"));
 		assertEquals(eval(c,
 			"'(2 3 5 7 11 13 17 19 23 29 31 37 41 43 47 53 59 61 67 71 73 79 83 89 97)"),
@@ -913,9 +913,9 @@ public class TestStack {
 		run(c, """
 			'( : array -> ,								{proc bubble-sort(array -> )}
 				i 0, j 0 :									{local i = 0, j = 0}
-				0 array size 1 - 1 range					{for % in range(0, array.size - 1, 1) do}
+				0 array size range							{for % in range(0, array.size) do}
 				'(  @i											{i = %}
-					0 array size 2 - i - 1 range				{for % in range(0, array.size - 2 - i, 1)}
+					0 array size 1 - i - range					{for % in range(0, array.size - 1 - i)}
 					'(  @j											{j = %}
 						j 1 + array at j array at <					{when array[j + 1] < array[j] do}
 							'(j j 1 + array swap-elements)				{swap-elements(j, j + 1, array)}
@@ -956,13 +956,16 @@ public class TestStack {
 	@Test
 	public void testInsertionSort() {
 		Context c = context();
+		// 「1 array size 1 range-step」は「1 array size range」にすると例外が発生する。
+		// 配列が空の場合前者はRange(1, 0, -1)となり、要素1を含んでしまうのでforループが1回実行される。
+		// 後者はRange(1, 0, 1)となり、要素が空なのでforループは実行されない。
 		// whileの条件はCoditionalAND(&&)にしないと例外が発生する。
 		run(c, """
 			'( : array -> ,									{proc insertion-sort(array -> )}
 				i 0, j 0, tmp 0 :								{local i = 0, j = 0, tmp = 0}
-				1 array size 1 - 1 range						{for % in range(1, array.size - 1, 1) do}
+				1 array size 1 range-step						{for % in range(1, array.size, 1) do}
 				'(  @i												{i = %}
-					i 1 - array at i array at >						{when array[i -1] > array[i] then}
+					i 1 - array at i array at >						{when array[i - 1] > array[i] then}
 					'(  i @j											{j = i}
 						i array at @tmp									{tmp = array[i]}
 						'(j 0 > '(j 1 - array at tmp >) &&)				{while j > 0 && array[j - 1] > tmp do}

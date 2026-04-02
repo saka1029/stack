@@ -34,7 +34,7 @@ public class Range extends List {
             
             @Override
             public Instruction next() {
-                if (step > 0 && current > end || step < 0 && current < end)
+                if (step > 0 && current >= end || step < 0 && current <= end)
                     return null;
                 int result = current;
                 current += step;

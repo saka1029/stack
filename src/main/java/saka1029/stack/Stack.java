@@ -330,6 +330,11 @@ public class Stack {
 		});
 		// START END STEP range -> RANGE
 		context.variable("range", c -> {
+			int end = i(c.pop()), start = i(c.pop());
+			c.push(Range.of(start, end));
+		});
+		// START END STEP range-step -> RANGE
+		context.variable("range-step", c -> {
 			int step = i(c.pop()), end = i(c.pop()), start = i(c.pop());
 			c.push(Range.of(start, end, step));
 		});

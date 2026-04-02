@@ -28,13 +28,13 @@ public class TestArray {
     @Test
     public void testAt() {
         Context c = Stack.context();
-        assertEquals(eval(c, "4"), eval(c, "3 (1 5 1 range to-array) at"));
+        assertEquals(eval(c, "4"), eval(c, "3 (1 5 range to-array) at"));
     }
 
     @Test
     public void testToArray() {
         Context c = Stack.context();
-        assertEquals(eval(c, "'(1 2 3 0 5)"), eval(c, "(1 5 1 range to-array) 0 3 dup2 put"));
+        assertEquals(eval(c, "'(1 2 3 0 5)"), eval(c, "(1 6 range to-array) 0 3 dup2 put"));
     }
 
     @Test
