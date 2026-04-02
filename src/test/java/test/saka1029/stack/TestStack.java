@@ -987,4 +987,120 @@ public class TestStack {
 		assertEquals(eval(c, "'(1 2 3)"), eval(c, "'(2 1 3) to-array dup insertion-sort"));
 		assertEquals(eval(c, "'(1 2 3 4 5 6)"), eval(c, "'(1 5 2 4 6 3) to-array dup insertion-sort"));
 	}
+
+	/**
+     *    // To heapify a subtree rooted with node i
+     *    static void heapify(int[] arr, int n, int i) {
+     *        int largest = i;
+     *        int l = 2 * i + 1;
+     *        int r = 2 * i + 2;
+     *        if (l < n && arr[l] > arr[largest])
+     *            largest = l;
+     *        if (r < n && arr[r] > arr[largest])
+     *            largest = r;
+     *        if (largest != i) {
+     *            int temp = arr[i];
+     *            arr[i] = arr[largest];
+     *            arr[largest] = temp;
+     *            heapify(arr, n, largest);
+     *        }
+     *    }
+     *
+     *    // Main function to do heap sort
+     *    static void heapSort(int[] arr) {
+     *        int n = arr.length;
+     *        for (int i = n / 2 - 1; i >= 0; i--)
+     *            heapify(arr, n, i);
+     *        for (int i = n - 1; i > 0; i--) {
+     *            int temp = arr[0];
+     *            arr[0] = arr[i];
+     *            arr[i] = temp;
+     *            heapify(arr, i, 0);
+     *        }
+     *    }
+	 */
+    static void heapify(int[] arr, int n, int i) {
+        int largest = i;
+        int l = 2 * i + 1;
+        int r = 2 * i + 2;
+        if (l < n && arr[l] > arr[largest])
+            largest = l;
+        if (r < n && arr[r] > arr[largest])
+            largest = r;
+        if (largest != i) {
+            int temp = arr[i];
+            arr[i] = arr[largest];
+            arr[largest] = temp;
+            heapify(arr, n, largest);
+        }
+    }
+
+    // Main function to do heap sort
+    static void heapSort(int[] arr) {
+        int n = arr.length;
+        for (int i = n / 2 - 1; i >= 0; i--)
+            heapify(arr, n, i);
+        for (int i = n - 1; i > 0; i--) {
+            int temp = arr[0];
+            arr[0] = arr[i];
+            arr[i] = temp;
+            heapify(arr, i, 0);
+        }
+    }
+
+	@Test
+	public void testHeapSortJava() {
+		int[] empty = {}; heapSort(empty);
+		assertArrayEquals(new int[] {}, empty);
+		int[] array = {4, 2, 5, 3, 1, 0}; heapSort(array);
+		assertArrayEquals(new int[] {0, 1, 2, 3, 4, 5}, array);
+	}
+
+	@Test
+	public void testHeapSort() {
+		Context c = context();
+		defineSwapElements(c);
+		run(c, """
+			'( : n i arr -> ,							{proc heapify(n, i, arr) -> }
+				largest i,									{local largest = i}
+				l 2 i * 1 +,								{local l = 2 * i + 1}
+				r 2 i * 2 + :								{local r = 2 * i + 2}
+				l n < '(l arr at largest arr at >) &&		{when l < n && arr[l] > arr[largest] do}
+				'( l @largest									{largest = l}
+				) when										{end when}
+				r n < '(r arr at largest arr at >) &&		{when r < n && arr[r] > arr[largest] do}
+				'( r @largest									{largest = r}
+				) when										{end when}
+				largest i !=								{when largest != i}
+				'(  i largest arr swap-elements					{swap-element(i, largest, arr)}
+					n largest arr heapify						{heapify(n, largest, arr)}
+				) when										{end when}
+			) @ heapify
+			""");
+		run(c, """
+			'( : arr -> ,									{proc heap-sort(arr -> )}
+				n arr size,										{local n = arr.size}
+				i 0 :											{local i = 0}
+				n 2 / 1 - -1 -1 range-step						{for % in range(n / 2 - 1, -1) do}
+				'(  @i												{i = %}
+					n i arr heapify									{heapify(n, i, arr)}
+				) for											{end for}
+				n 1 - 0 -1 range-step							{for % in range(n - 1, 0) do}
+				stack
+				'(	@i												{i = %}
+					i 0 arr swap-elements							{swap-elements(0, i, arr)}
+					i 0 arr heapify
+				) for											{end for}
+			) @ heap-sort	
+			""");
+		assertEquals(eval(c, "'()"), eval(c, "'() to-array dup heap-sort"));
+		assertEquals(eval(c, "'(1)"), eval(c, "'(1) to-array dup heap-sort"));
+		assertEquals(eval(c, "'(1 2)"), eval(c, "'(1 2) to-array dup heap-sort"));
+		assertEquals(eval(c, "'(1 2)"), eval(c, "'(2 1) to-array dup heap-sort"));
+		assertEquals(eval(c, "'(1 2 3)"), eval(c, "'(1 2 3) to-array dup heap-sort"));
+		assertEquals(eval(c, "'(1 2 3)"), eval(c, "'(1 3 2) to-array dup heap-sort"));
+		assertEquals(eval(c, "'(1 2 3)"), eval(c, "'(3 1 2) to-array dup heap-sort"));
+		assertEquals(eval(c, "'(1 2 3)"), eval(c, "'(2 1 3) to-array dup heap-sort"));
+		assertEquals(eval(c, "'(1 2 3 4 5 6)"), eval(c, "'(1 5 2 4 6 3) to-array dup heap-sort"));
+	}
 }
