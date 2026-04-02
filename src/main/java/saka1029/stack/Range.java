@@ -2,13 +2,20 @@ package saka1029.stack;
 
 import java.util.Objects;
 
+/**
+ * 整数範囲を表すクラス。
+ * startからendまでのstep刻みの範囲を表現する。
+ * endは範囲に含まれない。
+ * Range(start, end, 1) = { x | x >= start and x < end }
+ * Range(start, end, -1) = { x | x <= start and x > end }
+ */
 public class Range extends List {
     
     final int start, end, step;
     
     Range(int start, int end, int step) {
         if (step == 0)
-            throw new IllegalArgumentException("step == 0");
+            throw new IllegalArgumentException("step must not be 0");
         this.start = start;
         this.end = end;
         this.step = step;
@@ -34,7 +41,7 @@ public class Range extends List {
             
             @Override
             public Instruction next() {
-                if (step > 0 && current >= end || step < 0 && current <= end)
+                if (step > 0 ? current >= end : current <= end)
                     return null;
                 int result = current;
                 current += step;
