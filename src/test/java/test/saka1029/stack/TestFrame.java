@@ -45,7 +45,7 @@ public class TestFrame {
                     '(f * @f)           {f = i * f}
                 for                 {end for}
                 f                   {return f}
-            ) @fact
+            ) @fact             {end proc}
             """;
         List list = Parser.parse(source).read();
         assertEquals(
