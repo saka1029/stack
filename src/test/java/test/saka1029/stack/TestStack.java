@@ -38,6 +38,7 @@ public class TestStack {
 		assertEquals(Int.of(3), eval(c, "1 2 + "));
 		assertEquals(Int.of(3), eval(c, "(1 2) + "));
 		assertEquals(Int.of(3), eval(c, "1 2 (+) "));
+		// run(c, "'(1 2 3) stack println stack");
 	}
 
 	@Test
