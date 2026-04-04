@@ -16,7 +16,7 @@ public class Context {
     public int sp, bp;
     final java.util.List<Sequence> instructions;
     final Map<Symbol, Instruction> variables;
-    Consumer<String> output;
+    public Consumer<String> output;
     
     Context(Map<Symbol, Instruction> variables, Consumer<String> output) {
         this.stack = new Instruction[STACK_SIZE];
