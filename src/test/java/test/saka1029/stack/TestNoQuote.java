@@ -2,7 +2,9 @@ package test.saka1029.stack;
 
 import static org.junit.Assert.assertEquals;
 
+import java.util.HashMap;
 import java.util.Iterator;
+import java.util.Map;
 import java.util.NoSuchElementException;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
@@ -13,13 +15,11 @@ public class TestNoQuote {
 
     interface Instruction {
         void execute(Context c);
-        default void load(Context c) {
-            c.push(this);
-        }
     }
 
     static class Context {
-        Instruction[] stack = new Instruction[100];
+        final Map<Symbol, Instruction> instructions = new HashMap<>();
+        final Instruction[] stack = new Instruction[100];
         int sp = 0;
 
         void push(Instruction value) {
@@ -28,6 +28,26 @@ public class TestNoQuote {
 
         Instruction pop() {
             return stack[--sp];
+        }
+
+        void instruction(Symbol symbol, Instruction i) {
+            instructions.put(symbol, i);
+        }
+
+        Instruction instruction(Symbol symbol) {
+            return instructions.get(symbol);
+        }
+
+        static int i(Instruction instruction) {
+            return ((Int)instruction).value;
+        }
+
+        static Int i(int value) {
+            return Int.of(value);
+        }
+
+        public Context() {
+            instructions.put(Symbol.of("+"), c -> c.push(i(i(c.pop()) + i(c.pop()))));
         }
 
         @Override
@@ -122,6 +142,24 @@ public class TestNoQuote {
         }
     }
 
+    public static class Symbol implements Value {
+        public final String name;
+        static final Map<String, Symbol> all = new HashMap<>();
+
+        Symbol(String name) {
+            this.name = name;
+        }
+
+        public static Symbol of(String name) {
+            return all.computeIfAbsent(name, k -> new Symbol(name));
+        }
+
+        @Override
+        public String toString() {
+            return name;
+        }
+    }
+
     public static class Int implements Value {
         public final int value;
 
@@ -152,10 +190,10 @@ public class TestNoQuote {
     @Test
     public void testLoad() {
         Context c = new Context();
-        Int.of(3).load(c);
+        c.push(Int.of(3));
         assertEquals(1, c.sp);
         assertEquals(Int.of(3), c.pop());
-        Cons.of(Int.of(1), Int.of(2)).load(c);
+        c.push(Cons.of(Int.of(1), Int.of(2)));
         assertEquals(1, c.sp);
         assertEquals(Cons.of(Int.of(1), Int.of(2)), c.pop());
     }
@@ -170,5 +208,15 @@ public class TestNoQuote {
         assertEquals(2, c.sp);
         assertEquals(Int.of(1), c.pop());
         assertEquals(Int.of(2), c.pop());
+    }
+
+    @Test
+    public void testPlus() {
+        Context c = new Context();
+        Int.of(3).execute(c);
+        Int.of(4).execute(c);
+        c.instruction(Symbol.of("+")).execute(c);
+        assertEquals(1, c.sp);
+        assertEquals(Int.of(7), c.pop());
     }
 }
