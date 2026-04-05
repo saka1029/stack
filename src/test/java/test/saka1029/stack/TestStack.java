@@ -778,14 +778,41 @@ public class TestStack {
 		assertArrayEquals(expected, actual);
 	}
 
+	@Test
+	public void testSwapElements() {
+		Context c = context();
+		run(c, """
+			'( : i j array -> :				{proc swap-elements(i, j, array -> )}
+				i array at j array at			{array[j], array[i]}
+				i array put j array put			{= array[i], array[j]}
+			) @ swap-elements				{end proc}
+			""");
+		run(c, "'(1 2 3 4) to-array 1 3 dup2 swap-elements");
+		assertEquals(eval(c, "'(1 4 3 2)"), c.pop());
+	}
+
+	@Test
+	public void testSwapElementsNoFrame() {
+		Context c = context();
+		run(c, " '(dup2 dup1 at dup2 dup2 at dup4 dup3 put dup2 dup2 put) @ swap-elements");
+		run(c, "'(1 2 3 4) to-array 1 3 dup2 swap-elements");
+		assertEquals(eval(c, "'(1 4 3 2)"), c.pop());
+	}
+
 	void defineSwapElements(Context c) {
 		run(c, """
-			'( : i j array -> ,				{proc swap-elements(i, j, array) -> ()}
-				temp i array at :				{local temp = array[i]}
-				j array at i array put			{array[i] = array[j]}
-				temp j array put				{array[j] = temp}
-			) @swap-elements				{end proc}
+			'( : i j array -> :				{proc swap-elements(i, j, array -> )}
+				i array at j array at			{array[j], array[i]}
+				i array put j array put			{= array[i], array[j]}
+			) @ swap-elements				{end proc}
 			""");
+		// run(c, """
+		// 	'( : i j array -> ,				{proc swap-elements(i, j, array) -> ()}
+		// 		temp i array at :				{local temp = array[i]}
+		// 		j array at i array put			{array[i] = array[j]}
+		// 		temp j array put				{array[j] = temp}
+		// 	) @swap-elements				{end proc}
+		// 	""");
 	}
 
 	@Test
