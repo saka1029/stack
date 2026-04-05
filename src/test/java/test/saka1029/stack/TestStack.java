@@ -787,16 +787,14 @@ public class TestStack {
 				i array put j array put			{= array[i], array[j]}
 			) @ swap-elements				{end proc}
 			""");
-		run(c, "'(1 2 3 4) to-array 1 3 dup2 swap-elements");
-		assertEquals(eval(c, "'(1 4 3 2)"), c.pop());
+		assertEquals(eval(c, "'(1 4 3 2)"), eval(c, "'(1 2 3 4) to-array 1 3 dup2 swap-elements"));
 	}
 
 	@Test
 	public void testSwapElementsNoFrame() {
 		Context c = context();
-		run(c, " '(dup2 dup1 at dup2 dup2 at dup4 dup3 put dup2 dup2 put) @ swap-elements");
-		run(c, "'(1 2 3 4) to-array 1 3 dup2 swap-elements");
-		assertEquals(eval(c, "'(1 4 3 2)"), c.pop());
+		run(c, " '(dup2 dup1 at dup2 dup2 at dup4 dup3 put rrot put drop) @ swap-elements");
+		assertEquals(eval(c, "'(1 4 3 2)"), eval(c, "'(1 2 3 4) to-array 1 3 dup2 swap-elements"));
 	}
 
 	void defineSwapElements(Context c) {
