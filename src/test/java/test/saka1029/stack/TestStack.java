@@ -905,7 +905,7 @@ public class TestStack {
 					low pi 1 - array quick-sort-range		{quick-sort-range(low, pi - 1, array)}
 					pi 1 + high array quick-sort-range		{quick-sort-range(pi + 1, high, array)}
 				) when									{end when}
-			) @quick-sort-range						{end proc}
+			) @ quick-sort-range						{end proc}
 			""");
 		run(c, "'(0 swap dup size 1 - swap quick-sort-range) @quick-sort");
 		assertEquals(eval(c, "'()"), eval(c, "'() to-array dup quick-sort"));
