@@ -1086,7 +1086,6 @@ public class TestStack {
 					n i arr heapify									{heapify(n, i, arr)}
 				) for											{end for}
 				n 1 - 0 -1 range-step							{for % in range(n - 1, 0) do}
-				stack
 				'(	@i												{i = %}
 					i 0 arr swap-elements							{swap-elements(0, i, arr)}
 					i 0 arr heapify
