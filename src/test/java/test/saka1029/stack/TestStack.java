@@ -742,6 +742,42 @@ public class TestStack {
 		assertEquals(eval(c, "'(6 5 4)"), c.pop());
 		assertEquals(eval(c, "'(3 2 1)"), c.pop());
 		assertEquals(0, c.sp);
+		run(c, "'(3 >) @ pred");
+		assertEquals(eval(c, "true"), eval(c, "'4 pred execute"));
+		run(c,"""
+			'( : list pred -> t f , l '() , r '() :
+				list
+				'(
+					dup pred execute 
+					'(l cons @ l)
+					'(r cons @ r)
+					if
+				) for	
+				l r
+			) @ partition-frame
+			""");
+		run(c, "'(1 2 3 4 5 6) '(3 <=) partition-frame");
+		assertEquals(eval(c, "'(6 5 4)"), c.pop());
+		assertEquals(eval(c, "'(3 2 1)"), c.pop());
+		run(c,"""
+			'( : list pred -> t f :
+				'() '() 
+				list
+				'(
+					dup pred execute 
+					'(rot cons swap)
+					'rcons
+					if
+				) for	
+			) @ partition-frame2
+			""");
+		run(c, "'(1 2 3 4 5 6) '(3 <=) partition-frame2");
+		assertEquals(eval(c, "'(6 5 4)"), c.pop());
+		assertEquals(eval(c, "'(3 2 1)"), c.pop());
+		run(c, "'(1 2 3 4 5 6) '(3 <) partition-frame2");
+		assertEquals(eval(c, "'(6 5 4 3)"), c.pop());
+		assertEquals(eval(c, "'(2 1)"), c.pop());
+		
 	}
 
 	static void swap(int[] arr, int i, int j) {
