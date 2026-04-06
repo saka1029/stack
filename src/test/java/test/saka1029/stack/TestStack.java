@@ -38,6 +38,7 @@ public class TestStack {
 		assertEquals(Int.of(3), eval(c, "1 2 + "));
 		assertEquals(Int.of(3), eval(c, "(1 2) + "));
 		assertEquals(Int.of(3), eval(c, "1 2 (+) "));
+		// run(c, "'(1 2 3) stack println stack");
 	}
 
 	@Test
@@ -777,14 +778,39 @@ public class TestStack {
 		assertArrayEquals(expected, actual);
 	}
 
+	@Test
+	public void testSwapElements() {
+		Context c = context();
+		run(c, """
+			'( : i j array -> :				{proc swap-elements(i, j, array -> )}
+				i array at j array at			{array[j], array[i]}
+				i array put j array put			{= array[i], array[j]}
+			) @ swap-elements				{end proc}
+			""");
+		assertEquals(eval(c, "'(1 4 3 2)"), eval(c, "'(1 2 3 4) to-array 1 3 dup2 swap-elements"));
+	}
+
+	@Test
+	public void testSwapElementsNoFrame() {
+		Context c = context();
+		run(c, " '(dup2 dup1 at dup2 dup2 at dup4 dup3 put rrot put drop) @ swap-elements");
+		assertEquals(eval(c, "'(1 4 3 2)"), eval(c, "'(1 2 3 4) to-array 1 3 dup2 swap-elements"));
+	}
+
 	void defineSwapElements(Context c) {
 		run(c, """
-			'(: i j array -> ,				{proc swap-elements(i, j, array) -> ()}
-				temp i array at :				{local temp = array[i]}
-				j array at i array put			{array[i] = array[j]}
-				temp j array put				{array[j] = temp}
-			) @swap-elements				{end proc}
+			'( : i j array -> :				{proc swap-elements(i, j, array -> )}
+				i array at j array at			{array[j], array[i]}
+				i array put j array put			{= array[i], array[j]}
+			) @ swap-elements				{end proc}
 			""");
+		// run(c, """
+		// 	'( : i j array -> ,				{proc swap-elements(i, j, array) -> ()}
+		// 		temp i array at :				{local temp = array[i]}
+		// 		j array at i array put			{array[i] = array[j]}
+		// 		temp j array put				{array[j] = temp}
+		// 	) @swap-elements				{end proc}
+		// 	""");
 	}
 
 	@Test
@@ -793,7 +819,7 @@ public class TestStack {
 		defineSwapElements(c);
 		assertEquals(eval(c, "'(1 2 5 4 3)"), eval(c, "'(1 2 3 4 5) to-array 2 4 dup2 swap-elements"));
 		run(c, """
-			'(: low high array -> ,						{proc(row, high array) -> ()}
+			'( : low high array -> ,						{proc(row, high array) -> ()}
 				pivot 0,									{local pivot = 0}
 				i low,										{local i = low}
 				j high :									{local j = high}
@@ -853,7 +879,7 @@ public class TestStack {
 		Context c = context();
 		defineSwapElements(c);
 		run(c, """
-			'(: low high array -> pos,			  		{proc partition(low, high, array) -> pos}
+			'( : low high array -> pos,			  		{proc partition(low, high, array) -> pos}
 				pivot high array at,					{local pivot = array[hight]}
 				i low 1 -,								{local i = low - 1}
 				j low :									{local j = low}
@@ -872,7 +898,7 @@ public class TestStack {
 		assertEquals(eval(c, "2"), c.pop());
 		assertEquals(eval(c, "'(1 2 3 4 6 5)"), c.pop());
 		run(c, """
-			'(: low high array -> ,					{proc quick-sort-range(low, high, array) -> }
+			'( : low high array -> ,					{proc quick-sort-range(low, high, array) -> }
 				pi 0 :									{local pi = 0}
 				low high <								{when low < high do}
 				'(  low high array partition @pi			{pi = partition(low, high, array)}

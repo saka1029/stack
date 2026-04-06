@@ -24,7 +24,7 @@ public class TestFrame {
             """;
         List list = Parser.parse(source).read();
         assertEquals(
-            "('(: n -> r : n 0 <= 1 '(n 1 - fact n *) if ) @ fact)",
+            "('( : n -> r : n 0 <= 1 '(n 1 - fact n *) if ) @ fact)",
             list.toString());
         run(c, source);
         assertEquals(eval(c, "1"), eval(c, "0 fact"));
@@ -45,11 +45,11 @@ public class TestFrame {
                     '(f * @f)           {f = i * f}
                 for                 {end for}
                 f                   {return f}
-            ) @fact
+            ) @fact             {end proc}
             """;
         List list = Parser.parse(source).read();
         assertEquals(
-            "('(: n -> r , f 1 : 1 n 1 + range '(f * @ f) for f ) @ fact)",
+            "('( : n -> r , f 1 : 1 n 1 + range '(f * @ f) for f ) @ fact)",
             list.toString()); 
         run(c, source);
         assertEquals(eval(c, "1"), eval(c, "0 fact"));

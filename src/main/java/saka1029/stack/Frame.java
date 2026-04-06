@@ -49,7 +49,7 @@ public class Frame {
 
             @Override
             public String toString() {
-                return ": %s -> %s".formatted(
+                return " : %s -> %s".formatted(
                     arguments.stream()
                         .map(s -> s.toString())
                         .collect(Collectors.joining(" ")),

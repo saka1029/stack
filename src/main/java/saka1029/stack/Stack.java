@@ -170,7 +170,7 @@ public class Stack {
 		});
 		context.variable("print", c -> c.print(c.pop()));
 		context.variable("println", c -> c.println(c.pop()));
-		context.variable("stack", c -> System.out.println(c));
+		context.variable("stack", c -> c.stack());
 		context.variable("execute", c -> c.execute(c.pop()));
 		context.variable("if", c -> {
 			Instruction orElse = c.pop(), then = c.pop();
@@ -350,7 +350,7 @@ public class Stack {
 		context.variable("size", c -> c.push(i(l(c.pop()).size())));
 		// INDEX ARRAY at -> ELEMENT
 		context.variable("at", c -> c.push(a(c.pop()).at(i(c.pop()))));
-		// NEW_ELEMENT INDEX ARRAY put ->
+		// NEW-ELEMENT INDEX ARRAY put ->
 		context.variable("put", c -> a(c.pop()).put(i(c.pop()), c.pop()));
 	}
 }
