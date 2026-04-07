@@ -741,6 +741,10 @@ public class TestStack {
 		run(c, "3 '(1 2 3 4 5 6) partition");
 		assertEquals(eval(c, "'(6 5 4)"), c.pop());
 		assertEquals(eval(c, "'(3 2 1)"), c.pop());
+		run(c, "'('() '() rot '(dup dup4 <= '(rot cons swap) 'rcons if) for rot drop) @partition");
+		run(c, "3 '(1 2 3 4 5 6) partition");
+		assertEquals(eval(c, "'(6 5 4)"), c.pop());
+		assertEquals(eval(c, "'(3 2 1)"), c.pop());
 		assertEquals(0, c.sp);
 		run(c, "'(3 >) @ pred");
 		assertEquals(eval(c, "true"), eval(c, "'4 pred execute"));
