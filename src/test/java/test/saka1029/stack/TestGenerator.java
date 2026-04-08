@@ -32,7 +32,7 @@ public class TestGenerator {
     @Test
     public void testFactorials() {
         Context c = context();
-        run(c, "'('(1 + 1 1 rot stack range '(* dup yield) for) cons generator) @ factorials");
+        run(c, "'('(1 + 1 1 rot stack range '(* dup yield) for) generator1) @ factorials");
         assertEquals(eval(c, "'(1 2 6 24 120)"), eval(c, "5 factorials"));
     }
 }
