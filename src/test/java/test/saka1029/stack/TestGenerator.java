@@ -32,7 +32,25 @@ public class TestGenerator {
     @Test
     public void testFactorials() {
         Context c = context();
-        run(c, "'('(1 + 1 1 rot stack range '(* dup yield) for) cons generator) @ factorials");
+        run(c, "'('(1 + 1 1 rot range '(* dup yield) for) generator1) @ factorials");
         assertEquals(eval(c, "'(1 2 6 24 120)"), eval(c, "5 factorials"));
+    }
+
+    @Test
+    public void testFibonaccis() {
+        Context c = context();
+        run(c, """
+            '(                      {proc fibonaccis(n -> )}
+                '( : n -> ,             {generator1 lambda(n -> )}
+                    a 0,                    {local a = 0}
+                    b 1 :                   {local b = 0}
+                    0 n range               {for % in range(0, n) do}
+                    '( drop a yield             {yield a}
+                        b a b + @b @a           {a, b = b, a + b}
+                    ) for                   {end for}
+                ) generator1            {end generator1}    
+            ) @ fibonaccis          {end proc}
+            """);
+        assertEquals(eval(c, "'(0 1 1 2 3 5 8 13 21 34)"), eval(c, "10 fibonaccis"));
     }
 }
