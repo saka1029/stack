@@ -8,9 +8,6 @@ import static saka1029.stack.Stack.run;
 import org.junit.Test;
 
 import saka1029.stack.Context;
-import saka1029.stack.Generator;
-import saka1029.stack.Symbol;
-import saka1029.stack.Terminal;
 
 public class TestGenerator {
 
