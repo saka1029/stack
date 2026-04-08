@@ -3,6 +3,7 @@ package test.saka1029.stack;
 import static org.junit.Assert.assertEquals;
 import static saka1029.stack.Stack.context;
 import static saka1029.stack.Stack.eval;
+import static saka1029.stack.Stack.run;
 
 import org.junit.Test;
 
@@ -28,5 +29,7 @@ public class TestGenerator {
         assertEquals(eval(c, "'(6 5 4)"), eval(c, "3 '(dup 1 2 + + yield dup 2 + yield dup 1 + yield) generator1"));
         assertEquals(eval(c, "'(10 9 8)"), eval(c, "'3 4 '(+ dup 2 1 + + yield dup 2 + yield dup 1 + yield) generator2"));
         assertEquals(eval(c, "'(1 2)"), eval(c, "'(1 3 range 'yield for) generator"));
+        run(c, "'('(1 1 rot range '(* dup yield) for) generator) @ fact");
+        assertEquals(eval(c, "'(1 2 6 24)"), eval(c, "5 fact"));
     }
 }
