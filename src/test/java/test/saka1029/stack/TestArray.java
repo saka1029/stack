@@ -45,6 +45,7 @@ public class TestArray {
         assertEquals(eval(c, "'(1 2 3)"), eval(c, "'(1 2 3) to-array"));
         // array自身もto-arrayでコピーできる。
         assertEquals(eval(c, "'(1 2 3)"), eval(c, "'(1 2 3) to-array to-array"));
+        // to-arrayがクローンを作ることの確認
         run(c, "'(1 2 3) to-array dup to-array 0 2 dup2 put");
         assertEquals(eval(c, "'(1 2 0)"), c.pop());
         assertEquals(eval(c, "'(1 2 3)"), c.pop());
