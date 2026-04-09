@@ -2,9 +2,11 @@ package test.saka1029.stack;
 
 import static org.junit.Assert.assertEquals;
 import static saka1029.stack.Stack.eval;
+import static saka1029.stack.Stack.run;
 import java.util.logging.Logger;
 import org.junit.Test;
 import saka1029.Common;
+import saka1029.stack.Bool;
 import saka1029.stack.Context;
 import saka1029.stack.Stack;
 
@@ -32,9 +34,20 @@ public class TestArray {
     }
 
     @Test
-    public void testToArray() {
+    public void testPut() {
         Context c = Stack.context();
         assertEquals(eval(c, "'(1 2 3 0 5)"), eval(c, "(1 6 range to-array) 0 3 dup2 put"));
+    }
+
+    @Test
+    public void testToArray() {
+        Context c = Stack.context();
+        assertEquals(eval(c, "'(1 2 3)"), eval(c, "'(1 2 3) to-array"));
+        // array自身もto-arrayでコピーできる。
+        assertEquals(eval(c, "'(1 2 3)"), eval(c, "'(1 2 3) to-array to-array"));
+        run(c, "'(1 2 3) to-array dup to-array 0 2 dup2 put");
+        assertEquals(eval(c, "'(1 2 0)"), c.pop());
+        assertEquals(eval(c, "'(1 2 3)"), c.pop());
     }
 
     @Test

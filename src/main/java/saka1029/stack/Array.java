@@ -1,6 +1,5 @@
 package saka1029.stack;
 
-import java.util.ArrayList;
 import java.util.Arrays;
 
 public class Array extends List {
@@ -12,10 +11,11 @@ public class Array extends List {
     }
 
     public static Array of(List list) {
-        java.util.List<Instruction> x = new ArrayList<>();
-        for (Instruction i : list)
-            x.add(i);
-        return new Array(x.toArray(Instruction[]::new));
+        Instruction[] elements = new Instruction[list.size()];
+        int i = 0;
+        for (Instruction e : list)
+            elements[i++] = e;
+        return new Array(elements);
     }
 
     public static Array of(Instruction... elements) {
