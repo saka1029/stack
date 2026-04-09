@@ -575,9 +575,20 @@ public class TestStack {
 //        logger.info(Common.methodName());
 		Context c = context();
 		run(c, "'('(!=) cons filter) @remove");
-		run(c, "'(dup1 null" + " '(dup reverse yield)"
-				+ " '(dup1 '(dup2 dup1 remove swap dup2 cons perm) for) if drop2) @perm");
-		run(c, "'('() 'perm generator2) @permutations");
+		run(c, """
+			'(
+				dup1 null
+				'(dup reverse yield)
+				'(
+					dup1
+					'(
+						dup2 dup1 remove swap dup2 cons perm
+					) for
+				) if
+				drop2
+			) @ perm
+			""");
+		run(c, "'('() 'perm generator2) @ permutations");
 		assertEquals(eval(c, "'(())"), eval(c, "'() permutations"));
 		assertEquals(eval(c, "'((1))"), eval(c, "'(1) permutations"));
 		assertEquals(eval(c, "'((1 2) (2 1))"), eval(c, "'(1 2) permutations"));
