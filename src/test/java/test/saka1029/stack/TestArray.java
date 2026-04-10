@@ -6,7 +6,6 @@ import static saka1029.stack.Stack.run;
 import java.util.logging.Logger;
 import org.junit.Test;
 import saka1029.Common;
-import saka1029.stack.Bool;
 import saka1029.stack.Context;
 import saka1029.stack.Stack;
 

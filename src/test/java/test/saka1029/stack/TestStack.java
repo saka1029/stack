@@ -5,7 +5,9 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.fail;
 import static saka1029.stack.Stack.*;
 
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.function.Consumer;
 import java.util.logging.Logger;
 
 import org.junit.Test;
@@ -15,6 +17,7 @@ import saka1029.stack.Bool;
 import saka1029.stack.Cons;
 import saka1029.stack.Context;
 import saka1029.stack.Int;
+import saka1029.stack.List;
 import saka1029.stack.Range;
 import saka1029.stack.Symbol;
 import saka1029.stack.Terminal;
@@ -534,7 +537,36 @@ public class TestStack {
 	 * 
 	 * 結果をprintで収集する。
 	 */
+	static <T> void pvermutations(Consumer<java.util.List<T>> func, java.util.List<T> ls) {
+		new Object() {
+			java.util.List<T> a = new ArrayList<>();
+
+			void perm(java.util.List<T> ls) {
+				if (ls.isEmpty())
+					func.accept(a.stream().toList());
+				else
+					for (var n : ls) {
+						a.add(n);
+						perm(ls.stream().filter(x -> !x.equals(n)).toList());
+						a.removeLast();
+					}
+			}
+		}.perm(ls);
+	}
+
+	static <T> java.util.List<T> ls(T... elements) {
+		return java.util.List.of(elements);
+	}
+
 	@Test
+	public void testPermutationsJava() {
+		java.util.List<Integer> list = java.util.List.of(1, 2, 3);
+		java.util.List<java.util.List<Integer>> result = new ArrayList<>();
+		pvermutations(x -> result.add(x), list);
+		assertEquals(ls(ls(1, 2, 3), ls(1, 3, 2), ls(2, 1, 3), ls(2, 3, 1), ls(3, 1, 2), ls(3, 2, 1)), result);
+		System.out.println(result);
+	}
+
 	public void testPermutations() {
 //        logger.info(Common.methodName());
 		Context c = context();
