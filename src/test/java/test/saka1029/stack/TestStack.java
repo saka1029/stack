@@ -17,7 +17,6 @@ import saka1029.stack.Bool;
 import saka1029.stack.Cons;
 import saka1029.stack.Context;
 import saka1029.stack.Int;
-import saka1029.stack.List;
 import saka1029.stack.Range;
 import saka1029.stack.Symbol;
 import saka1029.stack.Terminal;
@@ -560,7 +559,7 @@ public class TestStack {
 
 	@Test
 	public void testPermutationsJava() {
-		java.util.List<Integer> list = java.util.List.of(1, 2, 3);
+		java.util.List<Integer> list = ls(1, 2, 3);
 		java.util.List<java.util.List<Integer>> result = new ArrayList<>();
 		pvermutations(x -> result.add(x), list);
 		assertEquals(ls(ls(1, 2, 3), ls(1, 3, 2), ls(2, 1, 3), ls(2, 3, 1), ls(3, 1, 2), ls(3, 2, 1)), result);
