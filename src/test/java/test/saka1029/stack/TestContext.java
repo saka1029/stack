@@ -161,5 +161,6 @@ public class TestContext {
             "1 sp=1 bp=0 [1]",
             "2 sp=2 bp=0 [1 2]",
             "+ sp=1 bp=0 [3]"), traces);
+        assertEquals(Int.of(6), c.pop());
     }
 }
