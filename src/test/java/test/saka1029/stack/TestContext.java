@@ -3,6 +3,9 @@ package test.saka1029.stack;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.fail;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import org.junit.Test;
 
 import saka1029.stack.Context;
@@ -142,8 +145,21 @@ public class TestContext {
             Stack.run(c, "7 0 /");
             fail();
         } catch (RuntimeException e) {
-            assertEquals("Fail '/' in Context(sp=2, bp=0 stack=[7, 0])", e.getMessage());
+            assertEquals("Fail '/' in Context(sp=2, bp=0 stack=[7 0])", e.getMessage());
             assertEquals(ArithmeticException.class, e.getCause().getClass());
         }
+    }
+
+    @Test
+    public void testTrace() {
+        Context c = Stack.context();
+        java.util.List<String> traces = new ArrayList<>();
+        c.output = s -> traces.add(s);
+        Stack.run(c, "tron 1 2 + troff 7 1 -");
+        assertEquals(List.of(
+            "tron sp=0 bp=0 []",
+            "1 sp=1 bp=0 [1]",
+            "2 sp=2 bp=0 [1 2]",
+            "+ sp=1 bp=0 [3]"), traces);
     }
 }

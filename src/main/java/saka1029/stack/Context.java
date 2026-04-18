@@ -7,6 +7,7 @@ import java.util.function.Consumer;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
+import java.util.stream.IntStream;
 import java.util.stream.Stream;
 
 public class Context {
@@ -17,6 +18,7 @@ public class Context {
     final java.util.List<Sequence> instructions;
     final Map<Symbol, Instruction> variables;
     public Consumer<String> output;
+    public boolean trace = false;
     
     Context(Map<Symbol, Instruction> variables, Consumer<String> output) {
         this.stack = new Instruction[STACK_SIZE];
@@ -184,6 +186,12 @@ public class Context {
                 int oldSize = instructions.size();
                 currentStack = toString();
                 execute(currentInstruction);
+                if (trace)
+                    output.accept("%s sp=%d bp=%d %s".formatted(
+                        currentInstruction, sp, bp,
+                        IntStream.range(0, sp)
+                            .mapToObj(i -> stack[i].toString())
+                            .collect(Collectors.joining(" ", "[", "]"))));
                 if (sp > 0 && peek(0) instanceof Terminal terminal) {
                     drop(); // drop Terminal;
                     switch (terminal) {
@@ -248,6 +256,6 @@ public class Context {
             Stream.of(stack)
                 .limit(sp)
                 .map(e -> "" + e)
-                .collect(Collectors.joining(", ", "[", "]")));
+                .collect(Collectors.joining(" ", "[", "]")));
     }
 }
