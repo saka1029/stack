@@ -1,6 +1,7 @@
 package test.saka1029.stack;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.fail;
 
 import org.junit.Test;
 
@@ -132,5 +133,17 @@ public class TestContext {
         assertEquals(Int.of(4), c.pop());
         assertEquals(Int.of(1), c.pop());
         assertEquals(0, c.sp);
+    }
+
+    @Test
+    public void testRun() {
+        Context c = Stack.context();
+        try {
+            Stack.run(c, "7 0 /");
+            fail();
+        } catch (RuntimeException e) {
+            assertEquals("Fail '/' in Context(sp=2, bp=0 stack=[7, 0])", e.getMessage());
+            assertEquals(ArithmeticException.class, e.getCause().getClass());
+        }
     }
 }

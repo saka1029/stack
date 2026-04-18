@@ -553,6 +553,7 @@ public class TestStack {
 		}.perm(ls);
 	}
 
+	@SafeVarargs
 	static <T> java.util.List<T> ls(T... elements) {
 		return java.util.List.of(elements);
 	}

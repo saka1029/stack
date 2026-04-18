@@ -174,13 +174,16 @@ public class Context {
         instruction.execute(this);
     }
 
+    String currentStack = "";
+    Instruction currentInstruction = null;
+
     public Terminal run0() {
         L0: while (!instructions.isEmpty()) {
             Sequence it = instructions.get(instructions.size() - 1);
-            Instruction ins;
-            L1: while ((ins = it.next()) != null) {
+            L1: while ((currentInstruction = it.next()) != null) {
                 int oldSize = instructions.size();
-                execute(ins);
+                currentStack = toString();
+                execute(currentInstruction);
                 if (sp > 0 && peek(0) instanceof Terminal terminal) {
                     drop(); // drop Terminal;
                     switch (terminal) {
@@ -216,8 +219,11 @@ public class Context {
     public Terminal run() {
         try {
             return run0();
-        } catch (ClassCastException ex) {
-            throw error(ex);
+        } catch (ClassCastException cce) {
+            throw error(cce);
+        } catch (Exception ex) {
+            throw new RuntimeException("Fail '%s' in %s"
+                .formatted(currentInstruction, currentStack), ex);
         }
     }
 
