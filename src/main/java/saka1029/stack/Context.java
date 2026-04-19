@@ -38,7 +38,7 @@ public class Context {
     }
     
     public static Context of() {
-        return new Context(new HashMap<Symbol, Instruction>(), System.out::print);
+        return new Context(new HashMap<Symbol, Instruction>(), System.out::println);
     }
     
     public Context fork() {
