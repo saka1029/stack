@@ -155,12 +155,29 @@ public class TestContext {
         Context c = Stack.context();
         java.util.List<String> traces = new ArrayList<>();
         c.output = s -> traces.add(s);
-        Stack.run(c, "tron 1 2 + troff 7 1 -");
+        assertEquals(Int.of(6), Stack.eval(c, "tron 1 2 + troff 3 +"));
         assertEquals(List.of(
             "tron sp=0 bp=0 []",
             "1 sp=1 bp=0 [1]",
             "2 sp=2 bp=0 [1 2]",
             "+ sp=1 bp=0 [3]"), traces);
-        assertEquals(Int.of(6), c.pop());
+    }
+
+    @Test
+    public void testTraceFail() {
+        Context c = Stack.context();
+        java.util.List<String> traces = new ArrayList<>();
+        c.output = s -> traces.add(s);
+        try {
+            Stack.run(c, "tron 1 0 / troff 1 +");
+            fail();
+        } catch (RuntimeException e) {
+            assertEquals("Fail '/' in Context(sp=2, bp=0 stack=[1 0])", e.getMessage());
+            assertEquals(ArithmeticException.class, e.getCause().getClass());
+        }
+        assertEquals(List.of(
+            "tron sp=0 bp=0 []",
+            "1 sp=1 bp=0 [1]",
+            "0 sp=2 bp=0 [1 0]"), traces);
     }
 }
