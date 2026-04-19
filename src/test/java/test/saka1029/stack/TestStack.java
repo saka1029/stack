@@ -634,7 +634,9 @@ public class TestStack {
 			run(c, "2 true +");
 			fail();
 		} catch (RuntimeException ex) {
-			assertEquals("Cast error: Bool to Int", ex.getMessage());
+			assertEquals(
+				"Cast error: Bool to Int, fail '+' in Context(sp=2, bp=0 stack=[2 true])",
+				ex.getMessage());
 		}
 	}
 	
@@ -824,7 +826,26 @@ public class TestStack {
 		run(c, "'(1 2 3 4 5 6) '(3 <) partition-frame2");
 		assertEquals(eval(c, "'(6 5 4 3)"), c.pop());
 		assertEquals(eval(c, "'(2 1)"), c.pop());
-		
+	}
+
+	@Test
+	public void testPartitionRecursive() {
+		Context c = context();
+		run(c, """
+			'( : t f list pred -> tt ff :
+				list null
+				'(t f)
+				'(list car pred execute
+					'(list car t cons f list cdr pred partition-inner)
+					'(t list car f cons list cdr pred partition-inner)
+					if
+				) if
+			) @ partition-inner
+			""");
+		run(c, "'( : list pred -> tt ff : '() '() list pred partition-inner) @ partition");
+		run(c, "'(1 2 3 4 5 6) '(3 <=) partition");
+		assertEquals(eval(c, "'(6 5 4)"), c.pop());
+		assertEquals(eval(c, "'(3 2 1)"), c.pop());
 	}
 
 	static void swap(int[] arr, int i, int j) {

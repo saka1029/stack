@@ -215,20 +215,27 @@ public class Context {
     static final Pattern CLASS_CAST_EXCEPTION = Pattern.compile(
         "class \\S*\\.(\\S+) cannot be cast to class \\S*\\.(\\S+).*");
     
-    static RuntimeException error(ClassCastException ex) {
-        Matcher m = CLASS_CAST_EXCEPTION.matcher(ex.getMessage());
-        if (m.find())
-            return new RuntimeException("Cast error: %s to %s"
-                .formatted(m.group(1), m.group(2)), ex);
-        else
-            return new RuntimeException(ex);
-    }
+    // static RuntimeException error(ClassCastException ex) {
+    //     Matcher m = CLASS_CAST_EXCEPTION.matcher(ex.getMessage());
+    //     if (m.find())
+    //         return new RuntimeException("Cast error: %s to %s"
+    //             .formatted(m.group(1), m.group(2)), ex);
+    //     else
+    //         return new RuntimeException(ex);
+    // }
 
     public Terminal run() {
         try {
             return run0();
         } catch (ClassCastException cce) {
-            throw error(cce);
+            // throw error(cce);
+            Matcher m = CLASS_CAST_EXCEPTION.matcher(cce.getMessage());
+            if (m.find())
+                throw new RuntimeException("Cast error: %s to %s, fail '%s' in %s"
+                    .formatted(m.group(1), m.group(2),
+                        currentInstruction, currentStack, cce));
+            else
+                throw new RuntimeException(cce);
         } catch (Exception ex) {
             throw new RuntimeException("Fail '%s' in %s"
                 .formatted(currentInstruction, currentStack), ex);
