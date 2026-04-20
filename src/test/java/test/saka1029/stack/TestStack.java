@@ -525,17 +525,17 @@ public class TestStack {
 		Context c = context();
 		assertEquals(eval(c, "1"), eval(c, """
 			0 '( : n self -> r :
-				n 0 <= '1 '(n 1 - self self execute n *) if
+				n 0 <= '1 '(n 1 - self dup execute n *) if
 			) dup execute
 			"""));
 		assertEquals(eval(c, "6"), eval(c, """
 			3 '( : n self -> r :
-				n 0 <= '1 '(n 1 - self self execute n *) if
+				n 0 <= '1 '(n 1 - self dup execute n *) if
 			) dup execute
 			"""));
 		assertEquals(eval(c, "24"), eval(c, """
 			4 '( : n self -> r :
-				n 0 <= '1 '(n 1 - self self execute n *) if
+				n 0 <= '1 '(n 1 - self dup execute n *) if
 			) dup execute
 			"""));
 	}
