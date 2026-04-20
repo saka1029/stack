@@ -835,10 +835,11 @@ public class TestStack {
 			'( : t f list pred -> tt ff :
 				list null
 				'(t f)
-				'(list car pred execute
-					'(list car t cons f list cdr pred partition-inner)
-					'(t list car f cons list cdr pred partition-inner)
+				'(list car dup pred execute
+					'(t cons @ t)
+					'(f cons @ f)
 					if
+					t f list cdr pred partition-inner
 				) if
 			) @ partition-inner
 			""");
