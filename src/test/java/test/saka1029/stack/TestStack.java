@@ -520,6 +520,26 @@ public class TestStack {
 				"0 5 range" + " '('(dup1 0 <= '1 '(dup1 dup 1 - dup2 dup execute *) if ret2) dup execute) map"));
 	}
 
+	@Test
+	public void testAnonymousRecurstionByFrame() {
+		Context c = context();
+		assertEquals(eval(c, "1"), eval(c, """
+			0 '( : n self -> r :
+				n 0 <= '1 '(n 1 - self self execute n *) if
+			) dup execute
+			"""));
+		assertEquals(eval(c, "6"), eval(c, """
+			3 '( : n self -> r :
+				n 0 <= '1 '(n 1 - self self execute n *) if
+			) dup execute
+			"""));
+		assertEquals(eval(c, "24"), eval(c, """
+			4 '( : n self -> r :
+				n 0 <= '1 '(n 1 - self self execute n *) if
+			) dup execute
+			"""));
+	}
+
 	/**
 	 * <pre>
 	 * scheme:
