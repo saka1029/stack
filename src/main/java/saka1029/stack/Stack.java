@@ -330,7 +330,7 @@ public class Stack {
                 }
 			});
 		});
-		// START END STEP range -> RANGE
+		// START END range -> RANGE
 		context.variable("range", c -> {
 			int end = i(c.pop()), start = i(c.pop());
 			c.push(Range.of(start, end));
@@ -339,6 +339,16 @@ public class Stack {
 		context.variable("range-step", c -> {
 			int step = i(c.pop()), end = i(c.pop()), start = i(c.pop());
 			c.push(Range.of(start, end, step));
+		});
+		// END iota -> RANGE (3 iota -> (0 1 2))
+		context.variable("iota", c -> {
+			int end = i(c.pop());
+			c.push(Range.of(end));
+		});
+		// END iota1 -> RANGE (3 iota1 -> (1 2 3))
+		context.variable("iota1", c -> {
+			int end = i(c.pop());
+			c.push(Range.of(1, end + 1));
 		});
 		// context.variable("define", c -> c.variable(s(c.pop()), c.pop()));
 		context.variable("yield", Terminal.YIELD);

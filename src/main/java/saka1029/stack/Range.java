@@ -30,7 +30,7 @@ public class Range extends List {
     }
     
     public static Range of(int end) {
-        return new Range(1, end, 1);
+        return new Range(0, end, 1);
     }
 
     @Override

@@ -1253,4 +1253,14 @@ public class TestStack {
 		assertEquals(eval(c, "'(1 2 3)"), eval(c, "'(2 1 3) to-array dup heap-sort"));
 		assertEquals(eval(c, "'(1 2 3 4 5 6)"), eval(c, "'(1 5 2 4 6 3) to-array dup heap-sort"));
 	}
+
+	@Test
+	public void testReduceFor() {
+		Context c = context();
+		assertEquals(Int.of(10), eval(c, "0 1 5 range '+ for"));
+		assertEquals(Int.of(24), eval(c, "1 1 5 range '* for"));
+		assertEquals(Int.of(12), eval(c, "'(3 4 5) 0 swap '+ for"));
+		run(c, "'(1 swap iota1 '* for) @ fact");
+		assertEquals(Int.of(120), eval(c, "5 fact"));
+	}
 }

@@ -28,4 +28,16 @@ public class TestRange {
         assertEquals(eval(c, "'(6 3)"), eval(c, "6 0 -3 range-step"));
     }
 
+    @Test
+    public void testIota() {
+        Context c = context();
+        assertEquals(eval(c, "'(0 1 2 3 4)"), eval(c, "5 iota"));
+    }
+
+    @Test
+    public void testIota1() {
+        Context c = context();
+        assertEquals(eval(c, "'(1 2 3 4 5)"), eval(c, "5 iota1"));
+    }
+
 }
