@@ -26,6 +26,17 @@ public class TestGenerator {
     }
 
     @Test
+    public void testConcurrent() {
+        Context c = context();
+        assertEquals(eval(c, "'(1 2)"),
+            eval(c, """
+                '()
+                    '('(gen 2) print 2 yield '(gen 1) print 1 yield) generator
+                '(dup '() cons 'accept rcons print rcons) for
+                """));
+    }
+
+    @Test
     public void testFactorials() {
         Context c = context();
         run(c, "'('(1 + 1 1 rot range '(* dup yield) for) generator1) @ factorials");
