@@ -112,22 +112,20 @@ public class Context {
     public void output(Consumer<String> output) {
         this.output = output;
     }
-    
+
+    public void output(String s) {
+        if (this.output != null)
+            this.output.accept(s);
+    }
+
     public void stack() {
-        if (output != null)
-            output.accept("%s%n".formatted(this));
+        output(this.toString());
     }
 
     public void print(Instruction i) {
-        if (output != null)
-            output.accept(i.toString());
+        output(i.toString());
     }
     
-    public void println(Instruction i) {
-        if (output != null)
-            output.accept("%s%n".formatted(i));
-    }
-
     public static int asInt(Instruction i) {
         return ((Int)i).value;
     }

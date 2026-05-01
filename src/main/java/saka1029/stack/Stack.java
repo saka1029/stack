@@ -169,7 +169,7 @@ public class Stack {
 			c.push(result);
 		});
 		context.variable("print", c -> c.print(c.pop()));
-		context.variable("println", c -> c.println(c.pop()));
+		// context.variable("println", c -> c.println(c.pop()));
 		context.variable("stack", c -> c.stack());
 		context.variable("tron", c -> c.trace = true);
 		context.variable("troff", c -> c.trace = false);
