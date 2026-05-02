@@ -168,8 +168,9 @@ public class Stack {
 				result = Cons.of(i, result);
 			c.push(result);
 		});
-		context.variable("print", c -> c.print(c.pop()));
-		context.variable("println", c -> c.println(c.pop()));
+		context.variable("print", c -> c.output.accept("" + c.pop()));
+		// context.variable("print", c -> c.print(c.pop()));
+		// context.variable("println", c -> c.println(c.pop()));
 		context.variable("stack", c -> c.stack());
 		context.variable("tron", c -> c.trace = true);
 		context.variable("troff", c -> c.trace = false);

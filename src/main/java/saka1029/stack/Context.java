@@ -34,7 +34,7 @@ public class Context {
     }
     
     public static Context of(Map<Symbol, Instruction> variables) {
-        return new Context(variables, System.out::print);
+        return new Context(variables, System.out::println);
     }
     
     public static Context of() {
