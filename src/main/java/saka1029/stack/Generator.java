@@ -34,6 +34,7 @@ public class Generator extends List {
         this.context = context;
         this.code = code instanceof List list ? list : Cons.list(code);
         this.args = reverse(args.clone());
+        logger.info("Generator() end");
     }
     
     public static Generator of(Context context, Instruction code, Instruction... args) {
@@ -42,12 +43,15 @@ public class Generator extends List {
 
     @Override
     public Sequence sequence() {
+        logger.info("sequence() start");
         Context c = context.fork();
         for (Instruction i : args)
             c.push(i);
         c.execute(code);
         return () -> {
+            logger.info("sequence() run() start");
             Terminal t = c.run();
+            logger.info("sequence() run() end terminal=" + t);
             return switch (t) {
                 case END -> null;
                 case YIELD -> c.pop();

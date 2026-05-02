@@ -4,14 +4,19 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.function.Consumer;
+import java.util.logging.Logger;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 import java.util.stream.Stream;
 
+import saka1029.Common;
+
 public class Context {
     
+    static final Logger logger = Common.logger(Context.class);
+
     public static final int STACK_SIZE = 500;
     public final Instruction[] stack;
     public int sp, bp;
@@ -34,11 +39,11 @@ public class Context {
     }
     
     public static Context of(Map<Symbol, Instruction> variables) {
-        return new Context(variables, System.out::println);
+        return new Context(variables, logger::info);
     }
     
     public static Context of() {
-        return new Context(new HashMap<Symbol, Instruction>(), System.out::println);
+        return new Context(new HashMap<Symbol, Instruction>(), logger::info);
     }
     
     public Context fork() {

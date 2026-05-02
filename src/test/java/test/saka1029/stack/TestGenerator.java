@@ -32,6 +32,7 @@ public class TestGenerator {
             eval(c, """
                 '()
                     '('(gen 2) print 2 yield '(gen 1) print 1 yield) generator
+                    '(execute generator) print
                 '(dup '() cons 'accept rcons print rcons) for
                 """));
     }
